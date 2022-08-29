@@ -1,17 +1,6 @@
 {
   "version": 2,
   "name": "gewch",
-  "builds": [
-    {
-      "src": "./server.js",
-      "use": "@now/node-server"
-    }
-  ],
-  "routes": [
-    { "handle": "filesystem" },
-    {
-      "src": "/.*",
-      "dest": "index.js"
-    }
-  ]
+  "builds": [{ "src": "index.js", "use": "@vercel/node" }],
+  "routes": [{ "src": "/(.*)", "dest": "index.js" }]
 }
