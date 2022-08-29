@@ -33,6 +33,15 @@ const UserSchema = new mongoose.Schema(
     profile_pic: {
       type: String,
     },
+    about: {
+      type: String,
+    },
+    social_link: {
+      type: String,
+    },
+    personal_feed: {
+      type: String,
+    }
   },
   {
     timestamps: true,

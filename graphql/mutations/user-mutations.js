@@ -159,11 +159,15 @@ const updateUser = {
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
     name: { type: new GraphQLNonNull(GraphQLString) },
-    last_name: { type: new GraphQLNonNull(GraphQLString) },
-    country: { type: new GraphQLNonNull(GraphQLString) },
-    city: { type: new GraphQLNonNull(GraphQLString) },
+    last_name: { type: GraphQLString },
+    country: { type: GraphQLString },
+    city: { type: GraphQLString },
     phone: { type: GraphQLString },
+    personal_feed: { type: GraphQLString },
+    social_link: { type: GraphQLString },
     profile_pic: { type: GraphQLUpload },
+    about: { type: GraphQLString },
+    new_password: { type: GraphQLString }
   },
   async resolve(parent, args, req) {
     // * CHECK IF TOKEN IS VALID
@@ -179,6 +183,9 @@ const updateUser = {
       );
     }
 
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(args.new_password, salt);
+
     const data = {
       name: args.name,
       phone: args.phone ?? '',
@@ -187,10 +194,17 @@ const updateUser = {
       last_name: args.last_name ?? '',
       user_name: args.user_name ?? '',
       profile_pic: args.profile_pic ?? '',
+      personal_feed: args.personal_feed ?? '',
+      social_link: args.social_link ?? '',
+      about: args.about ?? '',
+      password: hashedPassword
     };
 
     if (!args?.profile_pic) {
       delete data.profile_pic;
+    }
+    if (!args?.password) {
+      delete data.password;
     }
 
     const options = { new: true };
