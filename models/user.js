@@ -25,7 +25,7 @@ const UserSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: [USER_ROLES.ADMIN, USER_ROLES.AUTHOR],
+      enum: [USER_ROLES.ADMIN, USER_ROLES.USER],
     },
     password: {
       type: String,
@@ -36,12 +36,14 @@ const UserSchema = new mongoose.Schema(
     about: {
       type: String,
     },
-    social_link: {
-      type: String,
+    social_links: {
+      type: Object,
+      default: {},
     },
-    personal_feed: {
-      type: String,
-    }
+    personal_feeds: {
+      type: Array,
+      default: [],
+    },
   },
   {
     timestamps: true,

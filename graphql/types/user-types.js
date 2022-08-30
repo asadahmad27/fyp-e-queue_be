@@ -3,6 +3,7 @@ import {
   GraphQLID,
   GraphQLString,
   GraphQLInt,
+  GraphQLList,
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
@@ -24,9 +25,9 @@ const UserType = new GraphQLObjectType({
     new_password: { type: GraphQLString },
     confirm_password: { type: GraphQLString },
     role: { type: GraphQLString },
-    personal_feed: { type: GraphQLString },
+    personal_feeds: { type: new GraphQLList(FeedType) },
     about: { type: GraphQLString },
-    social_link: { type: GraphQLString },
+    social_links: { type: SocialType },
     profile_pic: {
       type: GraphQLString,
 
@@ -48,5 +49,28 @@ const UserType = new GraphQLObjectType({
     updatedAt: { type: GraphQLDateTime },
   }),
 });
+
+const FeedType = new GraphQLObjectType({
+  name: 'Feed',
+  fields: () => ({
+    link: { type: GraphQLString },
+  }),
+});
+const SocialType = new GraphQLObjectType({
+  name: 'Social',
+  fields: () => ({
+    facebook: { type: GraphQLString },
+    twitter: { type: GraphQLString },
+    instagram: { type: GraphQLString },
+    linkedin: { type: GraphQLString },
+    youtube: { type: GraphQLString },
+    telegram: { type: GraphQLString },
+    soundcloud: { type: GraphQLString },
+    spotify: { type: GraphQLString },
+    vkontakte: { type: GraphQLString },
+  }),
+});
+
+export { SocialType, FeedType };
 
 export default UserType;

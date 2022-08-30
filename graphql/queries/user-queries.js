@@ -19,11 +19,7 @@ const user = {
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
   },
-  resolve(parent, args, req) {
-    // * CHECK IF TOKEN IS VALID
-    if (!req.isAuth) {
-      throw new ApolloError('Not authenticated');
-    }
+  resolve(parent, args) {
     return User.findById(args.id);
   },
 };

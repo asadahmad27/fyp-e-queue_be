@@ -1,5 +1,5 @@
 const USER_ROLES = {
-  ADMIN: 'ADMIN',
+  USER: 'USER',
   AUTHOR: 'AUTHOR',
 };
 const FILE_KEYS = {

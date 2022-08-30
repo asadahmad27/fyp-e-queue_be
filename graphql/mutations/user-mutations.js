@@ -6,7 +6,6 @@ import {
   GraphQLNonNull,
   GraphQLEnumType,
   GraphQLID,
-  GraphQLBoolean,
 } from 'graphql';
 import User from '../../models/user.js';
 import UserType from '../types/user-types.js';
@@ -24,11 +23,11 @@ const register = {
       type: new GraphQLEnumType({
         name: 'UserStatus',
         values: {
-          author: { value: USER_ROLES.AUTHOR },
+          author: { value: USER_ROLES.USER },
           admin: { value: USER_ROLES.ADMIN },
         },
       }),
-      defaultValue: USER_ROLES?.AUTHOR,
+      defaultValue: USER_ROLES?.USER,
     },
   },
   async resolve(parent, args) {
@@ -163,11 +162,11 @@ const updateUser = {
     country: { type: GraphQLString },
     city: { type: GraphQLString },
     phone: { type: GraphQLString },
-    personal_feed: { type: GraphQLString },
-    social_link: { type: GraphQLString },
+    personal_feeds: { type: GraphQLString },
+    social_links: { type: GraphQLString },
     profile_pic: { type: GraphQLUpload },
     about: { type: GraphQLString },
-    new_password: { type: GraphQLString }
+    new_password: { type: GraphQLString },
   },
   async resolve(parent, args, req) {
     // * CHECK IF TOKEN IS VALID
@@ -183,8 +182,11 @@ const updateUser = {
       );
     }
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(args.new_password, salt);
+    let hashedPassword;
+    if (args.new_password) {
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(args.new_password, salt);
+    }
 
     const data = {
       name: args.name,
@@ -194,21 +196,36 @@ const updateUser = {
       last_name: args.last_name ?? '',
       user_name: args.user_name ?? '',
       profile_pic: args.profile_pic ?? '',
-      personal_feed: args.personal_feed ?? '',
-      social_link: args.social_link ?? '',
+      personal_feeds: JSON.parse(args.personal_feeds) ?? [],
+      social_links: JSON.parse(args.social_links) ?? {},
       about: args.about ?? '',
-      password: hashedPassword
+      password: hashedPassword,
     };
 
     if (!args?.profile_pic) {
       delete data.profile_pic;
     }
-    if (!args?.password) {
+    if (!args?.new_password) {
       delete data.password;
     }
 
     const options = { new: true };
-    const user = await User.findOneAndUpdate({ _id: args.id }, data, options);
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: args.id },
+      data,
+      options
+    );
+
+    // * CREATE AND ASSIGN TOKEN
+    const token = jwt.sign(
+      { _id: updatedUser._id, role: updatedUser.role },
+      process.env.TOKEN_SECRET,
+      { expiresIn: '24h' }
+    );
+    updatedUser.token = token;
+    updatedUser.token_expirtation = 1;
+
+    const user = await updatedUser.save();
     return user;
   },
 };
