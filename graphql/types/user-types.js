@@ -47,6 +47,20 @@ const UserType = new GraphQLObjectType({
     message: { type: GraphQLString },
     createdAt: { type: GraphQLDateTime },
     updatedAt: { type: GraphQLDateTime },
+    post_feed_ids: { type: new GraphQLList(GraphQLID) },
+    reviews_ids: { type: new GraphQLList(GraphQLID) },
+    // post_feeds: {
+    //   type: new GraphQLList(ArticleType),
+    //   resolve(parent, args) {
+    //     return Feed.find({ _id: { $in: parent.post_feed_ids } });
+    //   },
+    // },
+    // reviews: {
+    //   type: new GraphQLList(ArticleType),
+    //   resolve(parent, args) {
+    //     return Feed.find({ _id: { $in: parent.reviews_ids } });
+    //   },
+    // },
   }),
 });
 

@@ -44,6 +44,14 @@ const UserSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    post_feed_ids: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: 'Feeds',
+    },
+    reviews_ids: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: 'Reviews',
+    },
   },
   {
     timestamps: true,
