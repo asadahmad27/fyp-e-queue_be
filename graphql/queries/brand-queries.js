@@ -29,7 +29,7 @@ const brandByUserID = {
   args: {
     user_id: { type: new GraphQLNonNull(GraphQLID) },
   },
-  resolve() {
+  resolve(parent, args) {
     return Brand.find({ user_id: args.user_id });
   },
 };
