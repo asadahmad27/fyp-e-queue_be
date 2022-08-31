@@ -7,7 +7,14 @@ import {
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
-
+import Feed from '../../models/feed.js';
+import Review from '../../models/review.js';
+import FeedTypes from './feed-types.js';
+import ReviewTypes from './review-types.js';
+import BrandTypes from './brand-types.js';
+import ProductTypes from './product-types.js';
+import Product from '../../models/product.js';
+import Brand from '../../models/brand.js';
 const { GraphQLDateTime } = pkg;
 
 // * USER TYPE
@@ -49,23 +56,35 @@ const UserType = new GraphQLObjectType({
     updatedAt: { type: GraphQLDateTime },
     post_feed_ids: { type: new GraphQLList(GraphQLID) },
     reviews_ids: { type: new GraphQLList(GraphQLID) },
-    // post_feeds: {
-    //   type: new GraphQLList(ArticleType),
-    //   resolve(parent, args) {
-    //     return Feed.find({ _id: { $in: parent.post_feed_ids } });
-    //   },
-    // },
-    // reviews: {
-    //   type: new GraphQLList(ArticleType),
-    //   resolve(parent, args) {
-    //     return Feed.find({ _id: { $in: parent.reviews_ids } });
-    //   },
-    // },
+    post_feeds: {
+      type: new GraphQLList(FeedTypes),
+      resolve(parent, args) {
+        return Feed.find({ _id: { $in: parent.post_feed_ids } });
+      },
+    },
+    reviews: {
+      type: new GraphQLList(ReviewTypes),
+      resolve(parent, args) {
+        return Review.find({ _id: { $in: parent.reviews_ids } });
+      },
+    },
+    brands: {
+      type: new GraphQLList(BrandTypes),
+      resolve(parent, args) {
+        return Brand.find({ user_id: parent.id });
+      },
+    },
+    products: {
+      type: new GraphQLList(ProductTypes),
+      resolve(parent, args) {
+        return Product.find({ user_id: parent.id });
+      },
+    },
   }),
 });
 
 const FeedType = new GraphQLObjectType({
-  name: 'Feed',
+  name: 'FeedLink',
   fields: () => ({
     link: { type: GraphQLString },
   }),

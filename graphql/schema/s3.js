@@ -32,16 +32,8 @@ const singleFileUpload = async (file, key_name, id) => {
       Key = `user/${key_name}/${id}/${
         new Date().getTime().toString() + path.extname(filename)
       }`;
-    } else if (key_name === FILE_KEYS.IMAGES) {
-      Key = `${key_name}/${
-        new Date().getTime().toString() + path.extname(filename)
-      }`;
-    } else if (key_name === FILE_KEYS.SEO_IMAGES) {
-      Key = `${key_name}/${
-        new Date().getTime().toString() + path.extname(filename)
-      }`;
     } else {
-      Key = `articles/${key_name}/${id}/${
+      Key = `${key_name}/${id}/${
         new Date().getTime().toString() + path.extname(filename)
       }`;
     }
