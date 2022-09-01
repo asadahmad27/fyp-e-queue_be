@@ -230,4 +230,21 @@ const updateUser = {
   },
 };
 
-export { register, login, emailConfirmation, resetPassword, updateUser };
+const deleteUser = {
+  type: UserType,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  async resolve(parent, args, req) {
+    // * CHECK IF TOKEN IS VALID
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
+
+    const user = await User.findByIdAndDelete(args.id);
+    return user;
+  },
+};
+
+
+export { register, login, emailConfirmation, resetPassword, updateUser, deleteUser };
