@@ -36,7 +36,14 @@ const product = {
 
 const productsCount = {
   type: GraphQLInt,
-  resolve(parent, args) {
+  args: {
+    user_id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  async resolve(parent, args) {
+    const user = await User.findById(args.user_id);
+
+    if (user?.role === USER_ROLES.USER)
+      return Product.find({ user_id: args.user_id }).count();
     return Product.find().count();
   },
 };
