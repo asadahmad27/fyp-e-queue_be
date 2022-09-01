@@ -13,6 +13,7 @@ const createProduct = {
     website: { type: new GraphQLNonNull(GraphQLString) },
     about: { type: new GraphQLNonNull(GraphQLString) },
     user_id: { type: new GraphQLNonNull(GraphQLID) },
+    brand_id: { type: new GraphQLNonNull(GraphQLID) },
     image: { type: new GraphQLNonNull(GraphQLUpload) },
     link: { type: new GraphQLNonNull(GraphQLString) },
   },
@@ -26,6 +27,7 @@ const createProduct = {
       website: args.website,
       about: args.about,
       user_id: args.user_id,
+      brand_id: args.brand_id,
       link: args.link,
     });
 
@@ -46,6 +48,7 @@ const createProduct = {
       image: args.image,
       link: savedProduct.link,
       user_id: savedProduct.user_id,
+      brand_id: savedProduct.brand_id,
     };
     const options = { new: true };
     const updatedProduct = await Product.findOneAndUpdate(
@@ -64,6 +67,7 @@ const updateProduct = {
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
     user_id: { type: new GraphQLNonNull(GraphQLID) },
+    brand_id: { type: new GraphQLNonNull(GraphQLID) },
     name: { type: new GraphQLNonNull(GraphQLString) },
     website: { type: new GraphQLNonNull(GraphQLString) },
     link: { type: new GraphQLNonNull(GraphQLString) },
@@ -85,10 +89,11 @@ const updateProduct = {
 
     const data = {
       name: args.name,
-      website: args.phone ?? '',
-      about: args.country ?? '',
+      website: args.website ?? '',
+      about: args.about ?? '',
       image: args.image ?? '',
       user_id: args.user_id ?? '',
+      brand_id: args.brand_id ?? '',
       link: args.link ?? '',
     };
 

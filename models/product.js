@@ -19,6 +19,11 @@ const ProductSchema = new mongoose.Schema(
       ref: 'Users',
       required: true,
     },
+    brand_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Brands',
+      required: true,
+    },
     link: {
       type: String,
     },
