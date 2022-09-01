@@ -1,8 +1,16 @@
-import { GraphQLObjectType, GraphQLID, GraphQLString } from 'graphql';
+import {
+  GraphQLObjectType,
+  GraphQLID,
+  GraphQLString,
+  GraphQLList,
+} from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
 import UserTypes from './user-types.js';
 import User from '../../models/user.js';
+import Product from '../../models/product.js';
+import ProductTypes from './product-types.js';
+
 const { GraphQLDateTime } = pkg;
 
 // * BRAND TYPE
@@ -33,6 +41,12 @@ const BrandTypes = new GraphQLObjectType({
       type: UserTypes,
       resolve(parent, args) {
         return User.findById(parent.user_id);
+      },
+    },
+    products: {
+      type: new GraphQLList(ProductTypes),
+      resolve(parent, args) {
+        return Product.find({ brand_id: parent.id });
       },
     },
   }),

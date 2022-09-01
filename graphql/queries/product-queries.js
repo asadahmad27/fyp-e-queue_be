@@ -12,9 +12,9 @@ const products = {
   },
   async resolve(parent, args, req) {
     // * CHECK IF TOKEN IS VALID
-    if (!req.isAuth) {
-      throw new ApolloError('Not authenticated');
-    }
+    // if (!req.isAuth) {
+    //   throw new ApolloError('Not authenticated');
+    // }
 
     const user = await User.findById(args.user_id);
 
