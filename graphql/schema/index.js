@@ -3,16 +3,10 @@ import { users, user, usersCount } from '../queries/user-queries.js';
 import { faqs, faqsCount } from '../queries/faq-queries.js';
 import { privacyPolicy } from '../queries/privacy-policy-queries.js';
 import { termsConditions } from '../queries/terms-conditions-queries.js';
-import {
-  brands,
-  brand,
-  brandByUserID,
-  brandsCount,
-} from '../queries/brand-queries.js';
+import { brands, brand, brandsCount } from '../queries/brand-queries.js';
 import {
   products,
   product,
-  productByUserID,
   productsCount,
 } from '../queries/product-queries.js';
 import {
@@ -58,12 +52,10 @@ const RootQuery = new GraphQLObjectType({
     //  * BRAND QUERIES
     brands,
     brand,
-    brandByUserID,
     brandsCount,
     //  * PRODUCT QUERIES
     products,
     product,
-    productByUserID,
     productsCount,
   },
 });

@@ -81,8 +81,8 @@ const updateBrand = {
 
     const data = {
       name: args.name,
-      website: args.phone ?? '',
-      about: args.country ?? '',
+      website: args.website ?? '',
+      about: args.about ?? '',
       logo: args.logo ?? '',
       user_id: args.user_id ?? '',
     };

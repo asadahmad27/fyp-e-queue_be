@@ -2,14 +2,24 @@ import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLInt } from 'graphql';
 import Product from '../../models/product.js';
 import ProductTypes from '../types/product-types.js';
 import { ApolloError } from 'apollo-server-errors';
+import User from '../../models/user.js';
+import { USER_ROLES } from '../../constants.js';
 
 const products = {
   type: new GraphQLList(ProductTypes),
-  resolve: (parent, args, req) => {
+  args: {
+    user_id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  async resolve(parent, args, req) {
     // * CHECK IF TOKEN IS VALID
     if (!req.isAuth) {
       throw new ApolloError('Not authenticated');
     }
+
+    const user = await User.findById(args.user_id);
+
+    if (user?.role === USER_ROLES.USER)
+      return Product.find({ user_id: args.user_id });
     return Product.find();
   },
 };
@@ -24,16 +34,6 @@ const product = {
   },
 };
 
-const productByUserID = {
-  type: new GraphQLList(ProductTypes),
-  args: {
-    user_id: { type: new GraphQLNonNull(GraphQLID) },
-  },
-  resolve() {
-    return Product.find({ user_id: args.user_id });
-  },
-};
-
 const productsCount = {
   type: GraphQLInt,
   resolve(parent, args) {
@@ -41,4 +41,4 @@ const productsCount = {
   },
 };
 
-export { products, product, productByUserID, productsCount };
+export { products, product, productsCount };
