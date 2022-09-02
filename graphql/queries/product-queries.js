@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLInt } from 'graphql';
+import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLString } from 'graphql';
 import Product from '../../models/product.js';
 import ProductTypes from '../types/product-types.js';
 import { ApolloError } from 'apollo-server-errors';
@@ -21,6 +21,19 @@ const products = {
     if (user?.role === USER_ROLES.USER)
       return Product.find({ user_id: args.user_id });
     return Product.find();
+  },
+};
+
+const productsBySearch = {
+  type: new GraphQLList(ProductTypes),
+  args: {
+    query: { type: GraphQLString },
+  },
+  async resolve(parent, args, req) {
+    // * CHECK IF TOKEN IS VALID
+    const regex = new RegExp(args.query, 'i')
+    const product = Product.find({ name: { $regex: regex } });
+    return product;
   },
 };
 
@@ -48,4 +61,4 @@ const productsCount = {
   },
 };
 
-export { products, product, productsCount };
+export { products, product, productsCount, productsBySearch };

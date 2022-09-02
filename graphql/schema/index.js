@@ -8,6 +8,7 @@ import {
   products,
   product,
   productsCount,
+  productsBySearch
 } from '../queries/product-queries.js';
 import {
   register,
@@ -58,6 +59,7 @@ const RootQuery = new GraphQLObjectType({
     products,
     product,
     productsCount,
+    productsBySearch
   },
 });
 

@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLInt } from 'graphql';
+import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLString } from 'graphql';
 import Brand from '../../models/brand.js';
 import BrandTypes from '../types/brand-types.js';
 import { ApolloError } from 'apollo-server-errors';
@@ -23,7 +23,6 @@ const brands = {
     return Brand.find();
   },
 };
-
 const brand = {
   type: BrandTypes,
   args: {
