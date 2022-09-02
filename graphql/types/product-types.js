@@ -44,7 +44,7 @@ const ProductTypes = new GraphQLObjectType({
         return User.findById(parent.user_id);
       },
     },
-    brands: {
+    brand: {
       type: BrandTypes,
       resolve(parent, args) {
         return brand.findById(parent.brand_id);

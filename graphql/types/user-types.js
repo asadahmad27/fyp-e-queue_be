@@ -71,13 +71,13 @@ const UserType = new GraphQLObjectType({
     brands: {
       type: new GraphQLList(BrandTypes),
       resolve(parent, args) {
-        return Brand.find({ user_id: parent.id });
+        return Brand.find({ user_id: { $in: parent.id } });
       },
     },
     products: {
       type: new GraphQLList(ProductTypes),
       resolve(parent, args) {
-        return Product.find({ user_id: parent.id });
+        return Product.find({ user_id: { $in: parent.id } });
       },
     },
   }),
