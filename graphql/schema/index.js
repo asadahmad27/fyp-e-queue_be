@@ -3,20 +3,27 @@ import { users, user, usersCount } from '../queries/user-queries.js';
 import { faqs, faqsCount } from '../queries/faq-queries.js';
 import { privacyPolicy } from '../queries/privacy-policy-queries.js';
 import { termsConditions } from '../queries/terms-conditions-queries.js';
-import { brands, brand, brandsCount } from '../queries/brand-queries.js';
+import {
+  brands,
+  brand,
+  brandsCount,
+  recentBrands,
+} from '../queries/brand-queries.js';
 import {
   products,
   product,
   productsCount,
-  productsBySearch
+  productsBySearch,
+  recentProducts,
 } from '../queries/product-queries.js';
+import { reviews, review, reviewsCount } from '../queries/review-queries.js';
 import {
   register,
   login,
   emailConfirmation,
   resetPassword,
   updateUser,
-  deleteUser
+  deleteUser,
 } from '../mutations/user-mutations.js';
 import {
   updateFaqs,
@@ -35,6 +42,14 @@ import {
   updateProduct,
   deleteProduct,
 } from '../mutations/product-mutations.js';
+import {
+  createBrandReview,
+  updateBrandReview,
+  deleteReview,
+  updateReviewStatus,
+  updateProductReview,
+  createProductReview,
+} from '../mutations/review-mutations.js';
 
 //  * QUERIES
 const RootQuery = new GraphQLObjectType({
@@ -55,11 +70,17 @@ const RootQuery = new GraphQLObjectType({
     brands,
     brand,
     brandsCount,
+    recentBrands,
     //  * PRODUCT QUERIES
     products,
     product,
     productsCount,
-    productsBySearch
+    productsBySearch,
+    recentProducts,
+    // * REVIEWS QUERIES
+    reviews,
+    review,
+    reviewsCount,
   },
 });
 
@@ -118,6 +139,22 @@ const mutation = new GraphQLObjectType({
     // ? DELETE PRODUCT
     deleteProduct,
     //  * PRODUCT MUTATIONS
+
+    //  * BRAND REVIEW MUTATIONS
+    //  ? CREATE BRAND REVIEW
+    createBrandReview,
+    //  ? CREATE PRODUCT REVIEW
+    createProductReview,
+    //  ? UPDATE BRAND REVIEW
+    updateBrandReview,
+    //  ? UPDATE PRODUCT REVIEW
+    updateProductReview,
+
+    //  ? DELETE  REVIEW
+    deleteReview,
+    //  ? ? UPDATE REVIEW STATUS
+    updateReviewStatus,
+    //  * BRAND REVIEW MUTATIONS
   },
 });
 

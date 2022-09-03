@@ -8,4 +8,9 @@ const FILE_KEYS = {
   PRODUCT_IMAGES: 'product_images',
 };
 
-export { USER_ROLES, FILE_KEYS };
+const REVIEW_STATUS = {
+  APPROVED: 'APPROVED',
+  DISAPPROVED: 'DISAPPROVED',
+};
+
+export { USER_ROLES, FILE_KEYS, REVIEW_STATUS };

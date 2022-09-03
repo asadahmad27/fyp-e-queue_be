@@ -3,6 +3,7 @@ import {
   GraphQLID,
   GraphQLString,
   GraphQLList,
+  GraphQLInt,
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
@@ -21,6 +22,7 @@ const BrandTypes = new GraphQLObjectType({
     user_id: { type: GraphQLID },
     name: { type: GraphQLString },
     website: { type: GraphQLString },
+    reviews_count: { type: GraphQLInt },
     logo: {
       type: GraphQLString,
       resolve(parent, args) {

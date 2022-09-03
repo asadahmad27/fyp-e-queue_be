@@ -1,4 +1,10 @@
-import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLString } from 'graphql';
+import {
+  GraphQLID,
+  GraphQLList,
+  GraphQLNonNull,
+  GraphQLInt,
+  GraphQLString,
+} from 'graphql';
 import Brand from '../../models/brand.js';
 import BrandTypes from '../types/brand-types.js';
 import { ApolloError } from 'apollo-server-errors';
@@ -33,6 +39,15 @@ const brand = {
   },
 };
 
+const recentBrands = {
+  type: new GraphQLList(BrandTypes),
+  async resolve(parent, args) {
+    return Brand.find({ reviews_count: { $gt: 0 } })
+      .sort({ timestamp: -1 })
+      .limit(10);
+  },
+};
+
 const brandsCount = {
   type: GraphQLInt,
   args: {
@@ -47,4 +62,4 @@ const brandsCount = {
   },
 };
 
-export { brands, brand, brandsCount };
+export { brands, brand, brandsCount, recentBrands };

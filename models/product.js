@@ -24,6 +24,12 @@ const ProductSchema = new mongoose.Schema(
       ref: 'Brands',
       required: true,
     },
+
+    reviews_count: {
+      type: Number,
+      default: 0,
+    },
+
     link: {
       type: String,
     },

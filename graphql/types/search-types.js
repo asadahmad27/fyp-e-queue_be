@@ -9,20 +9,16 @@ import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
 import UserTypes from './user-types.js';
 import User from '../../models/user.js';
-import BrandTypes from './brand-types.js';
-import brand from '../../models/brand.js';
 const { GraphQLDateTime } = pkg;
 
-// * PRODUCT TYPE
-const ProductTypes = new GraphQLObjectType({
-  name: 'Product',
+// * SEARCH TYPE
+const SearchTypes = new GraphQLObjectType({
+  name: 'Search',
   fields: () => ({
     id: { type: GraphQLID },
     user_id: { type: GraphQLID },
     brand_id: { type: GraphQLID },
     name: { type: GraphQLString },
-    website: { type: GraphQLString },
-    link: { type: GraphQLString },
     image: {
       type: GraphQLString,
       resolve(parent, args) {
@@ -38,21 +34,26 @@ const ProductTypes = new GraphQLObjectType({
     },
     about: { type: GraphQLString },
     createdAt: { type: GraphQLDateTime },
-    updatedAt: { type: GraphQLDateTime },
     user: {
       type: UserTypes,
       resolve(parent, args) {
         return User.findById(parent.user_id);
       },
     },
-    brand: {
-      type: BrandTypes,
+    logo: {
+      type: GraphQLString,
       resolve(parent, args) {
-        return brand.findById(parent.brand_id);
+        let imageUrl;
+        if (parent.logo) {
+          imageUrl = s3.getSignedUrl('getObject', {
+            Bucket: process.env.S3_BUCKET,
+            Key: parent.logo,
+          });
+        }
+        return imageUrl || parent.logo;
       },
     },
-    reviews_count: { type: GraphQLInt },
   }),
 });
 
-export default ProductTypes;
+export default SearchTypes;
