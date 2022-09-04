@@ -10,7 +10,9 @@ import {
 import Review from '../../models/review.js';
 import ReviewTypes from '../types/review-types.js';
 import { REVIEW_STATUS } from '../../constants.js';
-import { FaqsTypes } from '../types/review-types.js';
+
+
+
 const createBrandReview = {
   type: ReviewTypes,
   args: {
@@ -80,7 +82,7 @@ const createProductReview = {
       }),
       defaultValue: REVIEW_STATUS.DISAPPROVED,
     },
-    faqs: { type: new GraphQLList(FaqsTypes) },
+    faqs: { type: GraphQLString },
   },
   async resolve(parent, args, req) {
     // * CHECK IF TOKEN IS VALID
@@ -99,7 +101,7 @@ const createProductReview = {
       brand_id: args.brand_id,
       product_id: args.product_id,
       status: args?.status,
-      faqs: args.faqs ?? [],
+      faqs: JSON.parse(args.faqs) ?? [],
     });
 
     const review = await newReview.save();
@@ -184,7 +186,7 @@ const updateProductReview = {
       }),
       defaultValue: REVIEW_STATUS.DISAPPROVED,
     },
-    faqs: { type: new GraphQLList(FaqsTypes) },
+    faqs: { type: GraphQLString },
   },
   async resolve(parent, args, req) {
     // * CHECK IF TOKEN IS VALID
@@ -204,7 +206,7 @@ const updateProductReview = {
       brand_id: args.brand_id,
       product_id: args.product_id,
       status: args?.status,
-      faqs: args.faqs ?? [],
+      faqs: JSON.parse(args.faqs) ?? [],
     };
 
     const options = { new: true };
