@@ -2,13 +2,13 @@ import {
   GraphQLObjectType,
   GraphQLID,
   GraphQLString,
-  GraphQLList,
   GraphQLInt,
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
 import UserTypes from './user-types.js';
 import User from '../../models/user.js';
+import Review from '../../models/review.js';
 import BrandTypes from './brand-types.js';
 import brand from '../../models/brand.js';
 const { GraphQLDateTime } = pkg;
@@ -51,7 +51,28 @@ const ProductTypes = new GraphQLObjectType({
         return brand.findById(parent.brand_id);
       },
     },
-    reviews_count: { type: GraphQLInt },
+    reviews_count: {
+      type: GraphQLInt,
+      resolve(parent, args) {
+        return Review.find({ product_id: parent.id }).count();
+      },
+    },
+    reviews_rating: {
+      type: GraphQLString,
+      async resolve(parent, args) {
+        const initialValue = 0;
+        const reviews = await Review.find({ brand_id: parent.id });
+        const reviews_count = reviews?.length;
+        const ratings = reviews?.map((review) => review.rating);
+        const rating_count = ratings.reduce(
+          (previousValue, currentValue) => previousValue + currentValue,
+          initialValue
+        );
+        const count = rating_count / reviews_count;
+
+        return count.toFixed(1);
+      },
+    },
   }),
 });
 

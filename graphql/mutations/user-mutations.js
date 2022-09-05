@@ -27,7 +27,7 @@ const register = {
           admin: { value: USER_ROLES.ADMIN },
         },
       }),
-      defaultValue: USER_ROLES?.USER,
+      defaultValue: USER_ROLES.USER,
     },
   },
   async resolve(parent, args) {
@@ -246,5 +246,11 @@ const deleteUser = {
   },
 };
 
-
-export { register, login, emailConfirmation, resetPassword, updateUser, deleteUser };
+export {
+  register,
+  login,
+  emailConfirmation,
+  resetPassword,
+  updateUser,
+  deleteUser,
+};

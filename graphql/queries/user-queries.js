@@ -2,6 +2,7 @@ import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLInt } from 'graphql';
 import User from '../../models/user.js';
 import UserType from '../types/user-types.js';
 import { ApolloError } from 'apollo-server-errors';
+import { USER_ROLES } from '../../constants.js';
 
 const users = {
   type: new GraphQLList(UserType),
@@ -10,7 +11,8 @@ const users = {
     if (!req.isAuth) {
       throw new ApolloError('Not authenticated');
     }
-    return User.find();
+
+    return User.find({ role: USER_ROLES.USER });
   },
 };
 

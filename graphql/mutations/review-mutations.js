@@ -11,8 +11,6 @@ import Review from '../../models/review.js';
 import ReviewTypes from '../types/review-types.js';
 import { REVIEW_STATUS } from '../../constants.js';
 
-
-
 const createBrandReview = {
   type: ReviewTypes,
   args: {
@@ -250,7 +248,7 @@ const updateReviewStatus = {
       defaultValue: REVIEW_STATUS.DISAPPROVED,
     },
   },
-  async resolve(parent, args) {
+  async resolve(parent, args, req) {
     // * CHECK IF TOKEN IS VALID
     if (!req.isAuth) {
       throw new ApolloError('Not authenticated');

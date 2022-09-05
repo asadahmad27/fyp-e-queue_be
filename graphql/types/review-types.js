@@ -6,8 +6,10 @@ import {
   GraphQLList,
 } from 'graphql';
 import Brand from '../../models/brand.js';
+import User from '../../models/user.js';
 import Product from '../../models/product.js';
 import ProductTypes from '../types/product-types.js';
+import UserTypes from '../types/user-types.js';
 import BrandTypes from '../types/brand-types.js';
 import pkg from 'graphql-iso-date';
 
@@ -37,16 +39,23 @@ const ReviewTypes = new GraphQLObjectType({
     updatedAt: { type: GraphQLDateTime },
     faqs: { type: new GraphQLList(FaqsTypes) },
 
-    brand: {
-      type: new GraphQLList(BrandTypes),
+    user: {
+      type: UserTypes,
       resolve(parent, args) {
-        return Brand.find({ _id: parent.brand_id });
+        return User.findById(parent.user_id);
+      },
+    },
+
+    brand: {
+      type: BrandTypes,
+      resolve(parent, args) {
+        return Brand.findById(parent.brand_id);
       },
     },
     product: {
-      type: new GraphQLList(ProductTypes),
+      type: ProductTypes,
       resolve(parent, args) {
-        return Product.find({ _id: parent.product_id });
+        return Product.findById(parent.product_id);
       },
     },
   }),

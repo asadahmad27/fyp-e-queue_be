@@ -65,7 +65,7 @@ const UserType = new GraphQLObjectType({
     reviews: {
       type: new GraphQLList(ReviewTypes),
       resolve(parent, args) {
-        return Review.find({ _id: { $in: parent.reviews_ids } });
+        return Review.find({ user_id: parent.id });
       },
     },
     brands: {
