@@ -11,8 +11,6 @@ import Review from '../../models/review.js';
 import ReviewTypes from '../types/review-types.js';
 import { REVIEW_STATUS } from '../../constants.js';
 
-
-
 const createBrandReview = {
   type: ReviewTypes,
   args: {
@@ -70,7 +68,6 @@ const createProductReview = {
     taste: { type: new GraphQLNonNull(GraphQLInt) },
     message: { type: GraphQLString },
     tags: { type: new GraphQLNonNull(new GraphQLList(GraphQLString)) },
-    brand_id: { type: new GraphQLNonNull(GraphQLID) },
     product_id: { type: new GraphQLNonNull(GraphQLID) },
     status: {
       type: new GraphQLEnumType({
@@ -175,7 +172,6 @@ const updateProductReview = {
     taste: { type: new GraphQLNonNull(GraphQLInt) },
     message: { type: GraphQLString },
     tags: { type: new GraphQLNonNull(new GraphQLList(GraphQLString)) },
-    brand_id: { type: new GraphQLNonNull(GraphQLID) },
     product_id: { type: new GraphQLNonNull(GraphQLID) },
     status: {
       type: new GraphQLEnumType({
@@ -251,7 +247,7 @@ const updateReviewStatus = {
       defaultValue: REVIEW_STATUS.DISAPPROVED,
     },
   },
-  async resolve(parent, args) {
+  async resolve(parent, args, req) {
     // * CHECK IF TOKEN IS VALID
     if (!req.isAuth) {
       throw new ApolloError('Not authenticated');

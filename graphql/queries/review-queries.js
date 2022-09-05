@@ -5,12 +5,17 @@ import { ApolloError } from 'apollo-server-errors';
 
 const reviews = {
   type: new GraphQLList(ReviewTypes),
+  args: {
+    limit: { type: GraphQLInt },
+  },
   async resolve(parent, args, req) {
     // * CHECK IF TOKEN IS VALID
     if (!req.isAuth) {
       throw new ApolloError('Not authenticated');
     }
-    return Review.find();
+    const DEFAULT_LIMIT = 10;
+
+    return Review.find().skip(args.limit).limit(DEFAULT_LIMIT);
   },
 };
 

@@ -19,10 +19,6 @@ const BrandSchema = new mongoose.Schema(
       ref: 'Users',
       required: true,
     },
-    reviews_count: {
-      type: Number,
-      default: 0,
-    },
   },
   {
     timestamps: true,

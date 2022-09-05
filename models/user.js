@@ -48,10 +48,6 @@ const UserSchema = new mongoose.Schema(
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'Feeds',
     },
-    reviews_ids: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: 'Reviews',
-    },
   },
   {
     timestamps: true,
