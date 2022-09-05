@@ -11,6 +11,8 @@ import UserTypes from './user-types.js';
 import User from '../../models/user.js';
 import Product from '../../models/product.js';
 import ProductTypes from './product-types.js';
+import Review from '../../models/review.js';
+import ReviewTypes from './review-types.js';
 
 const { GraphQLDateTime } = pkg;
 
@@ -49,6 +51,12 @@ const BrandTypes = new GraphQLObjectType({
       type: new GraphQLList(ProductTypes),
       resolve(parent, args) {
         return Product.find({ brand_id: { $in: parent.id } });
+      },
+    },
+    reviews: {
+      type: new GraphQLList(ReviewTypes),
+      resolve(parent, args) {
+        return Review.find({ brand_id: parent.id });
       },
     },
   }),

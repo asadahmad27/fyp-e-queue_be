@@ -10,6 +10,8 @@ import Product from '../../models/product.js';
 import ProductTypes from '../types/product-types.js';
 import BrandTypes from '../types/brand-types.js';
 import pkg from 'graphql-iso-date';
+import UserTypes from './user-types.js';
+import User from '../../models/user.js';
 
 const { GraphQLDateTime } = pkg;
 
@@ -47,6 +49,12 @@ const ReviewTypes = new GraphQLObjectType({
       type: new GraphQLList(ProductTypes),
       resolve(parent, args) {
         return Product.find({ _id: parent.product_id });
+      },
+    },
+    user: {
+      type: UserTypes,
+      resolve(parent, args) {
+        return User.findById(parent.user_id);
       },
     },
   }),

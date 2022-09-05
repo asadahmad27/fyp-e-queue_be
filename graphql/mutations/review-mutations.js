@@ -89,6 +89,7 @@ const createProductReview = {
     if (!req.isAuth) {
       throw new ApolloError('Not authenticated');
     }
+    console.log(args)
     const newReview = new Review({
       user_id: args.user_id,
       rating: args.rating,
