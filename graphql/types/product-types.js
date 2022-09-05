@@ -69,7 +69,7 @@ const ProductTypes = new GraphQLObjectType({
       type: GraphQLString,
       async resolve(parent, args) {
         const initialValue = 0;
-        const reviews = await Review.find({ brand_id: parent.id });
+        const reviews = await Review.find({ product_id: parent.id });
         const reviews_count = reviews?.length;
         const ratings = reviews?.map((review) => review.rating);
         const rating_count = ratings.reduce(
