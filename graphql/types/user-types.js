@@ -17,6 +17,8 @@ import ProductTypes from './product-types.js';
 import UserTypes from './user-types.js';
 import Product from '../../models/product.js';
 import Brand from '../../models/brand.js';
+import { USER_ROLES } from '../../constants.js';
+
 const { GraphQLDateTime } = pkg;
 
 // * USER TYPE
@@ -72,14 +74,22 @@ const UserType = new GraphQLObjectType({
     },
     brands: {
       type: new GraphQLList(BrandTypes),
-      resolve(parent, args) {
-        return Brand.find({ user_id: { $in: parent.id } });
+      async resolve(parent, args) {
+        const user = await User.findById(parent.id);
+
+        if (user?.role === USER_ROLES.USER)
+          return Brand.find({ user_id: parent.id });
+        return Brand.find();
       },
     },
     products: {
       type: new GraphQLList(ProductTypes),
-      resolve(parent, args) {
-        return Product.find({ user_id: { $in: parent.id } });
+      async resolve(parent, args) {
+        const user = await User.findById(parent.id);
+
+        if (user?.role === USER_ROLES.USER)
+          return Product.find({ user_id: parent.id });
+        return Product.find();
       },
     },
     all_reviews: {
