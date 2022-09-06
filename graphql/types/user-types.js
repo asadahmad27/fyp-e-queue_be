@@ -69,7 +69,13 @@ const UserType = new GraphQLObjectType({
     reviews: {
       type: new GraphQLList(ReviewTypes),
       resolve(parent, args) {
-        return Review.find({ user_id: parent.id });
+        const user = await User.findById(parent.id);
+
+        if (user?.role === USER_ROLES.USER)
+          return Review.find({ user_id: parent.id });
+        return Review.find();
+
+
       },
     },
     brands: {
@@ -92,12 +98,7 @@ const UserType = new GraphQLObjectType({
         return Product.find();
       },
     },
-    all_reviews: {
-      type: new GraphQLList(ReviewTypes),
-      resolve(parent, args) {
-        return Review.find();
-      },
-    },
+
     users: {
       type: new GraphQLList(UserTypes),
       resolve(parent, args) {
