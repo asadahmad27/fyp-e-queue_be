@@ -1,6 +1,8 @@
 import { ApolloError } from 'apollo-server-errors';
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
 import Brand from '../../models/brand.js';
+import Review from '../../models/review.js';
+import Product from '../../models/product.js';
 import BrandTypes from '../types/brand-types.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
 import { singleFileUpload } from '../schema/s3.js';
@@ -111,6 +113,28 @@ const deleteBrand = {
     if (!req.isAuth) {
       throw new ApolloError('Not authenticated');
     }
+    //  * DELETE BRANDS
+    Brand.findOne({ _id: args.id }).then((brand) => {
+      //  * DELETE BRAND REVIEWS
+      Review.find({ brand_id: brand._id }).then((reviews) => {
+        reviews.forEach((review) => {
+          review.remove();
+        });
+      });
+      //  * DELETE PRODUCTS
+      Product.find({ brand_id: brand._id }).then((products) => {
+        products.forEach((product) => {
+          //  * DELETE PRODUCT REVIEWS
+          Review.find({ product_id: product._id }).then((reviews) => {
+            reviews.forEach((review) => {
+              review.remove();
+            });
+          });
+
+          product.remove();
+        });
+      });
+    });
 
     const brand = await Brand.findByIdAndDelete(args.id);
     return brand;

@@ -1,5 +1,7 @@
 import { ApolloError } from 'apollo-server-errors';
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
+import Brand from '../../models/brand.js';
+import Review from '../../models/review.js';
 import Product from '../../models/product.js';
 import ProductTypes from '../types/product-types.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
@@ -121,6 +123,15 @@ const deleteProduct = {
     if (!req.isAuth) {
       throw new ApolloError('Not authenticated');
     }
+
+    Product.findOne({ _id: args.id }).then((product) => {
+      //  * DELETE PRODUCT REVIEWS
+      Review.find({ product_id: product._id }).then((reviews) => {
+        reviews.forEach((review) => {
+          review.remove();
+        });
+      });
+    });
 
     const product = await Product.findByIdAndDelete(args.id);
     return product;

@@ -8,6 +8,9 @@ import {
   GraphQLID,
 } from 'graphql';
 import User from '../../models/user.js';
+import Brand from '../../models/brand.js';
+import Product from '../../models/product.js';
+import Review from '../../models/review.js';
 import UserType from '../types/user-types.js';
 import { USER_ROLES, FILE_KEYS } from '../../constants.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
@@ -240,6 +243,32 @@ const deleteUser = {
     if (!req.isAuth) {
       throw new ApolloError('Not authenticated');
     }
+
+    //  * DELETE BRANDS
+    Brand.find({ user_id: args.id }).then((brands) => {
+      brands.forEach((brand) => {
+        //  * DELETE BRAND REVIEWS
+        Review.find({ brand_id: brand._id }).then((reviews) => {
+          reviews.forEach((review) => {
+            review.remove();
+          });
+        });
+        //  * DELETE PRODUCTS
+        Product.find({ brand_id: brand._id }).then((products) => {
+          products.forEach((product) => {
+            //  * DELETE PRODUCT REVIEWS
+            Review.find({ product_id: product._id }).then((reviews) => {
+              reviews.forEach((review) => {
+                review.remove();
+              });
+            });
+
+            product.remove();
+          });
+        });
+        brand.remove();
+      });
+    });
 
     const user = await User.findByIdAndDelete(args.id);
     return user;
