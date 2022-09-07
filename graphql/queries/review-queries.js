@@ -41,7 +41,7 @@ const recentBrandReviews = {
 const recentProductReviews = {
   type: new GraphQLList(ReviewTypes),
   args: {
-    id: { type: new GraphQLNonNull(GraphQLID) },
+    product_id: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve(parent, args) {
     return Review.find({ product_id: args.id }).sort({ timestamp: -1 });
