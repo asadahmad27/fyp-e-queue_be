@@ -13,6 +13,8 @@ import User from '../../models/user.js';
 import Review from '../../models/review.js';
 import Product from '../../models/product.js';
 import ProductTypes from './product-types.js';
+import { REVIEW_STAT } from '../../constants.js';
+
 
 const { GraphQLDateTime } = pkg;
 
@@ -81,6 +83,15 @@ const BrandTypes = new GraphQLObjectType({
         return count.toFixed(1);
       },
     },
+    reviews_stat: {
+      type: new GraphQLList(GraphQLInt),
+      async resolve(parent, args) {
+        const reviews = await Review.find({ brand_id: parent.id });
+        const ratings = reviews?.map((review) => review.rating);
+        return ratings
+
+      },
+    }
   }),
 });
 

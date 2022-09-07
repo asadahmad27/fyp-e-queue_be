@@ -65,6 +65,7 @@ const ProductTypes = new GraphQLObjectType({
         return Review.find({ product_id: parent.id });
       },
     },
+
     reviews_rating: {
       type: GraphQLString,
       async resolve(parent, args) {
@@ -81,6 +82,15 @@ const ProductTypes = new GraphQLObjectType({
         return count.toFixed(1);
       },
     },
+    reviews_stat: {
+      type: new GraphQLList(GraphQLInt),
+      async resolve(parent, args) {
+        const reviews = await Review.find({ product_id: parent.id });
+        const ratings = reviews?.map((review) => review.rating);
+        return ratings;
+
+      },
+    }
   }),
 });
 
