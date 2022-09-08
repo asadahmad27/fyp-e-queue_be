@@ -34,7 +34,7 @@ const recentBrandReviews = {
     brand_id: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve(parent, args) {
-    return Review.find({ brand_id: args.brand_id }).sort({ timestamp: -1 });
+    return Review.find({ brand_id: args.brand_id }).sort({ timestamp: -1 }).limit(5);
   },
 
 };
@@ -44,7 +44,7 @@ const recentProductReviews = {
     product_id: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve(parent, args) {
-    return Review.find({ product_id: args.product_id }).sort({ timestamp: -1 });
+    return Review.find({ product_id: args.product_id }).sort({ timestamp: -1 }).limit(5);
   },
 
 };

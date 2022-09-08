@@ -64,7 +64,7 @@ const BrandTypes = new GraphQLObjectType({
     reviews: {
       type: new GraphQLList(ReviewTypes),
       resolve(parent, args) {
-        return Review.find({ brand_id: parent.id });
+        return Review.find({ brand_id: parent.id }).sort({ timeStamp: -1 });
       },
     },
     reviews_rating: {
