@@ -103,6 +103,15 @@ const UserType = new GraphQLObjectType({
         return User.find();
       },
     },
+    reviews_stat: {
+      type: new GraphQLList(GraphQLInt),
+      async resolve(parent, args) {
+        const reviews = await Review.find({ user_id: parent.id });
+        const ratings = reviews?.map((review) => review.rating);
+        return ratings
+
+      },
+    }
   }),
 });
 

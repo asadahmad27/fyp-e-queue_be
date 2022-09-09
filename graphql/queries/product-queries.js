@@ -52,6 +52,7 @@ const productsBySearch = {
         .skip(args.limit)
         .limit(DEFAULT_LIMIT);
       data = [...products, ...brands];
+
       return data;
     } else {
       const products = await Product.find()

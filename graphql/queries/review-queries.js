@@ -28,6 +28,26 @@ const review = {
     return Review.findById(args.id);
   },
 };
+const recentBrandReviews = {
+  type: new GraphQLList(ReviewTypes),
+  args: {
+    brand_id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  resolve(parent, args) {
+    return Review.find({ brand_id: args.brand_id }).sort({ timestamp: -1 }).limit(5);
+  },
+
+};
+const recentProductReviews = {
+  type: new GraphQLList(ReviewTypes),
+  args: {
+    product_id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  resolve(parent, args) {
+    return Review.find({ product_id: args.product_id }).sort({ timestamp: -1 }).limit(5);
+  },
+
+};
 
 const reviewsCount = {
   type: GraphQLInt,
@@ -37,4 +57,6 @@ const reviewsCount = {
   },
 };
 
-export { reviews, review, reviewsCount };
+export {
+  reviews, review, reviewsCount, recentBrandReviews, recentProductReviews
+};

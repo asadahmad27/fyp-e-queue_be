@@ -13,4 +13,11 @@ const REVIEW_STATUS = {
   DISAPPROVED: 'DISAPPROVED',
 };
 
-export { USER_ROLES, FILE_KEYS, REVIEW_STATUS };
+const REVIEW_STAT = {
+  EXCELLENT: "Excellent",
+  GREAT: "Great",
+  AVERAGE: "Average",
+  BAD: "Bad",
+  POOR: "Poor",
+};
+export { USER_ROLES, FILE_KEYS, REVIEW_STATUS, REVIEW_STAT };

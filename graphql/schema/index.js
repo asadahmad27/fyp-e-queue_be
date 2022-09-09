@@ -16,7 +16,11 @@ import {
   productsBySearch,
   recentProducts,
 } from '../queries/product-queries.js';
-import { reviews, review, reviewsCount } from '../queries/review-queries.js';
+import {
+  reviews, review, reviewsCount,
+  recentBrandReviews,
+  recentProductReviews
+} from '../queries/review-queries.js';
 import {
   register,
   login,
@@ -81,6 +85,8 @@ const RootQuery = new GraphQLObjectType({
     reviews,
     review,
     reviewsCount,
+    recentBrandReviews,
+    recentProductReviews
   },
 });
 
