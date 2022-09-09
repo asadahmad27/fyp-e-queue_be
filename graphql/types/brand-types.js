@@ -81,6 +81,24 @@ const BrandTypes = new GraphQLObjectType({
         return count.toFixed(1);
       },
     },
+    tags: {
+      type: new GraphQLList(GraphQLString),
+      async resolve(parent) {
+        let array = [];
+        const reviews = await Review.find({ brand_id: parent.id });
+        reviews?.map((review) => {
+          return (array = [...review.tags]);
+        });
+
+        function onlyUnique(value, index, self) {
+          return self.indexOf(value) === index;
+        }
+
+        const unique = array.filter(onlyUnique);
+
+        return unique;
+      },
+    },
   }),
 });
 
