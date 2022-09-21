@@ -23,6 +23,14 @@ const ReviewSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    branding: {
+      type: Number,
+      default: 0,
+    },
+    price_points: {
+      type: Number,
+      default: 0,
+    },
 
     appearance: {
       type: Number,
@@ -43,10 +51,31 @@ const ReviewSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    affordability: {
+      type: Number,
+      default: 0,
+    },
+    texture: {
+      type: Number,
+      default: 0,
+    },
+    scent: {
+      type: Number,
+      default: 0,
+    },
     tags: {
       type: [String],
     },
+    specific_types: {
+      type: [String],
+    },
+    benefits: {
+      type: [String],
+    },
     message: {
+      type: String,
+    },
+    history: {
       type: String,
     },
     brand_id: {
