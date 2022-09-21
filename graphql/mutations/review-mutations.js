@@ -21,7 +21,7 @@ const createBrandReview = {
     reputation: { type: new GraphQLNonNull(GraphQLInt) },
     sustainability: { type: new GraphQLNonNull(GraphQLInt) },
     branding: { type: new GraphQLNonNull(GraphQLInt) },
-    price_points: { type: new GraphQLNonNull(GraphQLInt) },
+    price_point: { type: new GraphQLNonNull(GraphQLInt) },
     message: { type: GraphQLString },
     history: { type: GraphQLString },
     tags: { type: new GraphQLNonNull(new GraphQLList(GraphQLString)) },
@@ -78,7 +78,7 @@ const createProductReview = {
     message: { type: GraphQLString },
     tags: { type: new GraphQLNonNull(new GraphQLList(GraphQLString)) },
     specific_types: {
-      type: new GraphQLNonNull(new GraphQLList(GraphQLString)),
+      type: new GraphQLList(GraphQLString),
     },
     benefits: { type: new GraphQLNonNull(new GraphQLList(GraphQLString)) },
     product_id: { type: new GraphQLNonNull(GraphQLID) },
