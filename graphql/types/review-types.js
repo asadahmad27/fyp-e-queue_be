@@ -26,7 +26,7 @@ const ReviewTypes = new GraphQLObjectType({
     reputation: { type: GraphQLInt },
     sustainability: { type: GraphQLInt },
     branding: { type: GraphQLInt },
-    price_points: { type: GraphQLInt },
+    price_point: { type: GraphQLInt },
     appearance: { type: GraphQLInt },
     nutritional_value: { type: GraphQLInt },
     packaging: { type: GraphQLInt },
