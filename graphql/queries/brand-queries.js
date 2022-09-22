@@ -38,6 +38,17 @@ const brand = {
     return Brand.findById(args.id);
   },
 };
+const brandForAdmin = {
+  type: BrandTypes,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    limit: { type: GraphQLInt },
+  },
+  async resolve(parent, args) {
+    return await Brand.findById(args.id);
+
+  },
+};
 
 const recentBrands = {
   type: new GraphQLList(BrandTypes),
@@ -62,4 +73,4 @@ const brandsCount = {
   },
 };
 
-export { brands, brand, brandsCount, recentBrands };
+export { brands, brand, brandsCount, recentBrands, brandForAdmin };

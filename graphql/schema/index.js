@@ -8,6 +8,7 @@ import {
   brand,
   brandsCount,
   recentBrands,
+  brandForAdmin
 } from '../queries/brand-queries.js';
 import {
   products,
@@ -75,6 +76,7 @@ const RootQuery = new GraphQLObjectType({
     brand,
     brandsCount,
     recentBrands,
+    brandForAdmin,
     //  * PRODUCT QUERIES
     products,
     product,
