@@ -1,5 +1,10 @@
 import { GraphQLSchema, GraphQLObjectType } from 'graphql';
-import { users, user, usersCount, userForAdmin } from '../queries/user-queries.js';
+import {
+  users,
+  user,
+  usersCount,
+  userForAdmin,
+} from '../queries/user-queries.js';
 import { faqs, faqsCount } from '../queries/faq-queries.js';
 import { privacyPolicy } from '../queries/privacy-policy-queries.js';
 import { termsConditions } from '../queries/terms-conditions-queries.js';
@@ -8,7 +13,7 @@ import {
   brand,
   brandsCount,
   recentBrands,
-  brandForAdmin
+  brandForAdmin,
 } from '../queries/brand-queries.js';
 import {
   products,
@@ -16,12 +21,14 @@ import {
   productsCount,
   productsBySearch,
   recentProducts,
-  productForAdmin
+  productForAdmin,
 } from '../queries/product-queries.js';
 import {
-  reviews, review, reviewsCount,
+  reviews,
+  review,
+  reviewsCount,
   recentBrandReviews,
-  recentProductReviews
+  recentProductReviews,
 } from '../queries/review-queries.js';
 import {
   register,
@@ -57,6 +64,11 @@ import {
   updateProductReview,
   createProductReview,
 } from '../mutations/review-mutations.js';
+import {
+  createFeed,
+  updateFeed,
+  deleteFeed,
+} from '../mutations/feed-mutations.js';
 
 //  * QUERIES
 const RootQuery = new GraphQLObjectType({
@@ -92,7 +104,7 @@ const RootQuery = new GraphQLObjectType({
     review,
     reviewsCount,
     recentBrandReviews,
-    recentProductReviews
+    recentProductReviews,
   },
 });
 
@@ -169,6 +181,12 @@ const mutation = new GraphQLObjectType({
     //  ? ? UPDATE REVIEW STATUS
     updateReviewStatus,
     //  * BRAND REVIEW MUTATIONS
+
+    //  * FEED MUTATIONS
+    createFeed,
+    updateFeed,
+    deleteFeed,
+    //  * FEED MUTATIONS
   },
 });
 

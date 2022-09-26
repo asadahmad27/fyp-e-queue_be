@@ -40,10 +40,6 @@ const UserSchema = new mongoose.Schema(
       type: Object,
       default: {},
     },
-    personal_feeds: {
-      type: Array,
-      default: [],
-    },
     post_feed_ids: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'Feeds',
