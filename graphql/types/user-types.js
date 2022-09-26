@@ -36,7 +36,6 @@ const UserType = new GraphQLObjectType({
     new_password: { type: GraphQLString },
     confirm_password: { type: GraphQLString },
     role: { type: GraphQLString },
-    personal_feeds: { type: new GraphQLList(FeedType) },
     about: { type: GraphQLString },
     social_links: { type: SocialType },
     profile_pic: {
@@ -60,12 +59,7 @@ const UserType = new GraphQLObjectType({
     updatedAt: { type: GraphQLDateTime },
     post_feed_ids: { type: new GraphQLList(GraphQLID) },
     reviews_ids: { type: new GraphQLList(GraphQLID) },
-    post_feeds: {
-      type: new GraphQLList(FeedTypes),
-      resolve(parent, args) {
-        return Feed.find({ _id: { $in: parent.post_feed_ids } });
-      },
-    },
+
     reviews: {
       type: new GraphQLList(ReviewTypes),
       async resolve(parent, args) {
@@ -108,19 +102,12 @@ const UserType = new GraphQLObjectType({
       async resolve(parent, args) {
         const reviews = await Review.find({ user_id: parent.id });
         const ratings = reviews?.map((review) => review.rating);
-        return ratings
-
+        return ratings;
       },
-    }
+    },
   }),
 });
 
-const FeedType = new GraphQLObjectType({
-  name: 'FeedLink',
-  fields: () => ({
-    link: { type: GraphQLString },
-  }),
-});
 const SocialType = new GraphQLObjectType({
   name: 'Social',
   fields: () => ({
@@ -136,6 +123,6 @@ const SocialType = new GraphQLObjectType({
   }),
 });
 
-export { SocialType, FeedType };
+export { SocialType };
 
 export default UserType;
