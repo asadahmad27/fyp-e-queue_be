@@ -282,19 +282,32 @@ const followUser = {
   },
   async resolve(parent, args) {
     //ading id to the list of user who is currnetly login
-    const currentUser = User.findOne({ _id: args.id });
+    const currentUser = await User.findOne({ _id: args.id });
+    console.log(currentUser)
     if (currentUser.following_ids.includes(args.follower_id)) {
-      let newList = currentUser.following_ids.filter(
-        (item) => item !== args.follower_id
-      );
-      currentUser.following_ids = newList;
+
+      let ind = currentUser.following_ids.indexOf(args.follower_id);
+      currentUser.following_ids.splice(ind, 1)
+
     } else {
+
       currentUser.following_ids.push(args.follower_id);
     }
 
     currentUser.save();
 
-    return currentUser;
+    const currentDisplayUser = await User.findOne({ _id: args.follower_id });
+    if (currentDisplayUser.follower_ids.includes(args.id)) {
+      let ind = currentDisplayUser.follower_ids.indexOf(args.id);
+      currentDisplayUser.follower_ids.splice(ind, 1)
+
+    } else {
+      currentDisplayUser.follower_ids.push(args.id);
+    }
+
+    currentDisplayUser.save();
+    const newCurrentUser = await User.findOne({ _id: args.id });
+    return newCurrentUser;
   },
 };
 

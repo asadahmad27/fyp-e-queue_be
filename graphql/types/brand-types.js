@@ -17,6 +17,22 @@ import { DEFAULT_REVIEW_COUNT, REVIEW_STAT } from '../../constants.js';
 
 const { GraphQLDateTime } = pkg;
 
+// const SocialType = new GraphQLObjectType({
+//   name: 'Social',
+//   fields: () => ({
+//     facebook: { type: GraphQLString },
+//     twitter: { type: GraphQLString },
+//     instagram: { type: GraphQLString },
+//     linkedin: { type: GraphQLString },
+//     youtube: { type: GraphQLString },
+//     telegram: { type: GraphQLString },
+//     soundcloud: { type: GraphQLString },
+//     spotify: { type: GraphQLString },
+//     vkontakte: { type: GraphQLString },
+//   }),
+// });
+
+
 // * BRAND TYPE
 const BrandTypes = new GraphQLObjectType({
   name: 'Brand',
