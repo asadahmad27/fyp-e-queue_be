@@ -6,6 +6,7 @@ import {
   GraphQLNonNull,
   GraphQLEnumType,
   GraphQLID,
+  GraphQLInt
 } from 'graphql';
 import User from '../../models/user.js';
 import Brand from '../../models/brand.js';
@@ -275,6 +276,29 @@ const deleteUser = {
   },
 };
 
+const followUser = {
+  type: GraphQLInt,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    follower_id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  async resolve(parent, args) {
+    const userData = await User.findOne({ id: args.id });
+    if (userData.follower_ids.includes(args.follower_id)) {
+      let ind = userData.follower_ids.indexOf(args.follower_id);
+      userData.follower_ids.splice(ind, 1);
+    }
+    else {
+      userData.follower_ids.push(args.follower_id);
+    }
+
+    await userData.save();
+    return userData;
+
+  },
+};
+
+
 export {
   register,
   login,
@@ -282,4 +306,5 @@ export {
   resetPassword,
   updateUser,
   deleteUser,
+  followUser
 };

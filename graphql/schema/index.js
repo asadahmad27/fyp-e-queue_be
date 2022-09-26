@@ -30,6 +30,7 @@ import {
   resetPassword,
   updateUser,
   deleteUser,
+  followUser
 } from '../mutations/user-mutations.js';
 import {
   updateFaqs,
@@ -112,6 +113,8 @@ const mutation = new GraphQLObjectType({
     updateUser,
     //? DELETE USER
     deleteUser,
+    //?Follow user
+    followUser,
     // * USER MUTATIONS
 
     //  * FAQS MUTATIONS

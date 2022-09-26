@@ -59,6 +59,7 @@ const UserType = new GraphQLObjectType({
     createdAt: { type: GraphQLDateTime },
     updatedAt: { type: GraphQLDateTime },
     post_feed_ids: { type: new GraphQLList(GraphQLID) },
+    follower_ids: { type: new GraphQLList(GraphQLID) },
     reviews_ids: { type: new GraphQLList(GraphQLID) },
     post_feeds: {
       type: new GraphQLList(FeedTypes),
