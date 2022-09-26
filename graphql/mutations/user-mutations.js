@@ -173,63 +173,62 @@ const updateUser = {
   },
   async resolve(parent, args, req) {
     // * CHECK IF TOKEN IS VALID
-    console.log('rello');
-    // if (!req.isAuth) {
-    //   throw new ApolloError('Not authenticated');
-    // }
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
 
-    // if (args?.profile_pic) {
-    //   args.profile_pic = await singleFileUpload(
-    //     args?.profile_pic,
-    //     FILE_KEYS.PROFILE_PICS,
-    //     args.id
-    //   );
-    // }
+    if (args?.profile_pic) {
+      args.profile_pic = await singleFileUpload(
+        args?.profile_pic,
+        FILE_KEYS.PROFILE_PICS,
+        args.id
+      );
+    }
 
-    // let hashedPassword;
-    // if (args.new_password) {
-    //   const salt = await bcrypt.genSalt(10);
-    //   hashedPassword = await bcrypt.hash(args.new_password, salt);
-    // }
+    let hashedPassword;
+    if (args.new_password) {
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(args.new_password, salt);
+    }
 
-    // const data = {
-    //   name: args.name,
-    //   phone: args.phone ?? '',
-    //   country: args.country ?? '',
-    //   city: args.city ?? '',
-    //   last_name: args.last_name ?? '',
-    //   user_name: args.user_name ?? '',
-    //   profile_pic: args.profile_pic ?? '',
-    //   social_links: JSON.parse(args.social_links) ?? {},
-    //   about: args.about ?? '',
-    //   password: hashedPassword,
-    // };
+    const data = {
+      name: args.name,
+      phone: args.phone ?? '',
+      country: args.country ?? '',
+      city: args.city ?? '',
+      last_name: args.last_name ?? '',
+      user_name: args.user_name ?? '',
+      profile_pic: args.profile_pic ?? '',
+      social_links: JSON.parse(args.social_links) ?? {},
+      about: args.about ?? '',
+      password: hashedPassword,
+    };
 
-    // if (!args?.profile_pic) {
-    //   delete data.profile_pic;
-    // }
-    // if (!args?.new_password) {
-    //   delete data.password;
-    // }
+    if (!args?.profile_pic) {
+      delete data.profile_pic;
+    }
+    if (!args?.new_password) {
+      delete data.password;
+    }
 
-    // const options = { new: true };
-    // const updatedUser = await User.findOneAndUpdate(
-    //   { _id: args.id },
-    //   data,
-    //   options
-    // );
+    const options = { new: true };
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: args.id },
+      data,
+      options
+    );
 
-    // // * CREATE AND ASSIGN TOKEN
-    // const token = jwt.sign(
-    //   { _id: updatedUser._id, role: updatedUser.role },
-    //   process.env.TOKEN_SECRET,
-    //   { expiresIn: '24h' }
-    // );
-    // updatedUser.token = token;
-    // updatedUser.token_expirtation = 1;
+    // * CREATE AND ASSIGN TOKEN
+    const token = jwt.sign(
+      { _id: updatedUser._id, role: updatedUser.role },
+      process.env.TOKEN_SECRET,
+      { expiresIn: '24h' }
+    );
+    updatedUser.token = token;
+    updatedUser.token_expirtation = 1;
 
-    // const user = await updatedUser.save();
-    // return user;
+    const user = await updatedUser.save();
+    return user;
   },
 };
 
@@ -276,22 +275,34 @@ const deleteUser = {
 };
 
 const followUser = {
-  type: GraphQLInt,
+  type: UserType,
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
     follower_id: { type: new GraphQLNonNull(GraphQLID) },
   },
   async resolve(parent, args) {
-    const userData = await User.findOne({ id: args.id });
-    if (userData.follower_ids.includes(args.follower_id)) {
-      let ind = userData.follower_ids.indexOf(args.follower_id);
-      userData.follower_ids.splice(ind, 1);
+    //ading id to the list of user who is currnetly login
+    const userData = await User.findById(args.id);
+    if (userData.following_ids.includes(args.follower_id)) {
+      let ind = userData.following_ids.indexOf(args.follower_id);
+      userData.following_ids.splice(ind, 1);
     }
     else {
-      userData.follower_ids.push(args.follower_id);
+      userData.following_ids.push(args.follower_id);
     }
 
     await userData.save();
+
+    //ading id to list of user who just get follow
+    const followingUserData = await User.findById(args.follower_id);
+    if (followingUserData.follower_ids.includes(args.id)) {
+      let ind = followingUserData.follower_ids.indexOf(args.id);
+      followingUserData.follower_ids.splice(ind, 1);
+    }
+    else {
+      followingUserData.follower_ids.push(args.id);
+    }
+    await followingUserData.save();
     return userData;
 
   },
