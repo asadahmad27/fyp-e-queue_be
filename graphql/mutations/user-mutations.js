@@ -172,63 +172,63 @@ const updateUser = {
   },
   async resolve(parent, args, req) {
     // * CHECK IF TOKEN IS VALID
-    console.log('rello');
-    // if (!req.isAuth) {
-    //   throw new ApolloError('Not authenticated');
-    // }
 
-    // if (args?.profile_pic) {
-    //   args.profile_pic = await singleFileUpload(
-    //     args?.profile_pic,
-    //     FILE_KEYS.PROFILE_PICS,
-    //     args.id
-    //   );
-    // }
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
 
-    // let hashedPassword;
-    // if (args.new_password) {
-    //   const salt = await bcrypt.genSalt(10);
-    //   hashedPassword = await bcrypt.hash(args.new_password, salt);
-    // }
+    if (args?.profile_pic) {
+      args.profile_pic = await singleFileUpload(
+        args?.profile_pic,
+        FILE_KEYS.PROFILE_PICS,
+        args.id
+      );
+    }
 
-    // const data = {
-    //   name: args.name,
-    //   phone: args.phone ?? '',
-    //   country: args.country ?? '',
-    //   city: args.city ?? '',
-    //   last_name: args.last_name ?? '',
-    //   user_name: args.user_name ?? '',
-    //   profile_pic: args.profile_pic ?? '',
-    //   social_links: JSON.parse(args.social_links) ?? {},
-    //   about: args.about ?? '',
-    //   password: hashedPassword,
-    // };
+    let hashedPassword;
+    if (args.new_password) {
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(args.new_password, salt);
+    }
 
-    // if (!args?.profile_pic) {
-    //   delete data.profile_pic;
-    // }
-    // if (!args?.new_password) {
-    //   delete data.password;
-    // }
+    const data = {
+      name: args.name,
+      phone: args.phone ?? '',
+      country: args.country ?? '',
+      city: args.city ?? '',
+      last_name: args.last_name ?? '',
+      user_name: args.user_name ?? '',
+      profile_pic: args.profile_pic ?? '',
+      social_links: JSON.parse(args.social_links) ?? {},
+      about: args.about ?? '',
+      password: hashedPassword,
+    };
 
-    // const options = { new: true };
-    // const updatedUser = await User.findOneAndUpdate(
-    //   { _id: args.id },
-    //   data,
-    //   options
-    // );
+    if (!args?.profile_pic) {
+      delete data.profile_pic;
+    }
+    if (!args?.new_password) {
+      delete data.password;
+    }
 
-    // // * CREATE AND ASSIGN TOKEN
-    // const token = jwt.sign(
-    //   { _id: updatedUser._id, role: updatedUser.role },
-    //   process.env.TOKEN_SECRET,
-    //   { expiresIn: '24h' }
-    // );
-    // updatedUser.token = token;
-    // updatedUser.token_expirtation = 1;
+    const options = { new: true };
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: args.id },
+      data,
+      options
+    );
 
-    // const user = await updatedUser.save();
-    // return user;
+    // * CREATE AND ASSIGN TOKEN
+    const token = jwt.sign(
+      { _id: updatedUser._id, role: updatedUser.role },
+      process.env.TOKEN_SECRET,
+      { expiresIn: '24h' }
+    );
+    updatedUser.token = token;
+    updatedUser.token_expirtation = 1;
+
+    const user = await updatedUser.save();
+    return user;
   },
 };
 
