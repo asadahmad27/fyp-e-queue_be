@@ -61,13 +61,10 @@ const UserType = new GraphQLObjectType({
     follower_ids: { type: new GraphQLList(GraphQLID) },
     following_ids: { type: new GraphQLList(GraphQLID) },
     reviews_ids: { type: new GraphQLList(GraphQLID) },
-    follower_feeds: {
-      type: new GraphQLList(ReviewTypes),
-      args: {
-        limit: { type: GraphQLInt },
-      },
+    feeds: {
+      type: new GraphQLList(FeedTypes),
       resolve(parent, args) {
-        return Review.find({ user_id: { $in: parent.follower_ids } });
+        return Feed.find({ user_id: { $in: parent.id } });
       },
     },
     reviews: {
