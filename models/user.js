@@ -44,10 +44,6 @@ const UserSchema = new mongoose.Schema(
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'Feeds',
     },
-    follower_ids: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: 'Users',
-    },
     following_ids: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'Users',

@@ -117,6 +117,13 @@ const deleteFeed = {
       throw new ApolloError('Not authenticated');
     }
 
+    const feedData = await Feed.findOne({ _id: args.id });
+
+    const user = await User.findOne({ _id: feedData.user_id });
+    const newFeeds = user.post_feed_ids.filter((item) => item !== feedData._id);
+    user.post_feed_ids = newFeeds;
+    await user.save();
+
     const feed = await Feed.findByIdAndDelete(args.id);
     return feed;
   },

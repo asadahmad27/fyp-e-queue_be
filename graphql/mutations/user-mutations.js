@@ -6,7 +6,7 @@ import {
   GraphQLNonNull,
   GraphQLEnumType,
   GraphQLID,
-  GraphQLInt
+  GraphQLInt,
 } from 'graphql';
 import User from '../../models/user.js';
 import Brand from '../../models/brand.js';
@@ -282,32 +282,21 @@ const followUser = {
   },
   async resolve(parent, args) {
     //ading id to the list of user who is currnetly login
-    const userData = await User.findById(args.id);
-    if (userData.following_ids.includes(args.follower_id)) {
-      let ind = userData.following_ids.indexOf(args.follower_id);
-      userData.following_ids.splice(ind, 1);
-    }
-    else {
-      userData.following_ids.push(args.follower_id);
+    const currentUser = User.findOne({ _id: args.id });
+    if (currentUser.following_ids.includes(args.follower_id)) {
+      let newList = currentUser.following_ids.filter(
+        (item) => item !== args.follower_id
+      );
+      currentUser.following_ids = newList;
+    } else {
+      currentUser.following_ids.push(args.follower_id);
     }
 
-    await userData.save();
+    currentUser.save();
 
-    //ading id to list of user who just get follow
-    const followingUserData = await User.findById(args.follower_id);
-    if (followingUserData.follower_ids.includes(args.id)) {
-      let ind = followingUserData.follower_ids.indexOf(args.id);
-      followingUserData.follower_ids.splice(ind, 1);
-    }
-    else {
-      followingUserData.follower_ids.push(args.id);
-    }
-    await followingUserData.save();
-    return userData;
-
+    return currentUser;
   },
 };
-
 
 export {
   register,
@@ -316,5 +305,5 @@ export {
   resetPassword,
   updateUser,
   deleteUser,
-  followUser
+  followUser,
 };
