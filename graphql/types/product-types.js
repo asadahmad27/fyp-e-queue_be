@@ -13,6 +13,7 @@ import Review from '../../models/review.js';
 import BrandTypes from './brand-types.js';
 import brand from '../../models/brand.js';
 import ReviewTypes from './review-types.js';
+import { DEFAULT_REVIEW_COUNT } from '../../constants.js';
 const { GraphQLDateTime } = pkg;
 
 // * PRODUCT TYPE
@@ -61,8 +62,11 @@ const ProductTypes = new GraphQLObjectType({
     },
     reviews: {
       type: new GraphQLList(ReviewTypes),
+      args: {
+        limit: { type: GraphQLInt },
+      },
       resolve(parent, args) {
-        return Review.find({ product_id: parent.id }).sort({ timeStamp: -1 });
+        return Review.find({ product_id: parent.id }).skip(args.limit).limit(DEFAULT_REVIEW_COUNT).sort({ timeStamp: -1 });
       },
     },
 

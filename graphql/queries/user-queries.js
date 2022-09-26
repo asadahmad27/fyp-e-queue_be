@@ -20,6 +20,17 @@ const user = {
   type: UserType,
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
+    limit: { type: GraphQLInt },
+  },
+  resolve(parent, args) {
+    return User.findById(args.id);
+  },
+};
+
+const userForAdmin = {
+  type: UserType,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
   },
   resolve(parent, args) {
     return User.findById(args.id);
@@ -34,4 +45,4 @@ const usersCount = {
   },
 };
 
-export { users, user, usersCount };
+export { users, user, usersCount, userForAdmin };
