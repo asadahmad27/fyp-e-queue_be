@@ -16,45 +16,53 @@ const createBrand = {
     about: { type: new GraphQLNonNull(GraphQLString) },
     user_id: { type: new GraphQLNonNull(GraphQLID) },
     logo: { type: new GraphQLNonNull(GraphQLUpload) },
+    social_links: { type: GraphQLString },
+    slogan: { type: GraphQLString },
+
   },
   async resolve(parent, args, req) {
+    console.log(args)
     // * CHECK IF TOKEN IS VALID
-    if (!req.isAuth) {
-      throw new ApolloError('Not authenticated');
-    }
-    const newBrand = new Brand({
-      name: args.name,
-      website: args.website,
-      about: args.about,
-      user_id: args.user_id,
-    });
+    // if (!req.isAuth) {
+    //   throw new ApolloError('Not authenticated');
+    // }
+    // const newBrand = new Brand({
+    //   name: args.name,
+    //   website: args.website,
+    //   about: args.about,
+    //   user_id: args.user_id,
+    //   // social_links: {},
+    //   slogan: args.slogan ?? "",
+    // });
 
-    const savedBrand = await newBrand.save();
+    // const savedBrand = await newBrand.save();
 
-    if (args?.logo) {
-      args.logo = await singleFileUpload(
-        args?.logo,
-        FILE_KEYS.BRAND_LOGO,
-        savedBrand._id
-      );
-    }
+    // if (args?.logo) {
+    //   args.logo = await singleFileUpload(
+    //     args?.logo,
+    //     FILE_KEYS.BRAND_LOGO,
+    //     savedBrand._id
+    //   );
+    // }
 
-    const data = {
-      name: savedBrand.name,
-      website: savedBrand.website,
-      about: savedBrand.about,
-      logo: args.logo,
-      user_id: savedBrand.user_id,
-    };
-    const options = { new: true };
-    const updatedBrand = await Brand.findOneAndUpdate(
-      { _id: savedBrand._id },
-      data,
-      options
-    );
+    // const data = {
+    //   name: savedBrand.name,
+    //   website: savedBrand.website,
+    //   about: savedBrand.about,
+    //   logo: args.logo,
+    //   user_id: savedBrand.user_id,
+    //   // social_links: savedBrand.social_links,
+    //   slogan: savedBrand.slogan
+    // };
+    // const options = { new: true };
+    // const updatedBrand = await Brand.findOneAndUpdate(
+    //   { _id: savedBrand._id },
+    //   data,
+    //   options
+    // );
 
-    const brand = await updatedBrand.save();
-    return brand;
+    // const brand = await updatedBrand.save();
+    // return brand;
   },
 };
 
@@ -64,9 +72,11 @@ const updateBrand = {
     id: { type: new GraphQLNonNull(GraphQLID) },
     user_id: { type: new GraphQLNonNull(GraphQLID) },
     name: { type: new GraphQLNonNull(GraphQLString) },
+    slogan: { type: GraphQLString },
     website: { type: new GraphQLNonNull(GraphQLString) },
     about: { type: new GraphQLNonNull(GraphQLString) },
     logo: { type: GraphQLUpload },
+    social_links: { type: GraphQLString },
   },
   async resolve(parent, args, req) {
     // * CHECK IF TOKEN IS VALID
@@ -87,6 +97,8 @@ const updateBrand = {
       about: args.about ?? '',
       logo: args.logo ?? '',
       user_id: args.user_id ?? '',
+      social_links: JSON.parse(args.social_links) ?? {},
+      slogan: args.slogan ?? "",
     };
 
     if (!args?.logo) {

@@ -7,7 +7,7 @@ import {
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
-import UserTypes from './user-types.js';
+import UserTypes, { SocialType } from './user-types.js';
 import ReviewTypes from './review-types.js';
 import User from '../../models/user.js';
 import Review from '../../models/review.js';
@@ -25,6 +25,8 @@ const BrandTypes = new GraphQLObjectType({
     user_id: { type: GraphQLID },
     name: { type: GraphQLString },
     website: { type: GraphQLString },
+    social_links: { type: SocialType },
+    slogan: { type: GraphQLString },
     logo: {
       type: GraphQLString,
       resolve(parent, args) {

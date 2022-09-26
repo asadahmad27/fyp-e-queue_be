@@ -19,6 +19,13 @@ const BrandSchema = new mongoose.Schema(
       ref: 'Users',
       required: true,
     },
+    slogan: {
+      type: String,
+    },
+    social_links: {
+      type: Object,
+      default: {},
+    },
   },
   {
     timestamps: true,
