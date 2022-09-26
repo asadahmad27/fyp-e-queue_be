@@ -1,5 +1,5 @@
 import { GraphQLSchema, GraphQLObjectType } from 'graphql';
-import { users, user, usersCount } from '../queries/user-queries.js';
+import { users, user, usersCount, userForAdmin } from '../queries/user-queries.js';
 import { faqs, faqsCount } from '../queries/faq-queries.js';
 import { privacyPolicy } from '../queries/privacy-policy-queries.js';
 import { termsConditions } from '../queries/terms-conditions-queries.js';
@@ -16,6 +16,7 @@ import {
   productsCount,
   productsBySearch,
   recentProducts,
+  productForAdmin
 } from '../queries/product-queries.js';
 import {
   reviews, review, reviewsCount,
@@ -64,6 +65,7 @@ const RootQuery = new GraphQLObjectType({
     users,
     user,
     usersCount,
+    userForAdmin,
     //  * FAQS QUERIES
     faqs,
     faqsCount,
@@ -83,6 +85,7 @@ const RootQuery = new GraphQLObjectType({
     productsCount,
     productsBySearch,
     recentProducts,
+    productForAdmin,
     // * REVIEWS QUERIES
     reviews,
     review,

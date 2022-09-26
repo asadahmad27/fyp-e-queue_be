@@ -17,7 +17,7 @@ import ProductTypes from './product-types.js';
 import UserTypes from './user-types.js';
 import Product from '../../models/product.js';
 import Brand from '../../models/brand.js';
-import { USER_ROLES } from '../../constants.js';
+import { DEFAULT_REVIEW_COUNT, USER_ROLES } from '../../constants.js';
 
 const { GraphQLDateTime } = pkg;
 
@@ -62,12 +62,15 @@ const UserType = new GraphQLObjectType({
 
     reviews: {
       type: new GraphQLList(ReviewTypes),
+      args: {
+        limit: { type: GraphQLInt },
+      },
       async resolve(parent, args) {
         const user = await User.findById(parent.id);
 
         if (user?.role === USER_ROLES.USER)
           return Review.find({ user_id: parent.id });
-        return Review.find();
+        return Review.find().skip(args.limit).limit(DEFAULT_REVIEW_COUNT).sort({ timeStamp: -1 });;
       },
     },
     brands: {

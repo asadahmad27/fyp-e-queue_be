@@ -13,7 +13,7 @@ import User from '../../models/user.js';
 import Review from '../../models/review.js';
 import Product from '../../models/product.js';
 import ProductTypes from './product-types.js';
-import { REVIEW_STAT } from '../../constants.js';
+import { DEFAULT_REVIEW_COUNT, REVIEW_STAT } from '../../constants.js';
 
 const { GraphQLDateTime } = pkg;
 
@@ -67,7 +67,7 @@ const BrandTypes = new GraphQLObjectType({
       },
       resolve(parent, args) {
 
-        return Review.find({ brand_id: parent.id }).sort({ timeStamp: -1 }).skip(args.limit).limit(3);
+        return Review.find({ brand_id: parent.id }).skip(args.limit).limit(DEFAULT_REVIEW_COUNT).sort({ timeStamp: -1 });
       },
     },
     reviews_rating: {

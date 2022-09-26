@@ -75,6 +75,17 @@ const product = {
   },
 };
 
+const productForAdmin = {
+  type: ProductTypes,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    limit: { type: GraphQLInt },
+  },
+  resolve(parent, args) {
+    return Product.findById(args.id);
+  },
+};
+
 const recentProducts = {
   type: new GraphQLList(ProductTypes),
   async resolve(parent, args) {
@@ -98,4 +109,4 @@ const productsCount = {
   },
 };
 
-export { products, product, productsCount, recentProducts, productsBySearch };
+export { products, product, productsCount, recentProducts, productsBySearch, productForAdmin };
