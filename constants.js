@@ -6,6 +6,7 @@ const FILE_KEYS = {
   PROFILE_PICS: 'profile_pics',
   BRAND_LOGO: 'brand_logos',
   PRODUCT_IMAGES: 'product_images',
+  FEED_IMAGES: 'feed_images',
 };
 
 const REVIEW_STATUS = {
@@ -14,11 +15,17 @@ const REVIEW_STATUS = {
 };
 
 const REVIEW_STAT = {
-  EXCELLENT: "Excellent",
-  GREAT: "Great",
-  AVERAGE: "Average",
-  BAD: "Bad",
-  POOR: "Poor",
+  EXCELLENT: 'Excellent',
+  GREAT: 'Great',
+  AVERAGE: 'Average',
+  BAD: 'Bad',
+  POOR: 'Poor',
 };
 const DEFAULT_REVIEW_COUNT = 10;
-export { USER_ROLES, FILE_KEYS, REVIEW_STATUS, REVIEW_STAT, DEFAULT_REVIEW_COUNT };
+export {
+  USER_ROLES,
+  FILE_KEYS,
+  REVIEW_STATUS,
+  REVIEW_STAT,
+  DEFAULT_REVIEW_COUNT,
+};
