@@ -31,8 +31,10 @@ const userForAdmin = {
   type: UserType,
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
+    limit: { type: GraphQLInt },
   },
   resolve(parent, args) {
+    console.log(limit)
     return User.findById(args.id);
   },
 };

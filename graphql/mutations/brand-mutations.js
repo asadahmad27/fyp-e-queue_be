@@ -21,7 +21,7 @@ const createBrand = {
 
   },
   async resolve(parent, args, req) {
-    console.log(args)
+
     // * CHECK IF TOKEN IS VALID
     if (!req.isAuth) {
       throw new ApolloError('Not authenticated');

@@ -29,6 +29,7 @@ import {
   reviewsCount,
   recentBrandReviews,
   recentProductReviews,
+  recentReviews
 } from '../queries/review-queries.js';
 import {
   register,
@@ -37,7 +38,11 @@ import {
   resetPassword,
   updateUser,
   deleteUser,
-  followUser
+  followUser,
+  verifyUser,
+  suspendUser,
+  SendUserMsgOnLogin,
+  totalReviewsAllowed
 } from '../mutations/user-mutations.js';
 import {
   updateFaqs,
@@ -105,6 +110,7 @@ const RootQuery = new GraphQLObjectType({
     reviewsCount,
     recentBrandReviews,
     recentProductReviews,
+    recentReviews
   },
 });
 
@@ -127,6 +133,14 @@ const mutation = new GraphQLObjectType({
     deleteUser,
     //?Follow user
     followUser,
+    //? VERIFY USER
+    verifyUser,
+    //? SUSPEND USER
+    suspendUser,
+    //? SEND THE WELCOME MSG TO USER
+    SendUserMsgOnLogin,
+    //?TOTAL REVIEWS ALLOW PER DAY / PER WEEK
+    totalReviewsAllowed,
     // * USER MUTATIONS
 
     //  * FAQS MUTATIONS

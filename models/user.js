@@ -40,6 +40,26 @@ const UserSchema = new mongoose.Schema(
       type: Object,
       default: {},
     },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
+    suspended: {
+      type: Boolean,
+      default: false,
+    },
+    send_msg_on_login: {
+      type: Boolean,
+      default: false,
+    },
+    total_reviews_allowed: {
+      type: Number,
+      default: 30,
+    },
+    total_reviews_done: {
+      type: Number,
+      default: 0,
+    },
     post_feed_ids: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'Feeds',

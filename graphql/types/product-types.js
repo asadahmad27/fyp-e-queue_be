@@ -66,7 +66,13 @@ const ProductTypes = new GraphQLObjectType({
         limit: { type: GraphQLInt },
       },
       resolve(parent, args) {
-        return Review.find({ product_id: parent.id }).skip(args.limit).limit(DEFAULT_REVIEW_COUNT).sort({ timeStamp: -1 });
+        if (args.limit) {
+          return Review.find({ product_id: parent.id }).skip(args.limit).limit(DEFAULT_REVIEW_COUNT).sort({ timeStamp: -1 });
+        }
+        else {
+          return Review.find({ product_id: parent.id })
+        }
+
       },
     },
 

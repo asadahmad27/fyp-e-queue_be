@@ -4,6 +4,7 @@ import {
   GraphQLString,
   GraphQLInt,
   GraphQLList,
+  GraphQLBoolean,
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
@@ -61,6 +62,17 @@ const UserType = new GraphQLObjectType({
     follower_ids: { type: new GraphQLList(GraphQLID) },
     following_ids: { type: new GraphQLList(GraphQLID) },
     reviews_ids: { type: new GraphQLList(GraphQLID) },
+    verified: { type: GraphQLBoolean },
+    suspended: { type: GraphQLBoolean },
+    send_msg_on_login: { type: GraphQLBoolean },
+    total_reviews_allowed: { type: GraphQLInt },
+    total_reviews_done: { type: GraphQLInt },
+    recent_reviews_feed: {
+      type: new GraphQLList(ReviewTypes),
+      resolve(parent, args) {
+        return Review.find({ user_id: { $in: parent.following_ids } }).limit(10).sort({ timeStamp: -1 });
+      },
+    },
     feeds: {
       type: new GraphQLList(FeedTypes),
       resolve(parent, args) {

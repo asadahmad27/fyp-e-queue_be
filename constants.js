@@ -21,7 +21,7 @@ const REVIEW_STAT = {
   BAD: 'Bad',
   POOR: 'Poor',
 };
-const DEFAULT_REVIEW_COUNT = 10;
+const DEFAULT_REVIEW_COUNT = 2;
 export {
   USER_ROLES,
   FILE_KEYS,

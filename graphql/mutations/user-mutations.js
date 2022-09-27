@@ -7,6 +7,7 @@ import {
   GraphQLEnumType,
   GraphQLID,
   GraphQLInt,
+  GraphQLBoolean,
 } from 'graphql';
 import User from '../../models/user.js';
 import Brand from '../../models/brand.js';
@@ -274,6 +275,8 @@ const deleteUser = {
   },
 };
 
+
+
 const followUser = {
   type: UserType,
   args: {
@@ -283,7 +286,6 @@ const followUser = {
   async resolve(parent, args) {
     //ading id to the list of user who is currnetly login
     const currentUser = await User.findOne({ _id: args.id });
-    console.log(currentUser)
     if (currentUser.following_ids.includes(args.follower_id)) {
 
       let ind = currentUser.following_ids.indexOf(args.follower_id);
@@ -311,6 +313,79 @@ const followUser = {
   },
 };
 
+const verifyUser = {
+  type: UserType,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    status: { type: GraphQLBoolean }
+  },
+
+  async resolve(parent, args) {
+    const options = { new: true };
+    const updateUser = await User.findOneAndUpdate(
+      { _id: args.id },
+      { verified: args.status },
+      options
+    );
+    return updateUser;
+  },
+};
+
+const suspendUser = {
+  type: UserType,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    status: { type: GraphQLBoolean }
+  },
+
+  async resolve(parent, args) {
+    const options = { new: true };
+    const updateUser = await User.findOneAndUpdate(
+      { _id: args.id },
+      { suspended: args.status },
+      options
+    );
+    return updateUser;
+  },
+};
+
+const SendUserMsgOnLogin = {
+  type: UserType,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    status: { type: GraphQLBoolean }
+  },
+
+  async resolve(parent, args) {
+    const options = { new: true };
+    const updateUser = await User.findOneAndUpdate(
+      { _id: args.id },
+      { send_msg_on_login: args.status },
+      options
+    );
+    return updateUser;
+  },
+};
+
+const totalReviewsAllowed = {
+  type: UserType,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    count: { type: GraphQLInt }
+  },
+
+  async resolve(parent, args) {
+    const options = { new: true };
+    const updateUser = await User.findOneAndUpdate(
+      { _id: args.id },
+      { total_reviews_allowed: args.count },
+      options
+    );
+    return updateUser;
+  },
+};
+
+
 export {
   register,
   login,
@@ -319,4 +394,8 @@ export {
   updateUser,
   deleteUser,
   followUser,
+  verifyUser,
+  suspendUser,
+  SendUserMsgOnLogin,
+  totalReviewsAllowed
 };

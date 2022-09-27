@@ -2,6 +2,7 @@ import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLInt } from 'graphql';
 import Review from '../../models/review.js';
 import ReviewTypes from '../types/review-types.js';
 import { ApolloError } from 'apollo-server-errors';
+import User from '../../models/user.js';
 
 const reviews = {
   type: new GraphQLList(ReviewTypes),
@@ -57,6 +58,17 @@ const reviewsCount = {
   },
 };
 
+const recentReviews = {
+  type: new GraphQLList(ReviewTypes),
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+
+  async resolve(parent, args) {
+    const userData = await User.findById(args.id);
+    return await Review.find({ user_id: { $in: userData.following_ids } }).sort({ timeStamp: -1 });
+  },
+}
 export {
-  reviews, review, reviewsCount, recentBrandReviews, recentProductReviews
+  reviews, review, reviewsCount, recentBrandReviews, recentProductReviews, recentReviews
 };
