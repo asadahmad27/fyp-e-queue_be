@@ -9,8 +9,8 @@ import {
 } from 'graphql';
 import Review from '../../models/review.js';
 import User from '../../models/user.js';
-import ReviewTypes from '../types/review-types.js';
-import { REVIEW_STATUS } from '../../constants.js';
+import ReviewTypes, { ReactionType } from '../types/review-types.js';
+import { REVIEW_STATUS, REVIEW_NOT_ALLOWED } from '../../constants.js';
 
 const createBrandReview = {
   type: ReviewTypes,
@@ -42,6 +42,13 @@ const createBrandReview = {
     if (!req.isAuth) {
       throw new ApolloError('Not authenticated');
     }
+
+    const user = await User.findOne({ _id: args.user_id });
+
+    if (user.total_reviews_allowed === total_reviews_done) {
+      throw new ApolloError(REVIEW_NOT_ALLOWED);
+    }
+
     const newReview = new Review({
       user_id: args.user_id,
       rating: args.rating,
@@ -59,7 +66,7 @@ const createBrandReview = {
 
     const review = await newReview.save();
     const options = { new: true };
-    const userData = await User.findById(args.user_id)
+    const userData = await User.findById(args.user_id);
     await User.findOneAndUpdate(
       { _id: args.user_id },
       { total_reviews_done: userData.total_reviews_done + 1 },
@@ -107,6 +114,13 @@ const createProductReview = {
     if (!req.isAuth) {
       throw new ApolloError('Not authenticated');
     }
+
+    const user = await User.findOne({ _id: args.user_id });
+
+    if (user.total_reviews_allowed === total_reviews_done) {
+      throw new ApolloError(REVIEW_NOT_ALLOWED);
+    }
+
     const newReview = new Review({
       user_id: args.user_id,
       rating: args.rating,
@@ -317,6 +331,71 @@ const updateReviewStatus = {
   },
 };
 
+const addReactions = {
+  type: ReactionType,
+  args: {
+    review_id: { type: new GraphQLNonNull(GraphQLID) },
+    emoji: { type: new GraphQLNonNull(GraphQLString) },
+    by: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  async resolve(parent, args, req) {
+    // * CHECK IF TOKEN IS VALID
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
+    const review = await Review.findOne({ _id: args.review_id });
+    const newData = {
+      review_id: args.review_id,
+      emoji: args.emoji,
+      by: args.by,
+    };
+    review.reactions.push(newData);
+    review.save();
+
+    return newData;
+  },
+};
+const updateReactions = {
+  type: ReactionType,
+  args: {
+    review_id: { type: new GraphQLNonNull(GraphQLID) },
+    emoji: { type: new GraphQLNonNull(GraphQLString) },
+    by: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  async resolve(parent, args, req) {
+    // * CHECK IF TOKEN IS VALID
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
+    const review = await Review.findOne({ _id: args.review_id });
+
+    const newData = {
+      review_id: args.review_id,
+      emoji: args.emoji,
+      by: args.by,
+    };
+    const newArray = review.reactions.map((item) => {
+      if (item.by === args.by) {
+        return {
+          review_id: args.review_id,
+          emoji: args.emoji,
+          by: args.by,
+        };
+      }
+      return item;
+    });
+
+    const data = {
+      reactions: newArray,
+    };
+
+    const options = { new: true };
+    await Review.findOneAndUpdate({ _id: args.review_id }, data, options);
+
+    return newData;
+  },
+};
+
 export {
   createBrandReview,
   updateBrandReview,
@@ -324,4 +403,6 @@ export {
   updateReviewStatus,
   updateProductReview,
   createProductReview,
+  addReactions,
+  updateReactions,
 };

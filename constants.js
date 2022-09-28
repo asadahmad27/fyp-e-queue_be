@@ -31,3 +31,4 @@ export {
 };
 
 export const SUSPENDED = 'suspended';
+export const REVIEW_NOT_ALLOWED = 'review-not-allowed';
