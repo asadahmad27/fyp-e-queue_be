@@ -29,3 +29,5 @@ export {
   REVIEW_STAT,
   DEFAULT_REVIEW_COUNT,
 };
+
+export const SUSPENDED = 'suspended';

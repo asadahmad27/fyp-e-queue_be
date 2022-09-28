@@ -14,7 +14,7 @@ import Brand from '../../models/brand.js';
 import Product from '../../models/product.js';
 import Review from '../../models/review.js';
 import UserType from '../types/user-types.js';
-import { USER_ROLES, FILE_KEYS } from '../../constants.js';
+import { USER_ROLES, FILE_KEYS, SUSPENDED } from '../../constants.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
 import { singleFileUpload } from '../schema/s3.js';
 
@@ -81,6 +81,11 @@ const login = {
     if (!user) {
       throw new ApolloError('User does not exist');
     }
+
+    if (user.suspended) {
+      throw new ApolloError(SUSPENDED);
+    }
+
     //   * COMPARE HASHED PASSWORD
     const isMatch = await bcrypt.compare(args.password, user.password);
     if (!isMatch) {
@@ -275,8 +280,6 @@ const deleteUser = {
   },
 };
 
-
-
 const followUser = {
   type: UserType,
   args: {
@@ -287,12 +290,9 @@ const followUser = {
     //ading id to the list of user who is currnetly login
     const currentUser = await User.findOne({ _id: args.id });
     if (currentUser.following_ids.includes(args.follower_id)) {
-
       let ind = currentUser.following_ids.indexOf(args.follower_id);
-      currentUser.following_ids.splice(ind, 1)
-
+      currentUser.following_ids.splice(ind, 1);
     } else {
-
       currentUser.following_ids.push(args.follower_id);
     }
 
@@ -301,8 +301,7 @@ const followUser = {
     const currentDisplayUser = await User.findOne({ _id: args.follower_id });
     if (currentDisplayUser.follower_ids.includes(args.id)) {
       let ind = currentDisplayUser.follower_ids.indexOf(args.id);
-      currentDisplayUser.follower_ids.splice(ind, 1)
-
+      currentDisplayUser.follower_ids.splice(ind, 1);
     } else {
       currentDisplayUser.follower_ids.push(args.id);
     }
@@ -317,7 +316,7 @@ const verifyUser = {
   type: UserType,
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
-    status: { type: GraphQLBoolean }
+    status: { type: GraphQLBoolean },
   },
 
   async resolve(parent, args) {
@@ -335,7 +334,7 @@ const suspendUser = {
   type: UserType,
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
-    status: { type: GraphQLBoolean }
+    status: { type: GraphQLBoolean },
   },
 
   async resolve(parent, args) {
@@ -353,7 +352,7 @@ const SendUserMsgOnLogin = {
   type: UserType,
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
-    status: { type: GraphQLBoolean }
+    status: { type: GraphQLBoolean },
   },
 
   async resolve(parent, args) {
@@ -371,7 +370,7 @@ const totalReviewsAllowed = {
   type: UserType,
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
-    count: { type: GraphQLInt }
+    count: { type: GraphQLInt },
   },
 
   async resolve(parent, args) {
@@ -385,7 +384,6 @@ const totalReviewsAllowed = {
   },
 };
 
-
 export {
   register,
   login,
@@ -397,5 +395,5 @@ export {
   verifyUser,
   suspendUser,
   SendUserMsgOnLogin,
-  totalReviewsAllowed
+  totalReviewsAllowed,
 };
