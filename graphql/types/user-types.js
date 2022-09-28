@@ -86,7 +86,6 @@ const UserType = new GraphQLObjectType({
       },
       async resolve(parent, args) {
         const user = await User.findById(parent.id);
-
         if (user?.role === USER_ROLES.USER)
           return Review.find({ user_id: parent.id });
         return Review.find()

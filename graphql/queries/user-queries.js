@@ -34,7 +34,6 @@ const userForAdmin = {
     limit: { type: GraphQLInt },
   },
   resolve(parent, args) {
-    console.log(limit)
     return User.findById(args.id);
   },
 };
