@@ -22,7 +22,7 @@ const app = express();
 // * CONNECT DATABASE
 connectDB();
 
-//  * RESET REVIEWS DONE COUNT TO = 0
+//  * RESET REVIEWS DONE COUNT TO = 0 EVERY MIDNIGHT
 cron.schedule('0 0 * * *', () => {
   User.find({ role: USER_ROLES.USER }).then((users) => {
     users.forEach((user) => {

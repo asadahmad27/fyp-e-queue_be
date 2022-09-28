@@ -1,6 +1,5 @@
 import { ApolloError } from 'apollo-server-errors';
 import { GraphQLString, GraphQLNonNull, GraphQLID } from 'graphql';
-import Brand from '../../models/brand.js';
 import Review from '../../models/review.js';
 import Product from '../../models/product.js';
 import ProductTypes from '../types/product-types.js';

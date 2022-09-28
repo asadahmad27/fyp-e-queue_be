@@ -101,6 +101,13 @@ const ReviewSchema = new mongoose.Schema(
         answer: String,
       },
     ],
+    reactions: [
+      {
+        review_id: mongoose.Schema.Types.ObjectId,
+        emoji: String,
+        by: String,
+      },
+    ],
   },
   {
     timestamps: true,

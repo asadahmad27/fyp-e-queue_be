@@ -46,7 +46,7 @@ const ReviewTypes = new GraphQLObjectType({
     createdAt: { type: GraphQLDateTime },
     updatedAt: { type: GraphQLDateTime },
     faqs: { type: new GraphQLList(FaqsTypes) },
-
+    reactions: { type: new GraphQLList(ReactionType) },
     user: {
       type: UserTypes,
       resolve(parent, args) {
@@ -82,5 +82,16 @@ export const FaqsTypes = new GraphQLObjectType({
     answer: { type: GraphQLString },
   }),
 });
+
+const ReactionType = new GraphQLObjectType({
+  name: 'ReactionsType',
+  fields: () => ({
+    review_id: { type: GraphQLID },
+    emoji: { type: GraphQLString },
+    by: { type: GraphQLString },
+  }),
+});
+
+export { ReactionType };
 
 export default ReviewTypes;

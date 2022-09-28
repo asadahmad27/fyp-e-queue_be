@@ -9,7 +9,7 @@ import {
 } from 'graphql';
 import Review from '../../models/review.js';
 import User from '../../models/user.js';
-import ReviewTypes from '../types/review-types.js';
+import ReviewTypes, { ReactionType } from '../types/review-types.js';
 import { REVIEW_STATUS, REVIEW_NOT_ALLOWED } from '../../constants.js';
 
 const createBrandReview = {
@@ -331,6 +331,71 @@ const updateReviewStatus = {
   },
 };
 
+const addReactions = {
+  type: ReactionType,
+  args: {
+    review_id: { type: new GraphQLNonNull(GraphQLID) },
+    emoji: { type: new GraphQLNonNull(GraphQLString) },
+    by: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  async resolve(parent, args, req) {
+    // * CHECK IF TOKEN IS VALID
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
+    const review = await Review.findOne({ _id: args.review_id });
+    const newData = {
+      review_id: args.review_id,
+      emoji: args.emoji,
+      by: args.by,
+    };
+    review.reactions.push(newData);
+    review.save();
+
+    return newData;
+  },
+};
+const updateReactions = {
+  type: ReactionType,
+  args: {
+    review_id: { type: new GraphQLNonNull(GraphQLID) },
+    emoji: { type: new GraphQLNonNull(GraphQLString) },
+    by: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  async resolve(parent, args, req) {
+    // * CHECK IF TOKEN IS VALID
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
+    const review = await Review.findOne({ _id: args.review_id });
+
+    const newData = {
+      review_id: args.review_id,
+      emoji: args.emoji,
+      by: args.by,
+    };
+    const newArray = review.reactions.map((item) => {
+      if (item.by === args.by) {
+        return {
+          review_id: args.review_id,
+          emoji: args.emoji,
+          by: args.by,
+        };
+      }
+      return item;
+    });
+
+    const data = {
+      reactions: newArray,
+    };
+
+    const options = { new: true };
+    await Review.findOneAndUpdate({ _id: args.review_id }, data, options);
+
+    return newData;
+  },
+};
+
 export {
   createBrandReview,
   updateBrandReview,
@@ -338,4 +403,6 @@ export {
   updateReviewStatus,
   updateProductReview,
   createProductReview,
+  addReactions,
+  updateReactions,
 };

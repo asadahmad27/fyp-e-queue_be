@@ -70,7 +70,9 @@ const UserType = new GraphQLObjectType({
     recent_reviews_feed: {
       type: new GraphQLList(ReviewTypes),
       resolve(parent, args) {
-        return Review.find({ user_id: { $in: parent.following_ids } }).limit(10).sort({ timeStamp: -1 });
+        return Review.find({ user_id: { $in: parent.following_ids } })
+          .limit(10)
+          .sort({ timeStamp: -1 });
       },
     },
     feeds: {

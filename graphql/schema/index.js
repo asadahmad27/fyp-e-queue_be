@@ -29,7 +29,7 @@ import {
   reviewsCount,
   recentBrandReviews,
   recentProductReviews,
-  recentReviews
+  recentReviews,
 } from '../queries/review-queries.js';
 import {
   register,
@@ -42,7 +42,7 @@ import {
   verifyUser,
   suspendUser,
   SendUserMsgOnLogin,
-  totalReviewsAllowed
+  totalReviewsAllowed,
 } from '../mutations/user-mutations.js';
 import {
   updateFaqs,
@@ -68,6 +68,8 @@ import {
   updateReviewStatus,
   updateProductReview,
   createProductReview,
+  addReactions,
+  updateReactions,
 } from '../mutations/review-mutations.js';
 import {
   createFeed,
@@ -110,7 +112,7 @@ const RootQuery = new GraphQLObjectType({
     reviewsCount,
     recentBrandReviews,
     recentProductReviews,
-    recentReviews
+    recentReviews,
   },
 });
 
@@ -194,6 +196,8 @@ const mutation = new GraphQLObjectType({
     deleteReview,
     //  ? ? UPDATE REVIEW STATUS
     updateReviewStatus,
+    addReactions,
+    updateReactions,
     //  * BRAND REVIEW MUTATIONS
 
     //  * FEED MUTATIONS
