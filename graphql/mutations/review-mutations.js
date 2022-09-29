@@ -6,6 +6,7 @@ import {
   GraphQLID,
   GraphQLList,
   GraphQLEnumType,
+  GraphQLFloat,
 } from 'graphql';
 import Review from '../../models/review.js';
 import User from '../../models/user.js';
@@ -16,12 +17,12 @@ const createBrandReview = {
   type: ReviewTypes,
   args: {
     user_id: { type: new GraphQLNonNull(GraphQLID) },
-    rating: { type: new GraphQLNonNull(GraphQLInt) },
-    aesthetics: { type: new GraphQLNonNull(GraphQLInt) },
-    customer_service: { type: new GraphQLNonNull(GraphQLInt) },
-    sustainability: { type: new GraphQLNonNull(GraphQLInt) },
-    branding: { type: new GraphQLNonNull(GraphQLInt) },
-    price_point: { type: new GraphQLNonNull(GraphQLInt) },
+    rating: { type: new GraphQLNonNull(GraphQLFloat) },
+    aesthetics: { type: new GraphQLNonNull(GraphQLFloat) },
+    customer_service: { type: new GraphQLNonNull(GraphQLFloat) },
+    sustainability: { type: new GraphQLNonNull(GraphQLFloat) },
+    branding: { type: new GraphQLNonNull(GraphQLFloat) },
+    price_point: { type: new GraphQLNonNull(GraphQLFloat) },
     message: { type: GraphQLString },
     history: { type: GraphQLString },
     tags: { type: new GraphQLNonNull(new GraphQLList(GraphQLString)) },
@@ -45,7 +46,7 @@ const createBrandReview = {
 
     const user = await User.findOne({ _id: args.user_id });
 
-    if (user.total_reviews_allowed === total_reviews_done) {
+    if (user.total_reviews_allowed === user.total_reviews_done) {
       throw new ApolloError(REVIEW_NOT_ALLOWED);
     }
 
@@ -55,7 +56,7 @@ const createBrandReview = {
       aesthetics: args.aesthetics,
       customer_service: args.customer_service,
       sustainability: args.sustainability,
-      price_points: args.price_points,
+      price_point: args.price_points,
       branding: args.branding,
       message: args.message ?? '',
       history: args.history ?? '',
@@ -82,14 +83,14 @@ const createProductReview = {
   type: ReviewTypes,
   args: {
     user_id: { type: new GraphQLNonNull(GraphQLID) },
-    rating: { type: new GraphQLNonNull(GraphQLInt) },
-    appearance: { type: new GraphQLNonNull(GraphQLInt) },
-    nutritional_value: { type: new GraphQLNonNull(GraphQLInt) },
-    scent: { type: new GraphQLNonNull(GraphQLInt) },
-    affordability: { type: new GraphQLNonNull(GraphQLInt) },
-    texture: { type: new GraphQLNonNull(GraphQLInt) },
-    packaging: { type: new GraphQLNonNull(GraphQLInt) },
-    taste: { type: new GraphQLNonNull(GraphQLInt) },
+    rating: { type: new GraphQLNonNull(GraphQLFloat) },
+    appearance: { type: new GraphQLNonNull(GraphQLFloat) },
+    nutritional_value: { type: new GraphQLNonNull(GraphQLFloat) },
+    scent: { type: new GraphQLNonNull(GraphQLFloat) },
+    affordability: { type: new GraphQLNonNull(GraphQLFloat) },
+    texture: { type: new GraphQLNonNull(GraphQLFloat) },
+    packaging: { type: new GraphQLNonNull(GraphQLFloat) },
+    taste: { type: new GraphQLNonNull(GraphQLFloat) },
     message: { type: GraphQLString },
     tags: { type: new GraphQLNonNull(new GraphQLList(GraphQLString)) },
     specific_types: {
@@ -117,7 +118,7 @@ const createProductReview = {
 
     const user = await User.findOne({ _id: args.user_id });
 
-    if (user.total_reviews_allowed === total_reviews_done) {
+    if (user.total_reviews_allowed === user.total_reviews_done) {
       throw new ApolloError(REVIEW_NOT_ALLOWED);
     }
 
@@ -160,12 +161,12 @@ const updateBrandReview = {
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
     user_id: { type: new GraphQLNonNull(GraphQLID) },
-    rating: { type: new GraphQLNonNull(GraphQLInt) },
-    aesthetics: { type: new GraphQLNonNull(GraphQLInt) },
-    customer_service: { type: new GraphQLNonNull(GraphQLInt) },
-    sustainability: { type: new GraphQLNonNull(GraphQLInt) },
-    branding: { type: new GraphQLNonNull(GraphQLInt) },
-    price_points: { type: new GraphQLNonNull(GraphQLInt) },
+    rating: { type: new GraphQLNonNull(GraphQLFloat) },
+    aesthetics: { type: new GraphQLNonNull(GraphQLFloat) },
+    customer_service: { type: new GraphQLNonNull(GraphQLFloat) },
+    sustainability: { type: new GraphQLNonNull(GraphQLFloat) },
+    branding: { type: new GraphQLNonNull(GraphQLFloat) },
+    price_point: { type: new GraphQLNonNull(GraphQLFloat) },
     message: { type: GraphQLString },
     history: { type: GraphQLString },
     tags: { type: new GraphQLNonNull(new GraphQLList(GraphQLString)) },
@@ -217,18 +218,18 @@ const updateProductReview = {
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
     user_id: { type: new GraphQLNonNull(GraphQLID) },
-    rating: { type: new GraphQLNonNull(GraphQLInt) },
-    appearance: { type: new GraphQLNonNull(GraphQLInt) },
-    nutritional_value: { type: new GraphQLNonNull(GraphQLInt) },
-    packaging: { type: new GraphQLNonNull(GraphQLInt) },
-    taste: { type: new GraphQLNonNull(GraphQLInt) },
-    scent: { type: new GraphQLNonNull(GraphQLInt) },
-    affordability: { type: new GraphQLNonNull(GraphQLInt) },
-    texture: { type: new GraphQLNonNull(GraphQLInt) },
+    rating: { type: new GraphQLNonNull(GraphQLFloat) },
+    appearance: { type: new GraphQLNonNull(GraphQLFloat) },
+    nutritional_value: { type: new GraphQLNonNull(GraphQLFloat) },
+    scent: { type: new GraphQLNonNull(GraphQLFloat) },
+    affordability: { type: new GraphQLNonNull(GraphQLFloat) },
+    texture: { type: new GraphQLNonNull(GraphQLFloat) },
+    packaging: { type: new GraphQLNonNull(GraphQLFloat) },
+    taste: { type: new GraphQLNonNull(GraphQLFloat) },
     message: { type: GraphQLString },
     tags: { type: new GraphQLNonNull(new GraphQLList(GraphQLString)) },
     specific_types: {
-      type: new GraphQLNonNull(new GraphQLList(GraphQLString)),
+      type: new GraphQLList(GraphQLString),
     },
     benefits: { type: new GraphQLNonNull(new GraphQLList(GraphQLString)) },
     product_id: { type: new GraphQLNonNull(GraphQLID) },

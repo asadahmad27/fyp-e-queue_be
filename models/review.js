@@ -27,7 +27,7 @@ const ReviewSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    price_points: {
+    price_point: {
       type: Number,
       default: 0,
     },
