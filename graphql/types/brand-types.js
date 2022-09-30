@@ -91,6 +91,7 @@ const BrandTypes = new GraphQLObjectType({
         const reviews = await Review.find({ brand_id: parent.id });
         const reviews_count = reviews?.length;
         const ratings = reviews?.map((review) => review.rating);
+
         const rating_count = ratings.reduce(
           (previousValue, currentValue) => previousValue + currentValue,
           initialValue
