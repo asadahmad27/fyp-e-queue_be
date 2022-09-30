@@ -88,7 +88,10 @@ const UserType = new GraphQLObjectType({
         limit: { type: GraphQLInt },
       },
       async resolve(parent, args) {
-        return Review.find({ user_id: parent.id });
+        const user = await User.findById(parent.id);
+        if (user?.role === USER_ROLES.USER)
+          return Review.find({ user_id: parent.id });
+        return Review.find();
       },
     },
     brands: {
