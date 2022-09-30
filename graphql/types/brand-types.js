@@ -4,7 +4,7 @@ import {
   GraphQLString,
   GraphQLList,
   GraphQLInt,
-  GraphQLFloat
+  GraphQLFloat,
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
@@ -32,7 +32,6 @@ const { GraphQLDateTime } = pkg;
 //     vkontakte: { type: GraphQLString },
 //   }),
 // });
-
 
 // * BRAND TYPE
 const BrandTypes = new GraphQLObjectType({
@@ -86,11 +85,13 @@ const BrandTypes = new GraphQLObjectType({
       },
       resolve(parent, args) {
         if (args.limit) {
-          return Review.find({ brand_id: parent.id }).skip(args.limit).limit(DEFAULT_REVIEW_COUNT).sort({ timeStamp: -1 });
-        } else {
           return Review.find({ brand_id: parent.id })
+            .skip(args.limit)
+            .limit(DEFAULT_REVIEW_COUNT)
+            .sort({ timeStamp: -1 });
+        } else {
+          return Review.find({ brand_id: parent.id });
         }
-
       },
     },
     reviews_rating: {
