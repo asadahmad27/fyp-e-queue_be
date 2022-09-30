@@ -4,6 +4,7 @@ import {
   GraphQLString,
   GraphQLList,
   GraphQLInt,
+  GraphQLFloat
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
@@ -127,7 +128,7 @@ const BrandTypes = new GraphQLObjectType({
       },
     },
     reviews_stat: {
-      type: new GraphQLList(GraphQLInt),
+      type: new GraphQLList(GraphQLFloat),
       async resolve(parent, args) {
         const reviews = await Review.find({ brand_id: parent.id });
         const ratings = reviews?.map((review) => review.rating);
