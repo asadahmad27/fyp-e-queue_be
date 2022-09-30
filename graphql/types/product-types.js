@@ -96,9 +96,22 @@ const ProductTypes = new GraphQLObjectType({
       async resolve(parent) {
         let array = [];
         const reviews = await Review.find({ product_id: parent.id });
-        reviews?.map((review) => {
-          return (array = [...review.tags]);
-        });
+        reviews?.map((review) =>
+          review?.tags?.map((tag) => {
+            array.push(tag);
+          })
+        );
+        reviews?.map((review) =>
+          review?.benefits?.map((benefit) => {
+            array.push(benefit);
+          })
+        );
+
+        reviews?.map((review) =>
+          review?.specific_types?.map((type) => {
+            array.push(type);
+          })
+        );
 
         function onlyUnique(value, index, self) {
           return self.indexOf(value) === index;
