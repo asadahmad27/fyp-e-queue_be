@@ -105,9 +105,12 @@ const BrandTypes = new GraphQLObjectType({
       async resolve(parent) {
         let array = [];
         const reviews = await Review.find({ brand_id: parent.id });
-        reviews?.map((review) => {
-          return (array = [...review.tags]);
-        });
+
+        reviews?.map((review) =>
+          review.tags.map((tag) => {
+            array.push(tag);
+          })
+        );
 
         function onlyUnique(value, index, self) {
           return self.indexOf(value) === index;
