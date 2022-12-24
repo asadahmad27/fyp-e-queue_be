@@ -6,6 +6,7 @@ import {
 import {
   register,
   login,
+  updateUser
 } from '../mutations/user-mutations.js';
 
 //  * QUERIES
@@ -28,7 +29,8 @@ const mutation = new GraphQLObjectType({
     register,
     // ? LOGIN USER
     login,
-    // ? EMAIL CONFIRMATION
+    // ? PROFILE UPDATE
+    updateUser
 
   },
 });

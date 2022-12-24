@@ -19,11 +19,12 @@ const UserType = new GraphQLObjectType({
     name: { type: GraphQLString },
     email: { type: GraphQLString },
     phone: { type: GraphQLString },
-    country: { type: GraphQLString },
+    province: { type: GraphQLString },
     city: { type: GraphQLString },
     last_name: { type: GraphQLString },
     password: { type: GraphQLString },
-    new_password: { type: GraphQLString },
+    // new_password: { type: GraphQLString },
+    about: { type: GraphQLString },
     role: { type: GraphQLString },
     profile_pic: {
       type: GraphQLString,
@@ -117,21 +118,21 @@ const UserType = new GraphQLObjectType({
   }),
 });
 
-const SocialType = new GraphQLObjectType({
-  name: 'Social',
-  fields: () => ({
-    facebook: { type: GraphQLString },
-    twitter: { type: GraphQLString },
-    instagram: { type: GraphQLString },
-    linkedin: { type: GraphQLString },
-    youtube: { type: GraphQLString },
-    telegram: { type: GraphQLString },
-    soundcloud: { type: GraphQLString },
-    spotify: { type: GraphQLString },
-    vkontakte: { type: GraphQLString },
-  }),
-});
+// const SocialType = new GraphQLObjectType({
+//   name: 'Social',
+//   fields: () => ({
+//     facebook: { type: GraphQLString },
+//     twitter: { type: GraphQLString },
+//     instagram: { type: GraphQLString },
+//     linkedin: { type: GraphQLString },
+//     youtube: { type: GraphQLString },
+//     telegram: { type: GraphQLString },
+//     soundcloud: { type: GraphQLString },
+//     spotify: { type: GraphQLString },
+//     vkontakte: { type: GraphQLString },
+//   }),
+// });
 
-export { SocialType };
+// export { SocialType };
 
 export default UserType;

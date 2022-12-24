@@ -9,7 +9,7 @@ const UserSchema = new mongoose.Schema(
     last_name: {
       type: String,
     },
-    country: {
+    province: {
       type: String,
     },
     city: {
@@ -33,9 +33,9 @@ const UserSchema = new mongoose.Schema(
     profile_pic: {
       type: String,
     },
-    //   about: {
-    //     type: String,
-    //   },
+    about: {
+      type: String,
+    },
     //   social_links: {
     //     type: Object,
     //     default: {},
