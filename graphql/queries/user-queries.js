@@ -8,9 +8,9 @@ const users = {
   type: new GraphQLList(UserType),
   resolve: (parent, args, req) => {
     // * CHECK IF TOKEN IS VALID
-    if (!req.isAuth) {
-      throw new ApolloError('Not authenticated');
-    }
+    // if (!req.isAuth) {
+    //   throw new ApolloError('Not authenticated');
+    // }
 
     return User.find({ role: USER_ROLES.USER });
   },
@@ -27,23 +27,23 @@ const user = {
   },
 };
 
-const userForAdmin = {
-  type: UserType,
-  args: {
-    id: { type: new GraphQLNonNull(GraphQLID) },
-    limit: { type: GraphQLInt },
-  },
-  resolve(parent, args) {
-    return User.findById(args.id);
-  },
-};
+// const userForAdmin = {
+//   type: UserType,
+//   args: {
+//     id: { type: new GraphQLNonNull(GraphQLID) },
+//     limit: { type: GraphQLInt },
+//   },
+//   resolve(parent, args) {
+//     return User.findById(args.id);
+//   },
+// };
 
-const usersCount = {
-  type: GraphQLInt,
+// const usersCount = {
+//   type: GraphQLInt,
 
-  resolve(parent, args) {
-    return User.find().count();
-  },
-};
+//   resolve(parent, args) {
+//     return User.find().count();
+//   },
+// };
 
-export { users, user, usersCount, userForAdmin };
+export { users, user, };

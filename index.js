@@ -40,7 +40,7 @@ app.use(isAuth);
 
 //  * SETTING UP GRAPHQL
 app.use(
-  '/gewch',
+  '/petvet',
   graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
   graphqlHTTP({
     schema,
