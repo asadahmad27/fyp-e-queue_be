@@ -3,11 +3,14 @@ import {
   user,
   users
 } from '../queries/user-queries.js';
+import { allCategory, category } from "../queries/category-queries.js"
 import {
   register,
   login,
   updateUser
 } from '../mutations/user-mutations.js';
+
+import { createCategory, updateCategory, deleteCategory } from "../mutations/category-mutation.js"
 
 //  * QUERIES
 const RootQuery = new GraphQLObjectType({
@@ -15,7 +18,11 @@ const RootQuery = new GraphQLObjectType({
   fields: {
     //  * USERS QUERIE
     user,
-    users
+    users,
+
+    //  * CATEGORY QUERIE
+    allCategory,
+    category
 
   },
 });
@@ -30,7 +37,14 @@ const mutation = new GraphQLObjectType({
     // ? LOGIN USER
     login,
     // ? PROFILE UPDATE
-    updateUser
+    updateUser,
+
+    // ? CATEGORY CREATE
+    createCategory,
+    //  ? CATEGORY UPDATE
+    updateCategory,
+    //  ? DELETE CATEGORY
+    deleteCategory
 
   },
 });
