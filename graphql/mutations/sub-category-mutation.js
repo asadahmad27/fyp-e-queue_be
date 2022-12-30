@@ -9,11 +9,20 @@ import {
 import Category from '../../models/category.js';
 import CategoryType from '../types/category-type.js';
 import slugify from 'slugify';
+import SubCategory from '../../models/sub-category.js';
+import { SubCategoryType } from '../types/sub-category-type.js';
+import randomstring from 'randomstring';
 
-const addCategory = {
-    type: CategoryType,
+
+///////  Pets -----> cats
+///////  Pet food -----> cats
+
+
+const addSubCategory = {
+    type: SubCategoryType,
     args: {
         name: { type: new GraphQLNonNull(GraphQLString) },
+        categoryID: { type: new GraphQLNonNull(GraphQLID) }
     },
     async resolve(parent, args) {
         //  * CHECK TOKEN
@@ -23,25 +32,25 @@ const addCategory = {
         //   }
 
         //  * CHECK IF CATEGORY ALREADY EXIST
+        console.log("here")
+        const slug = `${slugify(args?.name, { lower: true })}-${randomstring.generate(12).toLowerCase()}`;
 
-        const categoryExist = await Category.find({ slug: slugify(args?.name, { lower: true }) })
-        if (categoryExist?.length > 0) {
-            throw new ApolloError('Category already exists');
-        }
-        const newCategory = new Category({
+        const newSubCategory = new SubCategory({
             name: args?.name,
-            slug: slugify(args?.name, { lower: true }),
+            slug,
+            category_id: args?.categoryID
         })
-        const category = await newCategory.save();
-        return category;
+        const subCategory = await newSubCategory.save();
+        return subCategory;
     },
 };
 
-const updateCategory = {
-    type: CategoryType,
+const updateSubCategory = {
+    type: SubCategoryType,
     args: {
         id: { type: new GraphQLNonNull(GraphQLID) },
         name: { type: new GraphQLNonNull(GraphQLString) },
+        categoryID: { type: new GraphQLNonNull(GraphQLID) }
     },
     async resolve(parent, args) {
         //  * CHECK TOKEN
@@ -50,28 +59,25 @@ const updateCategory = {
         //     throw new ApolloError('Not authenticated');
         //   }
 
-        //  * CHECK IF CATEGORY ALREADY EXIST
-        const categoryExist = await Category.find({ slug: slugify(args?.name, { lower: true }) })
-        if (categoryExist?.length > 0) {
-            throw new ApolloError('Category already exists');
-        }
 
+        const slug = `${slugify(args?.name, { lower: true })}-${randomstring.generate(12).toLowerCase()}`;
         const data = {
             name: args?.name,
-            slug: slugify(args?.name, { lower: true }),
+            slug,
+            category: args?.categoryID
         }
 
         const options = { new: true };
-        const category = await Category.findOneAndUpdate(
+        const subCategory = await SubCategory.findOneAndUpdate(
             { _id: args.id },
             data,
             options);
 
-        return category;
+        return subCategory;
     },
 };
 
-const deleteCategory = {
+const deleteSubCategory = {
     type: CategoryType,
     args: {
         id: { type: new GraphQLNonNull(GraphQLID) },
@@ -84,12 +90,16 @@ const deleteCategory = {
         //     throw new ApolloError('Not authenticated');
         //   }
 
-        const category = await Category.findByIdAndDelete(args.id)
-        return category;
+        const subCategory = await SubCategory.findByIdAndDelete(args.id)
+        return subCategory;
     },
 };
 
 
 
-export { addCategory, updateCategory, deleteCategory }
+export {
+    addSubCategory,
+    updateSubCategory,
+    deleteSubCategory
+}
 

@@ -7,6 +7,8 @@ import {
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
+import { SubCategoryType } from './sub-category-type.js';
+import subCategory from '../../models/sub-category.js';
 const { GraphQLDateTime } = pkg;
 
 // * Category TYPE
@@ -15,7 +17,14 @@ const CategoryType = new GraphQLObjectType({
     fields: () => ({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
-        subCategory: { type: new GraphQLList(subCategoryType) },
+        slug: { type: GraphQLString },
+        subCategory: {
+            type: new GraphQLList(SubCategoryType),
+            resolve(parent, args) {
+                console.log(parent)
+                return subCategory.find({ category_id: parent._id });
+            },
+        },
         token: { type: GraphQLString },
         token_expirtation: { type: GraphQLInt },
         createdAt: { type: GraphQLDateTime },
@@ -24,21 +33,12 @@ const CategoryType = new GraphQLObjectType({
     }),
 });
 
-// const ReactionType = new GraphQLObjectType({
-//     name: 'ReactionsType',
-//     fields: () => ({
-//         review_id: { type: GraphQLID },
-//         emoji: { type: GraphQLString },
-//         by: { type: GraphQLString },
-//     }),
-// });
-
-// export { ReactionType };
-
-const subCategoryLevelTwoType = new GraphQLObjectType({
+const mainCategoryType = new GraphQLObjectType({
     name: 'subCategoryLevelTwo',
     fields: () => ({
+        id: { type: GraphQLID },
         name: { type: GraphQLString },
+        slug: { type: GraphQLString },
     }),
 });
 
@@ -59,6 +59,6 @@ const subCategoryType = new GraphQLObjectType({
     }),
 });
 
-export { subCategoryType, subCategoryLevelOneType, subCategoryLevelTwoType };
+// export { subCategoryType, subCategoryLevelOneType, subCategoryLevelTwoType };
 
 export default CategoryType;

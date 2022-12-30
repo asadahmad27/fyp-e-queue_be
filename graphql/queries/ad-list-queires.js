@@ -3,20 +3,22 @@ import Category from '../../models/category.js';
 import CategoryType from '../types/category-type.js';
 import { ApolloError } from 'apollo-server-errors';
 import { USER_ROLES } from '../../constants.js';
+import AdListType from '../types/ad-list-type.js';
+import AdList from '../../models/ad-list.js';
 
-const allCategory = {
-    type: new GraphQLList(CategoryType),
+const allAdList = {
+    type: new GraphQLList(AdListType),
     resolve: (parent, args, req) => {
         // * CHECK IF TOKEN IS VALID
         // if (!req.isAuth) {
         //   throw new ApolloError('Not authenticated');
         // }
 
-        return Category.find();
+        return AdList.find();
     },
 };
-const category = {
-    type: CategoryType,
+const adList = {
+    type: AdListType,
     args: {
         id: { type: new GraphQLNonNull(GraphQLID) },
 
@@ -27,8 +29,11 @@ const category = {
         //   throw new ApolloError('Not authenticated');
         // }
 
-        return Category.findById(args.id);
+        return AdList.findById(args.id);
     },
 };
 
-export { allCategory, category }
+export {
+    allAdList,
+    adList
+}
