@@ -45,7 +45,7 @@ const AdListType = new GraphQLObjectType({
         category: {
             type: CategoryType,
             resolve(parent, args) {
-                console.log(parent)
+
                 return Category.findById(parent.category_id);
             },
         },

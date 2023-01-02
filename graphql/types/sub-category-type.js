@@ -26,6 +26,15 @@ const SubCategoryType = new GraphQLObjectType({
                 return Category.findById(parent.category_id);
             },
         },
+        details: {
+            type: new GraphQLList(SubCategoryDetailsType),
+            resolve(parent, args) {
+
+                const cc = SubCategoryDetails.find({ subCategory_id: parent._id });
+                console.log(parent, "ppp", cc)
+                return cc
+            },
+        },
         token: { type: GraphQLString },
         token_expirtation: { type: GraphQLInt },
         createdAt: { type: GraphQLDateTime },

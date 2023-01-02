@@ -21,8 +21,7 @@ const CategoryType = new GraphQLObjectType({
         subCategory: {
             type: new GraphQLList(SubCategoryType),
             resolve(parent, args) {
-                console.log(parent)
-                return subCategory.find({ category_id: parent._id });
+                return subCategory.find({ category_id: parent.id });
             },
         },
         token: { type: GraphQLString },

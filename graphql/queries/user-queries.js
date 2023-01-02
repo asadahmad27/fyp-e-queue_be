@@ -8,9 +8,9 @@ const users = {
   type: new GraphQLList(UserType),
   resolve: (parent, args, req) => {
     // * CHECK IF TOKEN IS VALID
-    // if (!req.isAuth) {
-    //   throw new ApolloError('Not authenticated');
-    // }
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
 
     return User.find({ role: USER_ROLES.USER });
   },

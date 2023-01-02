@@ -14,6 +14,7 @@ const allSubCategory = {
         // if (!req.isAuth) {
         //   throw new ApolloError('Not authenticated');
         // }
+        console.log("herererer")
         return SubCategory.find({ category_id: args?.categoryID });
     },
 
