@@ -20,7 +20,7 @@ const user = {
   type: UserType,
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
-    limit: { type: GraphQLInt },
+    // limit: { type: GraphQLInt },
   },
   resolve(parent, args) {
     return User.findById(args.id);

@@ -22,12 +22,20 @@ const REVIEW_STAT = {
   POOR: 'Poor',
 };
 const DEFAULT_REVIEW_COUNT = 2;
+
+const AD_STATUS = {
+  ACTIVE: "Active",
+  FEATURED: "Featured",
+  SOLD: "Sold"
+}
+
 export {
   USER_ROLES,
   FILE_KEYS,
   REVIEW_STATUS,
   REVIEW_STAT,
   DEFAULT_REVIEW_COUNT,
+  AD_STATUS
 };
 
 export const SUSPENDED = 'suspended';

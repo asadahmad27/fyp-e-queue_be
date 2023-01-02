@@ -6,6 +6,7 @@ import {
 import { allCategory, category } from "../queries/category-queries.js"
 import { allSubCategory, subCategory } from "../queries/sub-category-queries.js"
 import { allSubCategoryDetails } from "../queries/sub-category-details-queires.js"
+import { allAdListForAdmin, adList } from "../queries/ad-list-queires.js"
 import {
   register,
   login,
@@ -35,6 +36,10 @@ const RootQuery = new GraphQLObjectType({
 
     //  * SUB CATEGORY DETAILS
     allSubCategoryDetails,
+
+    //  *ALL AD LIST FRO ADMIN
+    allAdListForAdmin,
+    adList
 
 
   },

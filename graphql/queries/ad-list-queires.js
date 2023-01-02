@@ -17,6 +17,18 @@ const allAdList = {
         return AdList.find();
     },
 };
+
+const allAdListForAdmin = {
+    type: new GraphQLList(AdListType),
+    resolve: (parent, args, req) => {
+        // * CHECK IF TOKEN IS VALID
+        // if (!req.isAuth) {
+        //   throw new ApolloError('Not authenticated');
+        // }
+
+        return AdList.find();
+    },
+};
 const adList = {
     type: AdListType,
     args: {
@@ -35,5 +47,6 @@ const adList = {
 
 export {
     allAdList,
-    adList
+    adList,
+    allAdListForAdmin
 }

@@ -1,22 +1,26 @@
 import mongoose from 'mongoose';
+import { AD_STATUS } from '../constants.js';
 
 const AdListSchema = new mongoose.Schema(
     {
         title: {
             type: String,
         },
-        category: {
+        slug: {
+            type: String,
+        },
+        category_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Category',
             required: true
         },
 
-        subCategory: {
+        subCategory_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'SubCategory',
             required: true
         },
-        subCategory_details: {
+        subCategory_details_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'SubCategoryDetails',
             required: true
@@ -58,6 +62,15 @@ const AdListSchema = new mongoose.Schema(
         allow_whatsapp_contact: {
             type: Boolean,
             default: false,
+        },
+        user_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Users',
+            required: true
+        },
+        status: {
+            type: String,
+            enum: [AD_STATUS.ACTIVE, AD_STATUS.FEATURED, AD_STATUS.SOLD],
         },
     },
     {

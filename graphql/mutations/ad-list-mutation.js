@@ -5,18 +5,22 @@ import {
     GraphQLString,
     GraphQLNonNull,
     GraphQLID,
-    GraphQLBoolean
+    GraphQLBoolean,
+    GraphQLEnumType
 } from 'graphql';
 import AdListType from '../types/ad-list-type.js';
 import AdList from '../../models/ad-list.js';
+import randomstring from 'randomstring';
+import slugify from 'slugify';
+import { AD_STATUS } from '../../constants.js';
 
 const createAdList = {
     type: AdListType,
     args: {
         title: { type: GraphQLString },
-        category: { type: new GraphQLNonNull(GraphQLID) },
-        subCategory: { type: new GraphQLNonNull(GraphQLID) },
-        subCategory_details: { type: new GraphQLNonNull(GraphQLID) },
+        category_id: { type: new GraphQLNonNull(GraphQLID) },
+        subCategory_id: { type: new GraphQLNonNull(GraphQLID) },
+        subCategory_details_id: { type: new GraphQLNonNull(GraphQLID) },
         subCategory_types: { type: GraphQLString },
         province: { type: GraphQLString },
         city: { type: GraphQLString },
@@ -27,6 +31,18 @@ const createAdList = {
         primary_phone: { type: GraphQLString },
         secondary_phone: { type: GraphQLString },
         allow_whatsapp_contact: { type: GraphQLBoolean },
+        user_id: { type: new GraphQLNonNull(GraphQLID) },
+        status: {
+            type: new GraphQLEnumType({
+                name: 'AdStatus',
+                values: {
+                    active: { value: AD_STATUS.ACTIVE },
+                    featured: { value: AD_STATUS.FEATURED },
+                    sold: { value: AD_STATUS.SOLD },
+                },
+            }),
+            defaultValue: AD_STATUS.ACTIVE,
+        },
     },
     async resolve(parent, args) {
         //  * CHECK TOKEN
@@ -34,12 +50,13 @@ const createAdList = {
         // if (!req.isAuth) {
         //     throw new ApolloError('Not authenticated');
         //   }
-
+        const slug = `${slugify(args?.title, { lower: true })}-${randomstring.generate(12).toLowerCase()}`;
         const newAd = new AdList({
             title: args?.title,
-            category: args?.category,
-            subCategory: args?.category,
-            subCategory_details: args?.subCategory_details,
+            slug,
+            category_id: args?.category_id,
+            subCategory_id: args?.subCategory_id,
+            subCategory_details_id: args?.subCategory_details_id,
             subCategory_types: args?.subCategory_types,
             province: args?.province,
             city: args?.city,
@@ -49,7 +66,9 @@ const createAdList = {
             description: args?.description,
             primary_phone: args?.primary_phone,
             secondary_phone: args?.secondary_phone,
-            allow_whatsapp_contact: args?.allow_whatsapp_contact ?? boolean
+            allow_whatsapp_contact: args?.allow_whatsapp_contact ?? false,
+            user_id: args?.user_id,
+            status: args?.status ?? AD_STATUS.ACTIVE
         })
 
         const ad = await newAd.save();
@@ -62,9 +81,9 @@ const updateAdList = {
     args: {
         id: { type: new GraphQLNonNull(GraphQLID) },
         title: { type: GraphQLString },
-        category: { type: new GraphQLNonNull(GraphQLID) },
-        subCategory: { type: new GraphQLNonNull(GraphQLID) },
-        subCategory_details: { type: new GraphQLNonNull(GraphQLID) },
+        category_id: { type: new GraphQLNonNull(GraphQLID) },
+        subCategory_id: { type: new GraphQLNonNull(GraphQLID) },
+        subCategory_details_id: { type: new GraphQLNonNull(GraphQLID) },
         subCategory_types: { type: GraphQLString },
         province: { type: GraphQLString },
         city: { type: GraphQLString },
@@ -75,6 +94,7 @@ const updateAdList = {
         primary_phone: { type: GraphQLString },
         secondary_phone: { type: GraphQLString },
         allow_whatsapp_contact: { type: GraphQLBoolean },
+        user_id: { type: new GraphQLNonNull(GraphQLID) },
     },
     async resolve(parent, args) {
         //  * CHECK TOKEN
@@ -85,9 +105,9 @@ const updateAdList = {
 
         const data = {
             title: args?.title,
-            category: args?.category,
-            subCategory: args?.category,
-            subCategory_details: args?.subCategory_details,
+            category_id: args?.category_id,
+            subCategory_id: args?.subCategory_id,
+            subCategory_details_id: args?.subCategory_details_id,
             subCategory_types: args?.subCategory_types,
             province: args?.province,
             city: args?.city,
@@ -122,7 +142,6 @@ const deleteteAdList = {
         // if (!req.isAuth) {
         //     throw new ApolloError('Not authenticated');
         //   }
-
         const ad = await AdList.findByIdAndDelete(args.id)
         return ad;
     },
