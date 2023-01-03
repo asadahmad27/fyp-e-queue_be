@@ -10,7 +10,9 @@ import { allAdListForAdmin, adList } from "../queries/ad-list-queires.js"
 import {
   register,
   login,
-  updateUser
+  updateUser,
+  deleteUser,
+  changePassword
 } from '../mutations/user-mutations.js';
 
 import { addCategory, updateCategory, deleteCategory } from "../mutations/category-mutation.js"
@@ -56,6 +58,10 @@ const mutation = new GraphQLObjectType({
     login,
     // ? PROFILE UPDATE
     updateUser,
+    //  ? USER DELETE
+    deleteUser,
+    //  ? PASSWORD CHANGE
+    changePassword,
 
     // ? CATEGORY CREATE
     addCategory,

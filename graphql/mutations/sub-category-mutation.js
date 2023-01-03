@@ -12,6 +12,7 @@ import slugify from 'slugify';
 import SubCategory from '../../models/sub-category.js';
 import { SubCategoryType } from '../types/sub-category-type.js';
 import randomstring from 'randomstring';
+import SubCategoryDetails from '../../models/sub-category-details.js';
 
 
 ///////  Pets -----> cats
@@ -24,15 +25,15 @@ const addSubCategory = {
         name: { type: new GraphQLNonNull(GraphQLString) },
         categoryID: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(parent, args) {
+    async resolve(parent, args, req) {
         //  * CHECK TOKEN
 
-        // if (!req.isAuth) {
-        //     throw new ApolloError('Not authenticated');
-        //   }
+        if (!req.isAuth) {
+            throw new ApolloError('Not authenticated');
+        }
 
         //  * CHECK IF CATEGORY ALREADY EXIST
-        console.log("here")
+
         const slug = `${slugify(args?.name, { lower: true })}-${randomstring.generate(12).toLowerCase()}`;
 
         const newSubCategory = new SubCategory({
@@ -52,12 +53,12 @@ const updateSubCategory = {
         name: { type: new GraphQLNonNull(GraphQLString) },
         categoryID: { type: new GraphQLNonNull(GraphQLID) }
     },
-    async resolve(parent, args) {
+    async resolve(parent, args, req) {
         //  * CHECK TOKEN
 
-        // if (!req.isAuth) {
-        //     throw new ApolloError('Not authenticated');
-        //   }
+        if (!req.isAuth) {
+            throw new ApolloError('Not authenticated');
+        }
 
 
         const slug = `${slugify(args?.name, { lower: true })}-${randomstring.generate(12).toLowerCase()}`;
@@ -83,13 +84,18 @@ const deleteSubCategory = {
         id: { type: new GraphQLNonNull(GraphQLID) },
 
     },
-    async resolve(parent, args) {
+    async resolve(parent, args, req) {
         //  * CHECK TOKEN
 
-        // if (!req.isAuth) {
-        //     throw new ApolloError('Not authenticated');
-        //   }
-
+        if (!req.isAuth) {
+            throw new ApolloError('Not authenticated');
+        }
+        SubCategoryDetails?.find({ subCategory_id: args.id }).then((details) => {
+            details?.forEach((detail) => {
+                //  * DELETE BRAND REVIEWS
+                detail?.remove()
+            });
+        });
         const subCategory = await SubCategory.findByIdAndDelete(args.id)
         return subCategory;
     },

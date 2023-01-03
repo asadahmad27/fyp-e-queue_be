@@ -9,6 +9,7 @@ import {
 import Category from '../../models/category.js';
 import CategoryType from '../types/category-type.js';
 import slugify from 'slugify';
+import SubCategory from '../../models/sub-category.js';
 
 const addCategory = {
     type: CategoryType,
@@ -18,9 +19,9 @@ const addCategory = {
     async resolve(parent, args) {
         //  * CHECK TOKEN
 
-        // if (!req.isAuth) {
-        //     throw new ApolloError('Not authenticated');
-        //   }
+        if (!req.isAuth) {
+            throw new ApolloError('Not authenticated');
+        }
 
         //  * CHECK IF CATEGORY ALREADY EXIST
 
@@ -46,9 +47,9 @@ const updateCategory = {
     async resolve(parent, args) {
         //  * CHECK TOKEN
 
-        // if (!req.isAuth) {
-        //     throw new ApolloError('Not authenticated');
-        //   }
+        if (!req.isAuth) {
+            throw new ApolloError('Not authenticated');
+        }
 
         //  * CHECK IF CATEGORY ALREADY EXIST
         const categoryExist = await Category.find({ slug: slugify(args?.name, { lower: true }) })
@@ -77,12 +78,18 @@ const deleteCategory = {
         id: { type: new GraphQLNonNull(GraphQLID) },
 
     },
-    async resolve(parent, args) {
+    async resolve(parent, args, req) {
         //  * CHECK TOKEN
 
-        // if (!req.isAuth) {
-        //     throw new ApolloError('Not authenticated');
-        //   }
+        if (!req.isAuth) {
+            throw new ApolloError('Not authenticated');
+        }
+        SubCategory?.find({ category_id: args.id }).then((subCategories) => {
+            subCategories?.forEach((subCategory) => {
+                //  * DELETE BRAND REVIEWS
+                subCategory?.remove()
+            });
+        });
 
         const category = await Category.findByIdAndDelete(args.id)
         return category;

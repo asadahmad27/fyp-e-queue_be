@@ -6,14 +6,13 @@ import {
   GraphQLNonNull,
   GraphQLEnumType,
   GraphQLID,
-  GraphQLInt,
-  GraphQLBoolean,
 } from 'graphql';
 import User from '../../models/user.js';
 import UserType from '../types/user-types.js';
-import { USER_ROLES, FILE_KEYS, SUSPENDED } from '../../constants.js';
+import { USER_ROLES, FILE_KEYS, SUSPENDED, USER_STATUS } from '../../constants.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
 import { singleFileUpload } from '../schema/s3.js';
+import AdList from '../../models/ad-list.js';
 
 const register = {
   type: UserType,
@@ -24,13 +23,23 @@ const register = {
     phone: { type: GraphQLString },
     role: {
       type: new GraphQLEnumType({
-        name: 'UserStatus',
+        name: 'UserRole',
         values: {
           author: { value: USER_ROLES.USER },
           admin: { value: USER_ROLES.ADMIN },
         },
       }),
       defaultValue: USER_ROLES.USER,
+    },
+    status: {
+      type: new GraphQLEnumType({
+        name: 'ActiveStatus',
+        values: {
+          author: { value: USER_STATUS.ACTIVE },
+          admin: { value: USER_STATUS.UNACTIVE },
+        },
+      }),
+      defaultValue: USER_STATUS.ACTIVE,
     },
   },
   async resolve(parent, args) {
@@ -50,6 +59,7 @@ const register = {
       password: hashedPassword,
       phone: args.phone,
       role: args.role,
+      status: args.status
     });
 
     // * CREATE AND ASSIGN TOKEN
@@ -121,46 +131,39 @@ const login = {
 //   },
 // };
 
-// const resetPassword = {
-//   type: UserType,
-//   args: {
-//     id: { type: new GraphQLNonNull(GraphQLID) },
-//     password: { type: new GraphQLNonNull(GraphQLString) },
-//     new_password: { type: new GraphQLNonNull(GraphQLString) },
-//     confirm_password: { type: new GraphQLNonNull(GraphQLString) },
-//   },
-//   async resolve(parent, args) {
-//     // * CHECK IF USER EXISTS
-//     const user = await User.findOne({ _id: args.id });
-//     if (!user) {
-//       throw new ApolloError('User does not exist');
-//     }
+const changePassword = {
+  type: UserType,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    password: { type: new GraphQLNonNull(GraphQLString) },
+    new_password: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  async resolve(parent, args) {
+    // * CHECK IF USER EXISTS
+    const user = await User.findOne({ _id: args.id });
+    if (!user) {
+      throw new ApolloError('User does not exist');
+    }
 
-//     //   * COMPARE HASHED PASSWORD
-//     const isMatch = await bcrypt.compare(args.password, user.password);
-//     if (!isMatch) {
-//       throw new ApolloError('Old Password is incorrect');
-//     }
+    //   * COMPARE HASHED PASSWORD
+    const isMatch = await bcrypt.compare(args.password, user.password);
+    if (!isMatch) {
+      throw new ApolloError('Old Password is incorrect');
+    }
 
-//     //  * CHECK IS NEW PASSWORD MATCHES WITH CONFIRM PASSWORD
-//     if (args.new_password !== args.confirm_password) {
-//       throw new ApolloError('New Password does not match');
-//     }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(args.new_password, salt);
+    const options = { new: true };
+    await User.findOneAndUpdate(
+      { _id: args.id },
+      { password: hashedPassword },
+      options
+    );
+    console.log("hererere", args)
 
-//     const salt = await bcrypt.genSalt(10);
-//     const hashedPassword = await bcrypt.hash(args.new_password, salt);
-//     const options = { new: true };
-//     await User.findOneAndUpdate(
-//       { _id: args.id },
-//       { password: hashedPassword },
-//       options
-//     );
-//     const message = 'Password has been changed successfully';
-//     user.message = message;
-
-//     return user;
-//   },
-// };
+    return user;
+  },
+};
 
 const updateUser = {
   type: UserType,
@@ -173,6 +176,7 @@ const updateUser = {
     phone: { type: GraphQLString },
     about: { type: GraphQLString },
     profile_pic: { type: GraphQLUpload },
+    status: { type: GraphQLString }
   },
   async resolve(parent, args, req) {
     // * CHECK IF TOKEN IS VALID
@@ -202,7 +206,8 @@ const updateUser = {
       last_name: args.last_name ?? '',
       profile_pic: args.profile_pic ?? '',
       about: args.about ?? '',
-      province: args?.province ?? ''
+      province: args?.province ?? '',
+      status: args?.status
     };
 
     if (!args?.profile_pic) {
@@ -230,47 +235,28 @@ const updateUser = {
   },
 };
 
-// const deleteUser = {
-//   type: UserType,
-//   args: {
-//     id: { type: new GraphQLNonNull(GraphQLID) },
-//   },
-//   async resolve(parent, args, req) {
-//     // * CHECK IF TOKEN IS VALID
-//     if (!req.isAuth) {
-//       throw new ApolloError('Not authenticated');
-//     }
+const deleteUser = {
+  type: UserType,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  async resolve(parent, args, req) {
+    // * CHECK IF TOKEN IS VALID
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
 
-//     //  * DELETE BRANDS
-//     Brand.find({ user_id: args.id }).then((brands) => {
-//       brands.forEach((brand) => {
-//         //  * DELETE BRAND REVIEWS
-//         Review.find({ brand_id: brand._id }).then((reviews) => {
-//           reviews.forEach((review) => {
-//             review.remove();
-//           });
-//         });
-//         //  * DELETE PRODUCTS
-//         Product.find({ brand_id: brand._id }).then((products) => {
-//           products.forEach((product) => {
-//             //  * DELETE PRODUCT REVIEWS
-//             Review.find({ product_id: product._id }).then((reviews) => {
-//               reviews.forEach((review) => {
-//                 review.remove();
-//               });
-//             });
-
-//             product.remove();
-//           });
-//         });
-//         brand.remove();
-//       });
-//     });
-
-//     const user = await User.findByIdAndDelete(args.id);
-//     return user;
-//   },
-// };
+    //  * DELETE Ads
+    AdList?.find({ user_id: args.id }).then((ads) => {
+      ads?.forEach((ad) => {
+        //  * DELETE BRAND REVIEWS
+        ad?.remove()
+      });
+    });
+    const user = await User.findByIdAndDelete(args.id);
+    return user;
+  },
+};
 
 // const followUser = {
 //   type: UserType,
@@ -382,6 +368,8 @@ export {
   // emailConfirmation,
   // resetPassword,
   updateUser,
+  deleteUser,
+  changePassword
   // deleteUser,
   // followUser,
   // verifyUser,

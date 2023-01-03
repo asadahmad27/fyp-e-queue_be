@@ -31,7 +31,7 @@ const SubCategoryType = new GraphQLObjectType({
             resolve(parent, args) {
 
                 const cc = SubCategoryDetails.find({ subCategory_id: parent._id });
-                console.log(parent, "ppp", cc)
+
                 return cc
             },
         },

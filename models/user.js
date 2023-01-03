@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { USER_ROLES } from '../constants.js';
+import { USER_ROLES, USER_STATUS } from '../constants.js';
 
 const UserSchema = new mongoose.Schema(
   {
@@ -36,6 +36,10 @@ const UserSchema = new mongoose.Schema(
     about: {
       type: String,
     },
+    status: {
+      type: String,
+      enum: [USER_STATUS.ACTIVE, USER_STATUS.UNACTIVE],
+    }
     //   social_links: {
     //     type: Object,
     //     default: {},

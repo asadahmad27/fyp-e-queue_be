@@ -34,6 +34,7 @@ const AdListType = new GraphQLObjectType({
         description: { type: GraphQLString },
         primary_phone: { type: GraphQLString },
         secondary_phone: { type: GraphQLString },
+        featured: { type: GraphQLString },
         status: { type: GraphQLString },
         allow_whatsapp_contact: { type: GraphQLBoolean },
         user: {

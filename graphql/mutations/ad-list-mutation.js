@@ -32,12 +32,12 @@ const createAdList = {
         secondary_phone: { type: GraphQLString },
         allow_whatsapp_contact: { type: GraphQLBoolean },
         user_id: { type: new GraphQLNonNull(GraphQLID) },
+        featured: { type: GraphQLString },
         status: {
             type: new GraphQLEnumType({
                 name: 'AdStatus',
                 values: {
                     active: { value: AD_STATUS.ACTIVE },
-                    featured: { value: AD_STATUS.FEATURED },
                     sold: { value: AD_STATUS.SOLD },
                 },
             }),
@@ -68,7 +68,8 @@ const createAdList = {
             secondary_phone: args?.secondary_phone,
             allow_whatsapp_contact: args?.allow_whatsapp_contact ?? false,
             user_id: args?.user_id,
-            status: args?.status ?? AD_STATUS.ACTIVE
+            status: args?.status ?? AD_STATUS.ACTIVE,
+            featured: args?.featured
         })
 
         const ad = await newAd.save();
@@ -93,7 +94,9 @@ const updateAdList = {
         description: { type: GraphQLString },
         primary_phone: { type: GraphQLString },
         secondary_phone: { type: GraphQLString },
+        status: { type: GraphQLString },
         allow_whatsapp_contact: { type: GraphQLBoolean },
+        featured: { type: GraphQLString },
         user_id: { type: new GraphQLNonNull(GraphQLID) },
     },
     async resolve(parent, args) {
@@ -117,7 +120,9 @@ const updateAdList = {
             description: args?.description,
             primary_phone: args?.primary_phone,
             secondary_phone: args?.secondary_phone,
-            allow_whatsapp_contact: args?.allow_whatsapp_contact ?? boolean
+            allow_whatsapp_contact: args?.allow_whatsapp_contact ?? boolean,
+            status: args?.status,
+            featured: args?.featured
         }
 
         const options = { new: true };

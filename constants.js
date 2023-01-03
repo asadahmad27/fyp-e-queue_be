@@ -25,17 +25,21 @@ const DEFAULT_REVIEW_COUNT = 2;
 
 const AD_STATUS = {
   ACTIVE: "Active",
-  FEATURED: "Featured",
   SOLD: "Sold"
 }
 
+const USER_STATUS = {
+  ACTIVE: "Active",
+  UNACTIVE: "Unactive"
+}
 export {
   USER_ROLES,
   FILE_KEYS,
   REVIEW_STATUS,
   REVIEW_STAT,
   DEFAULT_REVIEW_COUNT,
-  AD_STATUS
+  AD_STATUS,
+  USER_STATUS
 };
 
 export const SUSPENDED = 'suspended';

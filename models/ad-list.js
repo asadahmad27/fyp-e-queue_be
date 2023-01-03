@@ -72,6 +72,10 @@ const AdListSchema = new mongoose.Schema(
             type: String,
             enum: [AD_STATUS.ACTIVE, AD_STATUS.FEATURED, AD_STATUS.SOLD],
         },
+        featured: {
+            type: String,
+            default: "no"
+        }
     },
     {
         timestamps: true,

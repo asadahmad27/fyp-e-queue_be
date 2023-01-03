@@ -11,10 +11,10 @@ const allSubCategory = {
     },
     resolve: (parent, args, req) => {
         // * CHECK IF TOKEN IS VALID
-        // if (!req.isAuth) {
-        //   throw new ApolloError('Not authenticated');
-        // }
-        console.log("herererer")
+        if (!req.isAuth) {
+            throw new ApolloError('Not authenticated');
+        }
+
         return SubCategory.find({ category_id: args?.categoryID });
     },
 
@@ -22,13 +22,13 @@ const allSubCategory = {
 const subCategory = {
     type: SubCategoryType,
     args: {
-        id: { type: new GraphQLNonNull(GraphQLID) }
+        categoryID: { type: new GraphQLNonNull(GraphQLID) }
     },
     resolve: (parent, args, req) => {
         // * CHECK IF TOKEN IS VALID
-        // if (!req.isAuth) {
-        //   throw new ApolloError('Not authenticated');
-        // }
+        if (!req.isAuth) {
+            throw new ApolloError('Not authenticated');
+        }
         return SubCategory.findById(args?.id);
     },
 };
