@@ -1,27 +1,30 @@
+import { createWriteStream, readdir } from 'fs';
+import path from 'path';
 
-import multer from 'multer';
-import randomstring from 'randomstring';
-const DIR = './images/';
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, DIR);
-    },
-    filename: (req, file, cb) => {
-        const fileName = file.originalname.toLowerCase().split(' ').join('-');
-        cb(null, randomstring.generate(12).toLowerCase() + '-' + fileName)
-    }
-});
-var upload = multer({
-    storage: storage,
-    fileFilter: (req, file, cb) => {
-        console.log("inside")
-        if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
-            cb(null, true);
-        } else {
-            cb(null, false);
-            return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
-        }
-    }
-});
+const uploadFile = async (image, name) => {
+    const { filename, createReadStream } = await image;
+    let imgArray = filename.split('.');
+    let imgExtension = imgArray[imgArray.length - 1]
+    const stream = createReadStream();
+    const pathName = path.join(path.resolve("./"), `/images/${name}.${imgExtension}`);
+    await stream.pipe(createWriteStream(pathName))
+    return `${name}.${imgExtension}`;
 
-export { upload }
+};
+
+
+// const readFile = (name) => {
+//     const directoryPath = path.join(path.resolve("./"), 'images');
+//     readdir(directoryPath, function (err, files) {
+//         //handling error
+//         if (err) {
+//             return console.log('Unable to scan directory: ' + err);
+//         }
+//         //listing all files using forEach
+//         files.forEach(function (file) {
+//             // Do whatever you want to do with the file
+//             console.log(file);
+//         });
+//     });
+// }
+export { uploadFile }

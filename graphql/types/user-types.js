@@ -9,6 +9,7 @@ import {
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
+import { getBufferedFile, readFile } from '../schema/local-file-read.js';
 const { GraphQLDateTime } = pkg;
 
 // * USER TYPE
@@ -27,9 +28,15 @@ const UserType = new GraphQLObjectType({
     about: { type: GraphQLString },
     role: { type: GraphQLString },
     status: { type: GraphQLString },
-
+    image: { type: GraphQLString },
     profile_pic: {
       type: GraphQLString,
+      resolve(parent, args) {
+        console.log("lioj")
+        let name = readFile(`profile-${parent.id}.jpg`)
+        console.log("name", name)
+        return name ? getBufferedFile(name) : null
+      }
 
       // resolve(parent, args) {
       //   let imageUrl;

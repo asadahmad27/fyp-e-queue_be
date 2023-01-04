@@ -12,7 +12,8 @@ import {
   login,
   updateUser,
   deleteUser,
-  changePassword
+  changePassword,
+  imageTest
 } from '../mutations/user-mutations.js';
 
 import { addCategory, updateCategory, deleteCategory } from "../mutations/category-mutation.js"
@@ -60,6 +61,7 @@ const mutation = new GraphQLObjectType({
     updateUser,
     //  ? USER DELETE
     deleteUser,
+    imageTest,
     //  ? PASSWORD CHANGE
     changePassword,
 

@@ -13,6 +13,9 @@ import { USER_ROLES, FILE_KEYS, SUSPENDED, USER_STATUS } from '../../constants.j
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
 import { singleFileUpload } from '../schema/s3.js';
 import AdList from '../../models/ad-list.js';
+import multer from 'multer';
+import path from 'path';
+import { uploadFile } from '../schema/local-file-upload.js';
 
 const register = {
   type: UserType,
@@ -175,7 +178,7 @@ const updateUser = {
     city: { type: GraphQLString },
     phone: { type: GraphQLString },
     about: { type: GraphQLString },
-    profile_pic: { type: GraphQLString },
+    profile_pic: { type: GraphQLUpload },
     status: { type: GraphQLString }
   },
   async resolve(parent, args, req) {
@@ -191,6 +194,9 @@ const updateUser = {
     //     args.id
     //   );
     // }
+    if (args?.profile_pic) {
+      args.profile_pic = await uploadFile(args.profile_pic, `profile-${args?.id}`);
+    }
 
     // let hashedPassword;
     // if (args.new_password) {
@@ -234,6 +240,35 @@ const updateUser = {
     return user;
   },
 };
+
+
+const imageTest = {
+  type: UserType,
+  args: {
+    image: { type: GraphQLUpload }
+  },
+  async resolve(parent, args, req) {
+    // * CHECK IF TOKEN IS VALID
+    // if (!req.isAuth) {
+    //   throw new ApolloError('Not authenticated');
+    // }
+
+    console.log(args.image, cc)
+
+  },
+};
+
+// export default function createFileUploadServer(config) {
+//   const app = express();
+//   const upload = multer({ dest: path.resolve(__dirname, os.tmpdir()) });
+//   const server = (http.Server as any)(app);
+//   app.post(config.path, upload.single(config.fieldName), (req, res, next) => {
+//     res.send(req.file);
+//   });
+
+//   return server;
+// }
+
 
 const deleteUser = {
   type: UserType,
@@ -369,7 +404,8 @@ export {
   // resetPassword,
   updateUser,
   deleteUser,
-  changePassword
+  changePassword,
+  imageTest
   // deleteUser,
   // followUser,
   // verifyUser,
