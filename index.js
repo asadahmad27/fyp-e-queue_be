@@ -33,6 +33,9 @@ cron.schedule('0 0 * * *', () => {
 });
 
 //  * MIDDLEWARE
+const maxRequestBodySize = '5mb';
+app.use(express.json({ limit: maxRequestBodySize }));
+app.use(express.urlencoded({ limit: maxRequestBodySize }));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -45,6 +48,7 @@ app.use(
   graphqlHTTP({
     schema,
     graphiql: process.env.NODE_ENV === 'development',
+
   })
 );
 

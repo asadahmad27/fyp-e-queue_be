@@ -31,16 +31,16 @@ const UserType = new GraphQLObjectType({
     profile_pic: {
       type: GraphQLString,
 
-      resolve(parent, args) {
-        let imageUrl;
-        if (parent.profile_pic) {
-          imageUrl = s3.getSignedUrl('getObject', {
-            Bucket: process.env.S3_BUCKET,
-            Key: parent.profile_pic,
-          });
-        }
-        return imageUrl || parent.profile_pic;
-      },
+      // resolve(parent, args) {
+      //   let imageUrl;
+      //   if (parent.profile_pic) {
+      //     imageUrl = s3.getSignedUrl('getObject', {
+      //       Bucket: process.env.S3_BUCKET,
+      //       Key: parent.profile_pic,
+      //     });
+      //   }
+      //   return imageUrl || parent.profile_pic;
+      // },
     },
     token: { type: GraphQLString },
     token_expirtation: { type: GraphQLInt },

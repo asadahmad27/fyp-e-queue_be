@@ -175,7 +175,7 @@ const updateUser = {
     city: { type: GraphQLString },
     phone: { type: GraphQLString },
     about: { type: GraphQLString },
-    profile_pic: { type: GraphQLUpload },
+    profile_pic: { type: GraphQLString },
     status: { type: GraphQLString }
   },
   async resolve(parent, args, req) {
@@ -184,13 +184,13 @@ const updateUser = {
       throw new ApolloError('Not authenticated');
     }
 
-    if (args?.profile_pic) {
-      args.profile_pic = await singleFileUpload(
-        args?.profile_pic,
-        FILE_KEYS.PROFILE_PICS,
-        args.id
-      );
-    }
+    // if (args?.profile_pic) {
+    //   args.profile_pic = await singleFileUpload(
+    //     args?.profile_pic,
+    //     FILE_KEYS.PROFILE_PICS,
+    //     args.id
+    //   );
+    // }
 
     // let hashedPassword;
     // if (args.new_password) {
