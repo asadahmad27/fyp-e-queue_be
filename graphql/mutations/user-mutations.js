@@ -176,6 +176,7 @@ const updateUser = {
     last_name: { type: GraphQLString },
     province: { type: GraphQLString },
     city: { type: GraphQLString },
+    address: { type: GraphQLString },
     phone: { type: GraphQLString },
     about: { type: GraphQLString },
     profile_pic: { type: GraphQLUpload },
@@ -213,7 +214,8 @@ const updateUser = {
       profile_pic: args.profile_pic ?? '',
       about: args.about ?? '',
       province: args?.province ?? '',
-      status: args?.status
+      status: args?.status,
+      address: args?.address ?? ''
     };
 
     if (!args?.profile_pic) {

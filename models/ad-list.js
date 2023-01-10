@@ -75,6 +75,10 @@ const AdListSchema = new mongoose.Schema(
         featured: {
             type: String,
             default: "no"
+        },
+        images: {
+            type: Array,
+
         }
     },
     {

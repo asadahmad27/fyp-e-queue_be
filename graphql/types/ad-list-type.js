@@ -51,19 +51,12 @@ const AdListType = new GraphQLObjectType({
             },
         },
 
-        // images: {
-        //     type: new GraphQLList(GraphQLString),
-        //     // resolve(parent, args) {
-        //     //   let imageUrl;
-        //     //   if (parent.logo) {
-        //     //     imageUrl = s3.getSignedUrl('getObject', {
-        //     //       Bucket: process.env.S3_BUCKET,
-        //     //       Key: parent.logo,
-        //     //     });
-        //     //   }
-        //     //   return imageUrl || parent.logo;
-        //     // },
-        // },
+        images: {
+            type: new GraphQLList(GraphQLString),
+        },
+        imagePaths: {
+            type: new GraphQLList(GraphQLString),
+        },
         token: { type: GraphQLString },
         token_expirtation: { type: GraphQLInt },
         createdAt: { type: GraphQLDateTime },

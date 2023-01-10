@@ -40,6 +40,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(isAuth);
+app.use(express.static('public'));
 
 //  * SETTING UP GRAPHQL
 app.use(

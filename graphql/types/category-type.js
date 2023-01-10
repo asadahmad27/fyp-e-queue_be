@@ -18,12 +18,7 @@ const CategoryType = new GraphQLObjectType({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         slug: { type: GraphQLString },
-        subCategory: {
-            type: new GraphQLList(SubCategoryType),
-            resolve(parent, args) {
-                return subCategory.find({ category_id: parent.id });
-            },
-        },
+        image: { type: GraphQLString },
         token: { type: GraphQLString },
         token_expirtation: { type: GraphQLInt },
         createdAt: { type: GraphQLDateTime },

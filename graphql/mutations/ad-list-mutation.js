@@ -6,13 +6,17 @@ import {
     GraphQLNonNull,
     GraphQLID,
     GraphQLBoolean,
-    GraphQLEnumType
+    GraphQLEnumType,
+    GraphQLList,
+    GraphQLInt
 } from 'graphql';
 import AdListType from '../types/ad-list-type.js';
 import AdList from '../../models/ad-list.js';
 import randomstring from 'randomstring';
 import slugify from 'slugify';
 import { AD_STATUS } from '../../constants.js';
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
+import { multipleUploadFile, multipleUploadFileSingled, NameCorrect } from '../schema/local-file-upload.js';
 
 const createAdList = {
     type: AdListType,
@@ -32,6 +36,7 @@ const createAdList = {
         secondary_phone: { type: GraphQLString },
         allow_whatsapp_contact: { type: GraphQLBoolean },
         user_id: { type: new GraphQLNonNull(GraphQLID) },
+        images: { type: new GraphQLList(GraphQLUpload) },
         featured: { type: GraphQLString },
         status: {
             type: new GraphQLEnumType({
@@ -73,7 +78,17 @@ const createAdList = {
         })
 
         const ad = await newAd.save();
-        return ad;
+
+        const images = await multipleUploadFile(args.images, `ad-${ad?._id}`)
+        const options = { new: true };
+        const data = {
+            images,
+        }
+        const edited = await AdList.findOneAndUpdate(
+            { _id: ad?._id },
+            data,
+            options);
+        return edited;
     },
 };
 
@@ -98,6 +113,9 @@ const updateAdList = {
         allow_whatsapp_contact: { type: GraphQLBoolean },
         featured: { type: GraphQLString },
         user_id: { type: new GraphQLNonNull(GraphQLID) },
+        images: { type: new GraphQLList(GraphQLUpload) },
+        previousImagesNumber: { type: GraphQLInt },
+        imagePaths: { type: new GraphQLList(GraphQLString) }
     },
     async resolve(parent, args) {
         //  * CHECK TOKEN
@@ -105,36 +123,51 @@ const updateAdList = {
         // if (!req.isAuth) {
         //     throw new ApolloError('Not authenticated');
         //   }
+        let finalImages = []
 
-        const data = {
-            title: args?.title,
-            category_id: args?.category_id,
-            subCategory_id: args?.subCategory_id,
-            subCategory_details_id: args?.subCategory_details_id,
-            subCategory_types: args?.subCategory_types,
-            province: args?.province,
-            city: args?.city,
-            age: args?.age,
-            price: args?.price,
-            home_delivery: args?.home_delivery,
-            description: args?.description,
-            primary_phone: args?.primary_phone,
-            secondary_phone: args?.secondary_phone,
-            allow_whatsapp_contact: args?.allow_whatsapp_contact ?? boolean,
-            status: args?.status,
-            featured: args?.featured
-        }
+        const images = await multipleUploadFile(args.images, `ad-${args?.id}`)
+            .then((res) => {
+                console.log(res, "res", finalImages)
+                finalImages = NameCorrect([...res, ...args?.imagePaths]);
+                const data = {
+                    title: args?.title,
+                    category_id: args?.category_id,
+                    subCategory_id: args?.subCategory_id,
+                    subCategory_details_id: args?.subCategory_details_id,
+                    subCategory_types: args?.subCategory_types,
+                    province: args?.province,
+                    city: args?.city,
+                    age: args?.age,
+                    price: args?.price,
+                    home_delivery: args?.home_delivery,
+                    description: args?.description,
+                    primary_phone: args?.primary_phone,
+                    secondary_phone: args?.secondary_phone,
+                    allow_whatsapp_contact: args?.allow_whatsapp_contact ?? boolean,
+                    status: args?.status,
+                    featured: args?.featured,
+                    images: finalImages,
+                }
+                const ad = updateFunc(data)
+                return ad
 
-        const options = { new: true };
-        const ad = await AdList.findOneAndUpdate(
-            { _id: args.id },
-            data,
-            options);
+            })
+            .catch(err => console.log(err))
 
-        return ad;
+        console.log('---->', args.images, images, finalImages)
+
     },
 };
 
+const updateFunc = async (data) => {
+    const options = { new: true };
+    const ad = await AdList.findOneAndUpdate(
+        { _id: args.id },
+        data,
+        options);
+
+    return ad;
+}
 
 const deleteteAdList = {
     type: AdListType,

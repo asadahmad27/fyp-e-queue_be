@@ -22,6 +22,7 @@ const UserType = new GraphQLObjectType({
     phone: { type: GraphQLString },
     province: { type: GraphQLString },
     city: { type: GraphQLString },
+    address: { type: GraphQLString },
     last_name: { type: GraphQLString },
     password: { type: GraphQLString },
     new_password: { type: GraphQLString },
@@ -31,12 +32,12 @@ const UserType = new GraphQLObjectType({
     image: { type: GraphQLString },
     profile_pic: {
       type: GraphQLString,
-      resolve(parent, args) {
-        console.log("lioj")
-        let name = readFile(`profile-${parent.id}.jpg`)
-        console.log("name", name)
-        return name ? getBufferedFile(name) : null
-      }
+      // resolve(parent, args) {
+      //   console.log("lioj")
+      //   let name = readFile(`profile-${parent.id}.jpg`)
+      //   console.log("name", name)
+      //   return name ? getBufferedFile(name) : null
+      // }
 
       // resolve(parent, args) {
       //   let imageUrl;

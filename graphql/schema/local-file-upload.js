@@ -1,30 +1,60 @@
-import { createWriteStream, readdir } from 'fs';
+import { createWriteStream } from 'fs';
 import path from 'path';
+import randomstring from 'randomstring';
 
 const uploadFile = async (image, name) => {
+
     const { filename, createReadStream } = await image;
     let imgArray = filename.split('.');
     let imgExtension = imgArray[imgArray.length - 1]
     const stream = createReadStream();
-    const pathName = path.join(path.resolve("./"), `/images/${name}.${imgExtension}`);
+    const pathName = path.join(path.resolve("./"), `/public/images/${name}.${imgExtension}`);
     await stream.pipe(createWriteStream(pathName))
     return `${name}.${imgExtension}`;
 
 };
 
+const multipleUploadFile = async (images, name) => {
+    const names = []
+    for (let i = 0; i < images?.length; i++) {
+        const { filename, createReadStream } = await images[i];
+        let imgArray = filename.split('.');
+        let imgExtension = imgArray[imgArray.length - 1]
+        const stream = await createReadStream();
+        const finalName = `${name}-${randomstring.generate(12).toLowerCase()}.${imgExtension}`
+        const pathName = path.join(path.resolve("./"), `/public/images/${finalName}`);
+        await stream.pipe(createWriteStream(pathName))
+        names.push(finalName)
+    }
+    // await images.forEach(async (element, index) => {
 
-// const readFile = (name) => {
-//     const directoryPath = path.join(path.resolve("./"), 'images');
-//     readdir(directoryPath, function (err, files) {
-//         //handling error
-//         if (err) {
-//             return console.log('Unable to scan directory: ' + err);
-//         }
-//         //listing all files using forEach
-//         files.forEach(function (file) {
-//             // Do whatever you want to do with the file
-//             console.log(file);
-//         });
-//     });
-// }
-export { uploadFile }
+    // });
+
+    return names
+
+};
+const multipleUploadFileSingled = async (image, name) => {
+    const { filename, createReadStream } = await image;
+    let imgArray = filename.split('.');
+    let imgExtension = imgArray[imgArray.length - 1]
+    const stream = createReadStream();
+    const finalName = `${name}-${randomstring.generate(12).toLowerCase()}.${imgExtension}`
+    const pathName = path.join(path.resolve("./"), `/public/images/${finalName}`);
+    await stream.pipe(createWriteStream(pathName))
+    return finalName
+
+};
+
+const NameCorrect = (data) => {
+    console.log(data)
+    const finalImages = data.map(item => {
+        let splited = item.split("images/")
+        if (splited[1]) {
+            return splited[1]
+        } else {
+            return splited[0]
+        }
+    })
+    return finalImages
+}
+export { uploadFile, multipleUploadFile, NameCorrect, multipleUploadFileSingled }

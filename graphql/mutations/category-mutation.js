@@ -10,13 +10,15 @@ import Category from '../../models/category.js';
 import CategoryType from '../types/category-type.js';
 import slugify from 'slugify';
 import SubCategory from '../../models/sub-category.js';
+import { uploadFile } from '../schema/local-file-upload.js';
+import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
 
 const addCategory = {
     type: CategoryType,
     args: {
         name: { type: new GraphQLNonNull(GraphQLString) },
     },
-    async resolve(parent, args) {
+    async resolve(parent, args, req) {
         //  * CHECK TOKEN
 
         if (!req.isAuth) {
@@ -26,15 +28,39 @@ const addCategory = {
         //  * CHECK IF CATEGORY ALREADY EXIST
 
         const categoryExist = await Category.find({ slug: slugify(args?.name, { lower: true }) })
+
         if (categoryExist?.length > 0) {
             throw new ApolloError('Category already exists');
         }
+
+
         const newCategory = new Category({
             name: args?.name,
             slug: slugify(args?.name, { lower: true }),
+            image: '',
         })
-        const category = await newCategory.save();
-        return category;
+        const ct = newCategory.save();
+        return ct;
+        // await (newCategory.save()).then(async (res) => {
+        //     if (args?.image) {
+        //         return await uploadFile(args?.image, `category-${res.id}`).then(async (ress) => {
+
+        //             const data = {
+        //                 image: ress ?? ''
+        //             }
+
+        //             const options = { new: true };
+        //             const category = await Category.findOneAndUpdate(
+        //                 { _id: res?.id },
+        //                 data,
+        //                 options);
+        //             console.log(category)
+        //             return category
+        //         });
+
+        //     }
+        //     return res
+        // });
     },
 };
 
@@ -43,8 +69,9 @@ const updateCategory = {
     args: {
         id: { type: new GraphQLNonNull(GraphQLID) },
         name: { type: new GraphQLNonNull(GraphQLString) },
+        image: { type: GraphQLUpload }
     },
-    async resolve(parent, args) {
+    async resolve(parent, args, req) {
         //  * CHECK TOKEN
 
         if (!req.isAuth) {
@@ -52,14 +79,18 @@ const updateCategory = {
         }
 
         //  * CHECK IF CATEGORY ALREADY EXIST
-        const categoryExist = await Category.find({ slug: slugify(args?.name, { lower: true }) })
-        if (categoryExist?.length > 0) {
-            throw new ApolloError('Category already exists');
+        // const categoryExist = await Category.find({ slug: slugify(args?.name, { lower: true }) })
+        // if (categoryExist?.length > 0) {
+        //     throw new ApolloError('Category already exists');
+        // }
+        if (args?.image) {
+            args.image = await uploadFile(args.image, `category-${args?.id}`);
         }
 
         const data = {
             name: args?.name,
             slug: slugify(args?.name, { lower: true }),
+            image: args?.image ?? ''
         }
 
         const options = { new: true };
