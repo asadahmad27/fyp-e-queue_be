@@ -9,13 +9,14 @@ import {
 } from 'graphql';
 import User from '../../models/user.js';
 import UserType from '../types/user-types.js';
-import { USER_ROLES, FILE_KEYS, SUSPENDED, USER_STATUS } from '../../constants.js';
+import { USER_ROLES, SUSPENDED, USER_STATUS } from '../../constants.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
-import { singleFileUpload } from '../schema/s3.js';
+
 import AdList from '../../models/ad-list.js';
-import multer from 'multer';
-import path from 'path';
+
 import { uploadFile } from '../schema/local-file-upload.js';
+
+import Category from '../../models/category.js';
 
 const register = {
   type: UserType,
@@ -112,6 +113,11 @@ const login = {
     );
     user.token = token;
     user.token_expirtation = 1;
+    if (user.role === USER_ROLES.ADMIN) {
+      user.total_ads = (await AdList.find()).length;
+      user.total_category = (await Category.find()).length;
+      user.total_users = (await User.find({ role: USER_ROLES.USER })).length;
+    }
 
     return user;
   },
@@ -162,7 +168,7 @@ const changePassword = {
       { password: hashedPassword },
       options
     );
-    console.log("hererere", args)
+
 
     return user;
   },

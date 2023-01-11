@@ -5,6 +5,7 @@ import {
     GraphQLInt,
     GraphQLList,
     GraphQLBoolean,
+    GraphQLScalarType,
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
@@ -23,11 +24,9 @@ const AdListType = new GraphQLObjectType({
         slug: { type: GraphQLString },
         category_id: { type: GraphQLID },
         user_id: { type: GraphQLID },
-        subCategory_id: { type: GraphQLID },
-        subCategory_details_id: { type: GraphQLID },
-        subCategory_types: { type: GraphQLString },
         province: { type: GraphQLString },
         city: { type: GraphQLString },
+        address: { type: GraphQLString },
         age: { type: GraphQLString },
         price: { type: GraphQLString },
         home_delivery: { type: GraphQLString },
@@ -46,7 +45,6 @@ const AdListType = new GraphQLObjectType({
         category: {
             type: CategoryType,
             resolve(parent, args) {
-
                 return Category.findById(parent.category_id);
             },
         },
@@ -61,7 +59,17 @@ const AdListType = new GraphQLObjectType({
         token_expirtation: { type: GraphQLInt },
         createdAt: { type: GraphQLDateTime },
         updatedAt: { type: GraphQLDateTime },
+        tags: { type: new GraphQLList(TagsType) },
+    }),
+});
 
+
+
+const TagsType = new GraphQLObjectType({
+    name: 'tags',
+    fields: () => ({
+        key: { type: GraphQLString },
+        value: { type: GraphQLString },
     }),
 });
 

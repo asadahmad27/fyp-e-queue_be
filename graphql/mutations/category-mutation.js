@@ -9,7 +9,6 @@ import {
 import Category from '../../models/category.js';
 import CategoryType from '../types/category-type.js';
 import slugify from 'slugify';
-import SubCategory from '../../models/sub-category.js';
 import { uploadFile } from '../schema/local-file-upload.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
 
@@ -17,6 +16,7 @@ const addCategory = {
     type: CategoryType,
     args: {
         name: { type: new GraphQLNonNull(GraphQLString) },
+        image: { type: GraphQLUpload }
     },
     async resolve(parent, args, req) {
         //  * CHECK TOKEN
@@ -34,33 +34,24 @@ const addCategory = {
         }
 
 
-        const newCategory = new Category({
+        let data = new Category({
             name: args?.name,
             slug: slugify(args?.name, { lower: true }),
             image: '',
         })
-        const ct = newCategory.save();
-        return ct;
-        // await (newCategory.save()).then(async (res) => {
-        //     if (args?.image) {
-        //         return await uploadFile(args?.image, `category-${res.id}`).then(async (ress) => {
+        let cate = await data.save();
+        const imageName = args?.image ? await uploadFile(args?.image, `category-${cate.id}`) : ''
 
-        //             const data = {
-        //                 image: ress ?? ''
-        //             }
+        data = {
+            image: imageName ?? ''
+        }
+        const options = { new: true };
+        const editedCate = await Category.findOneAndUpdate(
+            { _id: cate?.id },
+            data,
+            options);
 
-        //             const options = { new: true };
-        //             const category = await Category.findOneAndUpdate(
-        //                 { _id: res?.id },
-        //                 data,
-        //                 options);
-        //             console.log(category)
-        //             return category
-        //         });
-
-        //     }
-        //     return res
-        // });
+        return editedCate
     },
 };
 

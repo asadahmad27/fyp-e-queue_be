@@ -52,7 +52,9 @@ const UserType = new GraphQLObjectType({
     },
     token: { type: GraphQLString },
     token_expirtation: { type: GraphQLInt },
-
+    total_ads: { type: GraphQLInt },
+    total_category: { type: GraphQLInt },
+    total_users: { type: GraphQLInt },
     createdAt: { type: GraphQLDateTime },
     updatedAt: { type: GraphQLDateTime },
     // post_feed_ids: { type: new GraphQLList(GraphQLID) },

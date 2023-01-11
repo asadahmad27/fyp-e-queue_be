@@ -8,7 +8,6 @@ import {
     GraphQLBoolean,
     GraphQLEnumType,
     GraphQLList,
-    GraphQLInt
 } from 'graphql';
 import AdListType from '../types/ad-list-type.js';
 import AdList from '../../models/ad-list.js';
@@ -16,18 +15,17 @@ import randomstring from 'randomstring';
 import slugify from 'slugify';
 import { AD_STATUS } from '../../constants.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
-import { multipleUploadFile, multipleUploadFileSingled, NameCorrect } from '../schema/local-file-upload.js';
+import { multipleUploadFile, NameCorrect } from '../schema/local-file-upload.js';
 
 const createAdList = {
     type: AdListType,
     args: {
         title: { type: GraphQLString },
         category_id: { type: new GraphQLNonNull(GraphQLID) },
-        subCategory_id: { type: new GraphQLNonNull(GraphQLID) },
-        subCategory_details_id: { type: new GraphQLNonNull(GraphQLID) },
-        subCategory_types: { type: GraphQLString },
+        tags: { type: GraphQLString },
         province: { type: GraphQLString },
         city: { type: GraphQLString },
+        address: { type: GraphQLString },
         age: { type: GraphQLString },
         price: { type: GraphQLString },
         home_delivery: { type: GraphQLString },
@@ -49,22 +47,21 @@ const createAdList = {
             defaultValue: AD_STATUS.ACTIVE,
         },
     },
-    async resolve(parent, args) {
+    async resolve(parent, args, req) {
         //  * CHECK TOKEN
 
-        // if (!req.isAuth) {
-        //     throw new ApolloError('Not authenticated');
-        //   }
+        if (!req.isAuth) {
+            throw new ApolloError('Not authenticated');
+        }
         const slug = `${slugify(args?.title, { lower: true })}-${randomstring.generate(12).toLowerCase()}`;
         const newAd = new AdList({
             title: args?.title,
             slug,
             category_id: args?.category_id,
-            subCategory_id: args?.subCategory_id,
-            subCategory_details_id: args?.subCategory_details_id,
-            subCategory_types: args?.subCategory_types,
+            tags: JSON.parse(args?.tags) ?? [],
             province: args?.province,
             city: args?.city,
+            address: args?.address,
             age: args?.age,
             price: args?.price,
             home_delivery: args?.home_delivery,
@@ -88,6 +85,7 @@ const createAdList = {
             { _id: ad?._id },
             data,
             options);
+
         return edited;
     },
 };
@@ -98,9 +96,8 @@ const updateAdList = {
         id: { type: new GraphQLNonNull(GraphQLID) },
         title: { type: GraphQLString },
         category_id: { type: new GraphQLNonNull(GraphQLID) },
-        subCategory_id: { type: new GraphQLNonNull(GraphQLID) },
-        subCategory_details_id: { type: new GraphQLNonNull(GraphQLID) },
-        subCategory_types: { type: GraphQLString },
+        tags: { type: GraphQLString },
+        address: { type: GraphQLString },
         province: { type: GraphQLString },
         city: { type: GraphQLString },
         age: { type: GraphQLString },
@@ -114,60 +111,51 @@ const updateAdList = {
         featured: { type: GraphQLString },
         user_id: { type: new GraphQLNonNull(GraphQLID) },
         images: { type: new GraphQLList(GraphQLUpload) },
-        previousImagesNumber: { type: GraphQLInt },
         imagePaths: { type: new GraphQLList(GraphQLString) }
     },
-    async resolve(parent, args) {
+    async resolve(parent, args, req) {
         //  * CHECK TOKEN
 
-        // if (!req.isAuth) {
-        //     throw new ApolloError('Not authenticated');
-        //   }
+        if (!req.isAuth) {
+            throw new ApolloError('Not authenticated');
+        }
         let finalImages = []
 
         const images = await multipleUploadFile(args.images, `ad-${args?.id}`)
-            .then((res) => {
-                console.log(res, "res", finalImages)
-                finalImages = NameCorrect([...res, ...args?.imagePaths]);
-                const data = {
-                    title: args?.title,
-                    category_id: args?.category_id,
-                    subCategory_id: args?.subCategory_id,
-                    subCategory_details_id: args?.subCategory_details_id,
-                    subCategory_types: args?.subCategory_types,
-                    province: args?.province,
-                    city: args?.city,
-                    age: args?.age,
-                    price: args?.price,
-                    home_delivery: args?.home_delivery,
-                    description: args?.description,
-                    primary_phone: args?.primary_phone,
-                    secondary_phone: args?.secondary_phone,
-                    allow_whatsapp_contact: args?.allow_whatsapp_contact ?? boolean,
-                    status: args?.status,
-                    featured: args?.featured,
-                    images: finalImages,
-                }
-                const ad = updateFunc(data)
-                return ad
+        finalImages = NameCorrect(args?.imagePaths);
+        const newImages = finalImages?.concat(images)
+        console.log(newImages)
 
-            })
-            .catch(err => console.log(err))
+        const data = {
+            title: args?.title,
+            category_id: args?.category_id,
+            subCategory_id: args?.subCategory_id,
+            subCategory_details_id: args?.subCategory_details_id,
+            subCategory_types: args?.subCategory_types,
+            province: args?.province,
+            city: args?.city,
+            age: args?.age,
+            price: args?.price,
+            home_delivery: args?.home_delivery,
+            description: args?.description,
+            primary_phone: args?.primary_phone,
+            secondary_phone: args?.secondary_phone,
+            allow_whatsapp_contact: args?.allow_whatsapp_contact ?? false,
+            status: args?.status,
+            featured: args?.featured,
+            images: newImages,
+        }
+        const options = { new: true };
+        const ad = await AdList.findOneAndUpdate(
+            { _id: args.id },
+            data,
+            options);
 
-        console.log('---->', args.images, images, finalImages)
+        return ad;
 
     },
 };
 
-const updateFunc = async (data) => {
-    const options = { new: true };
-    const ad = await AdList.findOneAndUpdate(
-        { _id: args.id },
-        data,
-        options);
-
-    return ad;
-}
 
 const deleteteAdList = {
     type: AdListType,

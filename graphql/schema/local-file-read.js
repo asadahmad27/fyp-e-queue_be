@@ -2,7 +2,7 @@ import { createWriteStream, readdir, readFileSync } from 'fs';
 import path from 'path';
 
 const readFile = (name) => {
-    console.log(name, "gtr")
+
     const directoryPath = path.join(path.resolve("./"), 'images');
 
     var sfile = ''
@@ -17,7 +17,7 @@ const readFile = (name) => {
             if (file === name) {
                 sfile = file
             }
-            console.log(sfile, '---->')
+
             return sfile;
 
         });
@@ -27,7 +27,7 @@ const readFile = (name) => {
 
 const getBufferedFile = (name) => {
     const bufferedFile = readFileSync(path.resolve("./images/" + name))
-    console.log(bufferedFile, 'ohb')
+
     return bufferedFile
 }
 

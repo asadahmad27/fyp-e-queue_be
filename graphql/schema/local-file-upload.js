@@ -46,15 +46,19 @@ const multipleUploadFileSingled = async (image, name) => {
 };
 
 const NameCorrect = (data) => {
-    console.log(data)
-    const finalImages = data.map(item => {
-        let splited = item.split("images/")
-        if (splited[1]) {
-            return splited[1]
-        } else {
-            return splited[0]
-        }
-    })
-    return finalImages
+    if (data?.length > 0) {
+        const finalImages = data.map(item => {
+            let splited = item.split("images/")
+            if (splited[1]) {
+                return splited[1]
+            } else {
+                return splited[0]
+            }
+        })
+        return finalImages
+    }
+    return data
+
+
 }
 export { uploadFile, multipleUploadFile, NameCorrect, multipleUploadFileSingled }

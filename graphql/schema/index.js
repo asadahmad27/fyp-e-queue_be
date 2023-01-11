@@ -4,9 +4,8 @@ import {
   users
 } from '../queries/user-queries.js';
 import { allCategory, category } from "../queries/category-queries.js"
-import { allSubCategory, subCategory } from "../queries/sub-category-queries.js"
-import { allSubCategoryDetails } from "../queries/sub-category-details-queires.js"
-import { allAdListForAdmin, adList } from "../queries/ad-list-queires.js"
+
+import { allAdListForAdmin, adList, allAdList } from "../queries/ad-list-queires.js"
 import {
   register,
   login,
@@ -15,10 +14,7 @@ import {
   changePassword,
   imageTest
 } from '../mutations/user-mutations.js';
-
 import { addCategory, updateCategory, deleteCategory } from "../mutations/category-mutation.js"
-import { addSubCategory, updateSubCategory, deleteSubCategory } from "../mutations/sub-category-mutation.js"
-import { createSubCategoryDetails, updateSubCategoryDetails, deleteSubCategoryDetails } from "../mutations/sub-category-details-mutation.js"
 import { createAdList, updateAdList, deleteteAdList } from "../mutations/ad-list-mutation.js"
 
 //  * QUERIES
@@ -33,15 +29,9 @@ const RootQuery = new GraphQLObjectType({
     allCategory,
     category,
 
-    //  * SUB CATEGORY QURIE
-    allSubCategory,
-    subCategory,
-
-    //  * SUB CATEGORY DETAILS
-    allSubCategoryDetails,
-
     //  *ALL AD LIST FRO ADMIN
     allAdListForAdmin,
+    allAdList,
     adList
 
 
@@ -71,20 +61,6 @@ const mutation = new GraphQLObjectType({
     updateCategory,
     //  ? DELETE CATEGORY
     deleteCategory,
-
-    //  ? SUB CATEGORY CREATE
-    addSubCategory,
-    //  ? SUB CATEGORY UPDATE
-    updateSubCategory,
-    //  ? SUB CATEGORY DELETE
-    deleteSubCategory,
-
-    //  ? SUB CATEGORY DETAILS CREATE
-    createSubCategoryDetails,
-    //  ?SUB CATEGORY DETAILS UPDATE
-    updateSubCategoryDetails,
-    //  ?SUB CATEGORY DETAILS DLEETE
-    deleteSubCategoryDetails,
 
     //  AD LIST CREATE
     createAdList,

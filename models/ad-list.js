@@ -14,26 +14,18 @@ const AdListSchema = new mongoose.Schema(
             ref: 'Category',
             required: true
         },
-
-        subCategory_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'SubCategory',
-            required: true
-        },
-        subCategory_details_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'SubCategoryDetails',
-            required: true
-        },
-        subCategory_types: {
-            type: String,
-
+        tags: {
+            type: Array,
         },
         province: {
             type: String,
             required: true
         },
         city: {
+            type: String,
+            required: true
+        },
+        address: {
             type: String,
             required: true
         },
@@ -78,6 +70,10 @@ const AdListSchema = new mongoose.Schema(
         },
         images: {
             type: Array,
+        },
+        view: {
+            type: Number,
+            default: 0,
 
         }
     },

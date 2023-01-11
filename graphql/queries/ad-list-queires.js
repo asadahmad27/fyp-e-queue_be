@@ -25,8 +25,8 @@ const allAdListForAdmin = {
         // if (!req.isAuth) {
         //   throw new ApolloError('Not authenticated');
         // }
-
         return AdList.find();
+
     },
 };
 const adList = {
