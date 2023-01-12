@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLInt } from 'graphql';
+import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLBoolean } from 'graphql';
 import Category from '../../models/category.js';
 import CategoryType from '../types/category-type.js';
 import { ApolloError } from 'apollo-server-errors';
@@ -33,6 +33,7 @@ const adList = {
     type: AdListType,
     args: {
         id: { type: new GraphQLNonNull(GraphQLID) },
+        increaseView: { type: GraphQLBoolean }
 
     },
     resolve: (parent, args, req) => {

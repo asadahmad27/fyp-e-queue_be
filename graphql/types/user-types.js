@@ -10,6 +10,8 @@ import {
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
 import { getBufferedFile, readFile } from '../schema/local-file-read.js';
+import AdListType from './ad-list-type.js';
+import AdList from '../../models/ad-list.js';
 const { GraphQLDateTime } = pkg;
 
 // * USER TYPE
@@ -30,6 +32,14 @@ const UserType = new GraphQLObjectType({
     role: { type: GraphQLString },
     status: { type: GraphQLString },
     image: { type: GraphQLString },
+    ads: {
+      type: new GraphQLList(AdListType),
+      resolve(parent, args) {
+        return AdList.find({ user_id: parent.id })
+          .limit(10)
+          .sort({ timeStamp: -1 });
+      },
+    },
     profile_pic: {
       type: GraphQLString,
       // resolve(parent, args) {
@@ -55,6 +65,7 @@ const UserType = new GraphQLObjectType({
     total_ads: { type: GraphQLInt },
     total_category: { type: GraphQLInt },
     total_users: { type: GraphQLInt },
+    ads_sold: { type: GraphQLInt },
     createdAt: { type: GraphQLDateTime },
     updatedAt: { type: GraphQLDateTime },
     // post_feed_ids: { type: new GraphQLList(GraphQLID) },

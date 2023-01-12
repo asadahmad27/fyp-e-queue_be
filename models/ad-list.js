@@ -62,7 +62,7 @@ const AdListSchema = new mongoose.Schema(
         },
         status: {
             type: String,
-            enum: [AD_STATUS.ACTIVE, AD_STATUS.FEATURED, AD_STATUS.SOLD],
+            enum: [AD_STATUS.ACTIVE, AD_STATUS.SOLD],
         },
         featured: {
             type: String,
@@ -71,7 +71,7 @@ const AdListSchema = new mongoose.Schema(
         images: {
             type: Array,
         },
-        view: {
+        views: {
             type: Number,
             default: 0,
 

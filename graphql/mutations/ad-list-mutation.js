@@ -124,7 +124,6 @@ const updateAdList = {
         const images = await multipleUploadFile(args.images, `ad-${args?.id}`)
         finalImages = NameCorrect(args?.imagePaths);
         const newImages = finalImages?.concat(images)
-        console.log(newImages)
 
         const data = {
             title: args?.title,
@@ -157,6 +156,38 @@ const updateAdList = {
 };
 
 
+const updateAdListStatus = {
+    type: AdListType,
+    args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+        status: { type: GraphQLString },
+
+    },
+    async resolve(parent, args, req) {
+        //  * CHECK TOKEN
+
+        if (!req.isAuth) {
+            throw new ApolloError('Not authenticated');
+        }
+
+
+        const data = {
+            status: args?.status,
+
+        }
+
+        const options = { new: true };
+        const ad = await AdList.findOneAndUpdate(
+            { _id: args.id },
+            data,
+            options);
+
+        return ad;
+
+    },
+};
+
+
 const deleteteAdList = {
     type: AdListType,
     args: {
@@ -176,5 +207,6 @@ const deleteteAdList = {
 export {
     createAdList,
     updateAdList,
-    deleteteAdList
+    deleteteAdList,
+    updateAdListStatus
 }

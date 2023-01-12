@@ -2,7 +2,8 @@ import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLInt } from 'graphql';
 import User from '../../models/user.js';
 import UserType from '../types/user-types.js';
 import { ApolloError } from 'apollo-server-errors';
-import { USER_ROLES } from '../../constants.js';
+import { AD_STATUS, USER_ROLES } from '../../constants.js';
+import AdList from '../../models/ad-list.js';
 
 const users = {
   type: new GraphQLList(UserType),
@@ -22,8 +23,12 @@ const user = {
     id: { type: new GraphQLNonNull(GraphQLID) },
     // limit: { type: GraphQLInt },
   },
-  resolve(parent, args) {
-    return User.findById(args.id);
+  async resolve(parent, args) {
+    let user = await User.findById(args.id);
+    user.total_ads = (await AdList.find({ user_id: user?._id })).length;
+    user.ads_sold = (await AdList.find({ user_id: user?._id, status: AD_STATUS.SOLD })).length;
+    return user
+
   },
 };
 

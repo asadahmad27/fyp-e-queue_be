@@ -15,7 +15,7 @@ import {
   imageTest
 } from '../mutations/user-mutations.js';
 import { addCategory, updateCategory, deleteCategory } from "../mutations/category-mutation.js"
-import { createAdList, updateAdList, deleteteAdList } from "../mutations/ad-list-mutation.js"
+import { createAdList, updateAdList, deleteteAdList, updateAdListStatus } from "../mutations/ad-list-mutation.js"
 
 //  * QUERIES
 const RootQuery = new GraphQLObjectType({
@@ -67,7 +67,9 @@ const mutation = new GraphQLObjectType({
     //  ?Ad List UPDATE
     updateAdList,
     //  ? ad list delete
-    deleteteAdList
+    deleteteAdList,
+    //  ? ad list status update
+    updateAdListStatus
 
 
 

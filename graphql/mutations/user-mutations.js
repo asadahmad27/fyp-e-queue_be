@@ -113,6 +113,7 @@ const login = {
     );
     user.token = token;
     user.token_expirtation = 1;
+    user.total_ads = (await AdList.find({ user_id: user?._id })).length;
     if (user.role === USER_ROLES.ADMIN) {
       user.total_ads = (await AdList.find()).length;
       user.total_category = (await Category.find()).length;
