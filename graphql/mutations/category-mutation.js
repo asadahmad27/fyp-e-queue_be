@@ -11,6 +11,7 @@ import CategoryType from '../types/category-type.js';
 import slugify from 'slugify';
 import { uploadFile } from '../schema/local-file-upload.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
+import SubCategory from '../../models/sub-category.js';
 
 const addCategory = {
     type: CategoryType,
@@ -83,7 +84,9 @@ const updateCategory = {
             slug: slugify(args?.name, { lower: true }),
             image: args?.image ?? ''
         }
-
+        if (!args?.image) {
+            delete data.image;
+        }
         const options = { new: true };
         const category = await Category.findOneAndUpdate(
             { _id: args.id },

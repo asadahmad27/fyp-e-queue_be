@@ -1,4 +1,4 @@
-import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLBoolean } from 'graphql';
+import { GraphQLID, GraphQLList, GraphQLNonNull, GraphQLInt, GraphQLBoolean, GraphQLString } from 'graphql';
 import Category from '../../models/category.js';
 import CategoryType from '../types/category-type.js';
 import { ApolloError } from 'apollo-server-errors';
@@ -20,12 +20,23 @@ const allAdList = {
 
 const allAdListForAdmin = {
     type: new GraphQLList(AdListType),
-    resolve: (parent, args, req) => {
+    args: {
+        query: { type: GraphQLString }
+    },
+    async resolve(parent, args, req) {
         // * CHECK IF TOKEN IS VALID
         // if (!req.isAuth) {
         //   throw new ApolloError('Not authenticated');
         // }
-        return AdList.find();
+        const regex = new RegExp(args.query, 'i');
+        if (args?.query) {
+            const ads = await AdList.find({ title: { $regex: regex } })
+            return ads
+        } else {
+            const ads = await AdList.find();
+            return ads
+        }
+
 
     },
 };

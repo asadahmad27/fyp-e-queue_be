@@ -22,6 +22,7 @@ const createAdList = {
     args: {
         title: { type: GraphQLString },
         category_id: { type: new GraphQLNonNull(GraphQLID) },
+        sub_category_id: { type: GraphQLID },
         tags: { type: GraphQLString },
         province: { type: GraphQLString },
         city: { type: GraphQLString },
@@ -58,6 +59,7 @@ const createAdList = {
             title: args?.title,
             slug,
             category_id: args?.category_id,
+            sub_category_id: args?.sub_category_id ?? '',
             tags: JSON.parse(args?.tags) ?? [],
             province: args?.province,
             city: args?.city,
@@ -73,7 +75,10 @@ const createAdList = {
             status: args?.status ?? AD_STATUS.ACTIVE,
             featured: args?.featured
         })
-
+        if (!args?.sub_category_id) {
+            console.log("here")
+            delete newAd?.sub_category_id
+        }
         const ad = await newAd.save();
 
         const images = await multipleUploadFile(args.images, `ad-${ad?._id}`)
@@ -96,6 +101,7 @@ const updateAdList = {
         id: { type: new GraphQLNonNull(GraphQLID) },
         title: { type: GraphQLString },
         category_id: { type: new GraphQLNonNull(GraphQLID) },
+        sub_category_id: { type: GraphQLID },
         tags: { type: GraphQLString },
         address: { type: GraphQLString },
         province: { type: GraphQLString },
@@ -128,9 +134,7 @@ const updateAdList = {
         const data = {
             title: args?.title,
             category_id: args?.category_id,
-            subCategory_id: args?.subCategory_id,
-            subCategory_details_id: args?.subCategory_details_id,
-            subCategory_types: args?.subCategory_types,
+            sub_category_id: args?.sub_category_id ?? '',
             province: args?.province,
             city: args?.city,
             age: args?.age,
@@ -143,6 +147,9 @@ const updateAdList = {
             status: args?.status,
             featured: args?.featured,
             images: newImages,
+        }
+        if (!args?.sub_category_id) {
+            delete data?.sub_category_id
         }
         const options = { new: true };
         const ad = await AdList.findOneAndUpdate(
@@ -188,7 +195,7 @@ const updateAdListStatus = {
 };
 
 
-const deleteteAdList = {
+const deleteAdList = {
     type: AdListType,
     args: {
         id: { type: new GraphQLNonNull(GraphQLID) },
@@ -207,6 +214,6 @@ const deleteteAdList = {
 export {
     createAdList,
     updateAdList,
-    deleteteAdList,
+    deleteAdList,
     updateAdListStatus
 }

@@ -1,3 +1,9 @@
-<svg width="84" height="48" viewBox="0 0 84 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M47.7022 0.799805C34.5816 0.799805 23.1235 8.74146 16.7462 15.5362L4.01059 5.95891C2.24164 4.62781 -0.3994 6.04591 0.0526825 8.08461L3.57892 23.9998L0.0512241 39.9165C-0.400858 41.9552 2.24018 43.3718 4.00913 42.0422L16.7447 32.4649C23.122 39.2582 34.5816 47.1998 47.7022 47.1998C67.7484 47.1998 84 28.6398 84 23.9998C84 19.3598 67.7484 0.799805 47.7022 0.799805ZM60.4523 27.4798C58.5201 27.4798 56.9524 25.9211 56.9524 23.9998C56.9524 22.0771 58.5201 20.5198 60.4523 20.5198C62.3861 20.5198 63.9523 22.0771 63.9523 23.9998C63.9523 25.9211 62.3846 27.4798 60.4523 27.4798Z" fill="white"/>
-</svg>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
+<svg fill="#ffffff" width="83px" height="83px" viewBox="0 0 24 24" id="rope-left" data-name="Flat Line" xmlns="http://www.w3.org/2000/svg" class="icon flat-line" stroke="#ffffff">
+<g id="SVGRepo_bgCarrier" stroke-width="0"/>
+<g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"/>
+<g id="SVGRepo_iconCarrier">
+<path id="primary" d="M11,6a3,3,0,0,1,6,0c0,1.66-1.34,5-3,5S11,7.66,11,6Zm0,12a3,3,0,0,0,6,0c0-1.66-1.34-5-3-5S11,16.34,11,18Zm0-8h6m-7,2h8m-1,2H10.83A6.84,6.84,0,0,0,6,16H6" style="fill: none; stroke: #ffffff; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2;"/>
+</g>
+</svg>

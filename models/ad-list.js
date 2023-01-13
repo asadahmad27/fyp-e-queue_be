@@ -14,6 +14,10 @@ const AdListSchema = new mongoose.Schema(
             ref: 'Category',
             required: true
         },
+        sub_category_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'SubCategory',
+        },
         tags: {
             type: Array,
         },

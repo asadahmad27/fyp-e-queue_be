@@ -5,7 +5,6 @@ import {
     GraphQLInt,
     GraphQLList,
     GraphQLBoolean,
-    GraphQLScalarType,
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';

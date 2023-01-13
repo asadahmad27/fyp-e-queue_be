@@ -27,6 +27,7 @@ const category = {
         //   throw new ApolloError('Not authenticated');
         // }
 
+        console.log(args.id)
         return Category.findById(args.id);
     },
 };

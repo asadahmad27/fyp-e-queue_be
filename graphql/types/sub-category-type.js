@@ -3,27 +3,28 @@ import {
     GraphQLID,
     GraphQLString,
     GraphQLInt,
+    GraphQLList,
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
-import { GraphQLList } from 'graphql';
-import { SubCategoryType } from './sub-category-type.js';
-import SubCategory from '../../models/sub-category.js';
+import CategoryType from './category-type.js';
+import Category from '../../models/category.js';
 
 const { GraphQLDateTime } = pkg;
 
-// * Category TYPE
-const CategoryType = new GraphQLObjectType({
-    name: 'Category',
+// * SubCategory TYPE
+const SubCategoryType = new GraphQLObjectType({
+    name: 'SubCategory',
     fields: () => ({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         slug: { type: GraphQLString },
         image: { type: GraphQLString },
-        sub_category: {
-            type: new GraphQLList(SubCategoryType),
+        category: {
+            type: CategoryType,
             resolve(parent, args) {
-                return SubCategory.find({ category_id: parent.id })
+
+                return Category.findById(parent.category_id);
             },
         },
         token: { type: GraphQLString },
@@ -33,6 +34,4 @@ const CategoryType = new GraphQLObjectType({
 
     }),
 });
-
-
-export default CategoryType;
+export { SubCategoryType }
