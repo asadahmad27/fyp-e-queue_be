@@ -84,33 +84,17 @@ const adListOnCatelog = {
     async resolve(parent, args, req) {
         // * CHECK IF TOKEN IS VALID
 
-        // const queryData = {
-        //     province: args?.provinces,
-        //     city: args?.cities,
-        //     home_delivery: args?.home_delivery,
-        //     vaccinated: args?.vaccinated,
-        //     price: { $gte: args?.min_price, $lte: args?.max_price }
-        // };
-
-        // console.log(queryData)
-        // const ads = await adList.find({ $where: queryData })
-        console.log(args)
         const ads = await AdList.find(
-
-            // {
-            //     $and: [
             {
                 $and: [
-
                     // { province: { $in: args?.provinces } },
                     { city: { $in: args?.cities } },
-                    // { home_delivery: args?.home_delivery },
-                    // { vaccinated: args?.vaccinated },
+                    { home_delivery: args?.home_delivery },
+                    { vaccinated: args?.vaccinated },
                     { price: { $gte: args?.min_price, $lte: args?.max_price } },
                 ]
             }
-            //     ],
-            // }
+
         )
 
         return ads
