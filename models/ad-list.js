@@ -38,7 +38,7 @@ const AdListSchema = new mongoose.Schema(
             required: true
         },
         price: {
-            type: String,
+            type: Number,
             required: true
         },
         home_delivery: {
@@ -78,7 +78,10 @@ const AdListSchema = new mongoose.Schema(
         views: {
             type: Number,
             default: 0,
-
+        },
+        vaccinated: {
+            type: String,
+            default: "no"
         }
     },
     {

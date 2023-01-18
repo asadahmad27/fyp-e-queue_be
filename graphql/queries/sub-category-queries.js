@@ -31,7 +31,7 @@ const allSubCategoryByCategoryID = {
 
 
         const cc = await SubCategory.find({ category_id: args?.categoryID });
-        console.log(cc)
+
         return cc
     },
 

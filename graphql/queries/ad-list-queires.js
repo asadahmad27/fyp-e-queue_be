@@ -5,6 +5,7 @@ import { ApolloError } from 'apollo-server-errors';
 import { USER_ROLES } from '../../constants.js';
 import AdListType from '../types/ad-list-type.js';
 import AdList from '../../models/ad-list.js';
+import SubCategory from '../../models/sub-category.js';
 
 const allAdList = {
     type: new GraphQLList(AdListType),
@@ -40,25 +41,116 @@ const allAdListForAdmin = {
 
     },
 };
-const adList = {
-    type: AdListType,
+const AdsByCategory = {
+    type: new GraphQLList(AdListType),
     args: {
-        id: { type: new GraphQLNonNull(GraphQLID) },
-        increaseView: { type: GraphQLBoolean }
-
+        slug: { type: GraphQLString }
     },
-    resolve: (parent, args, req) => {
+    async resolve(parent, args, req) {
         // * CHECK IF TOKEN IS VALID
         // if (!req.isAuth) {
         //   throw new ApolloError('Not authenticated');
         // }
+        let ads;
+        const categoryData = await Category.find({ slug: args?.slug });
+        const subCategoryData = await SubCategory.find({ slug: args?.slug });
+        if (categoryData?.length > 0) {
+            ads = await AdList.find({ category_id: categoryData[0]._id });
+        } else if (subCategoryData?.length > 0) {
+            ads = await AdList.find({ sub_category_id: subCategoryData[0]._id });
+        } else {
+            ads = []
+        }
 
-        return AdList.findById(args.id);
+
+        return ads;
+
+
+    },
+};
+
+const adListOnCatelog = {
+    type: new GraphQLList(AdListType),
+    args: {
+        age: { type: GraphQLString },
+        categories: { type: new GraphQLList(GraphQLString) },
+        cities: { type: new GraphQLList(GraphQLString) },
+        provinces: { type: new GraphQLList(GraphQLString) },
+        home_delivery: { type: GraphQLString },
+        max_price: { type: GraphQLInt },
+        min_price: { type: GraphQLInt },
+        vaccinated: { type: GraphQLString },
+    },
+    async resolve(parent, args, req) {
+        // * CHECK IF TOKEN IS VALID
+
+        // const queryData = {
+        //     province: args?.provinces,
+        //     city: args?.cities,
+        //     home_delivery: args?.home_delivery,
+        //     vaccinated: args?.vaccinated,
+        //     price: { $gte: args?.min_price, $lte: args?.max_price }
+        // };
+
+        // console.log(queryData)
+        // const ads = await adList.find({ $where: queryData })
+        console.log(args)
+        const ads = await AdList.find(
+
+            // {
+            //     $and: [
+            {
+                $and: [
+
+                    // { province: { $in: args?.provinces } },
+                    { city: { $in: args?.cities } },
+                    // { home_delivery: args?.home_delivery },
+                    // { vaccinated: args?.vaccinated },
+                    { price: { $gte: args?.min_price, $lte: args?.max_price } },
+                ]
+            }
+            //     ],
+            // }
+        )
+
+        return ads
+
+    },
+};
+const adList = {
+    type: AdListType,
+    args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+        increaseViewCount: { type: GraphQLString }
+
+    },
+    async resolve(parent, args, req) {
+
+        const ad = await AdList.findById(args.id);
+
+        if (args?.increaseViewCount == "true") {
+
+            const data = {
+                views: ad?.views + 1
+            }
+            const options = { new: true };
+            const increasedViewCount = await AdList.findOneAndUpdate(
+                { _id: ad?._id },
+                data,
+                options);
+
+            return increasedViewCount
+        } else {
+            return ad;
+        }
+
     },
 };
 
 export {
     allAdList,
     adList,
-    allAdListForAdmin
+    allAdListForAdmin,
+    adListOnCatelog,
+    AdsByCategory
 }

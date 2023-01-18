@@ -8,6 +8,7 @@ import {
     GraphQLBoolean,
     GraphQLEnumType,
     GraphQLList,
+    GraphQLInt,
 } from 'graphql';
 import AdListType from '../types/ad-list-type.js';
 import AdList from '../../models/ad-list.js';
@@ -28,7 +29,7 @@ const createAdList = {
         city: { type: GraphQLString },
         address: { type: GraphQLString },
         age: { type: GraphQLString },
-        price: { type: GraphQLString },
+        price: { type: GraphQLInt },
         home_delivery: { type: GraphQLString },
         description: { type: GraphQLString },
         primary_phone: { type: GraphQLString },
@@ -36,6 +37,7 @@ const createAdList = {
         allow_whatsapp_contact: { type: GraphQLBoolean },
         user_id: { type: new GraphQLNonNull(GraphQLID) },
         images: { type: new GraphQLList(GraphQLUpload) },
+        vaccinated: { type: GraphQLString },
         featured: { type: GraphQLString },
         status: {
             type: new GraphQLEnumType({
@@ -73,7 +75,8 @@ const createAdList = {
             allow_whatsapp_contact: args?.allow_whatsapp_contact ?? false,
             user_id: args?.user_id,
             status: args?.status ?? AD_STATUS.ACTIVE,
-            featured: args?.featured
+            featured: args?.featured,
+            vaccinated: args?.vaccinated ?? 'no',
         })
         if (!args?.sub_category_id) {
             console.log("here")
@@ -107,7 +110,7 @@ const updateAdList = {
         province: { type: GraphQLString },
         city: { type: GraphQLString },
         age: { type: GraphQLString },
-        price: { type: GraphQLString },
+        price: { type: GraphQLInt },
         home_delivery: { type: GraphQLString },
         description: { type: GraphQLString },
         primary_phone: { type: GraphQLString },
@@ -117,7 +120,8 @@ const updateAdList = {
         featured: { type: GraphQLString },
         user_id: { type: new GraphQLNonNull(GraphQLID) },
         images: { type: new GraphQLList(GraphQLUpload) },
-        imagePaths: { type: new GraphQLList(GraphQLString) }
+        imagePaths: { type: new GraphQLList(GraphQLString) },
+        vaccinated: { type: GraphQLString },
     },
     async resolve(parent, args, req) {
         //  * CHECK TOKEN
@@ -128,8 +132,8 @@ const updateAdList = {
         let finalImages = []
 
         const images = await multipleUploadFile(args.images, `ad-${args?.id}`)
-        finalImages = NameCorrect(args?.imagePaths);
-        const newImages = finalImages?.concat(images)
+        // finalImages = NameCorrect(args?.imagePaths);
+        const newImages = args?.imagePaths?.concat(images)
 
         const data = {
             title: args?.title,
@@ -147,6 +151,7 @@ const updateAdList = {
             status: args?.status,
             featured: args?.featured,
             images: newImages,
+            vaccinated: args?.vaccinated ?? 'no',
         }
         if (!args?.sub_category_id) {
             delete data?.sub_category_id
