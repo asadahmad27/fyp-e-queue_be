@@ -58,6 +58,23 @@ const AdListType = new GraphQLObjectType({
                 return SubCategory.findById(parent.sub_category_id);
             },
         },
+        similar_ads: {
+            type: new GraphQLList(AdListType),
+            resolve(parent, args) {
+                const regex = new RegExp(parent.title, 'i');
+                return AdList.find({
+                    $and: [
+                        {
+                            $or: [{ category_id: parent.category_id },
+                            { sub_category_id: parent.sub_category_id },
+                            { title: { $regex: regex } }]
+                        },
+                        { id: { $ne: parent.id } }
+                    ],
+
+                })
+            },
+        },
         // similar_ads: {
         //     type: new GraphQLList(AdListType),
         //     resolve(parent, args) {

@@ -22,16 +22,23 @@ const allAdList = {
 const allAdListForAdmin = {
     type: new GraphQLList(AdListType),
     args: {
-        query: { type: GraphQLString }
+        query: { type: GraphQLString },
+        limit: { type: GraphQLInt }
     },
     async resolve(parent, args, req) {
-        // * CHECK IF TOKEN IS VALID
-        // if (!req.isAuth) {
-        //   throw new ApolloError('Not authenticated');
-        // }
+
+        const DEFAULT_LIMIT = 40;
         const regex = new RegExp(args.query, 'i');
         if (args?.query) {
             const ads = await AdList.find({ title: { $regex: regex } })
+            return ads
+        } else if (args?.limit || args?.limit === 0) {
+            const ads = await AdList.find().skip(args.limit)
+                .limit(DEFAULT_LIMIT);
+            return ads
+        } else if (args?.limit && args?.limit) {
+            const ads = await AdList.find({ title: { $regex: regex } }).skip(args.limit)
+                .limit(DEFAULT_LIMIT);
             return ads
         } else {
             const ads = await AdList.find();
