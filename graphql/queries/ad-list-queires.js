@@ -97,7 +97,7 @@ const adListOnCatelog = {
                     // { province: { $in: args?.provinces } },
                     { city: { $in: args?.cities } },
                     { home_delivery: args?.home_delivery },
-                    { vaccinated: args?.vaccinated },
+                    // { vaccinated: args?.vaccinated },
                     { price: { $gte: args?.min_price, $lte: args?.max_price } },
                 ]
             }
