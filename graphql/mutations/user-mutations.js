@@ -175,6 +175,27 @@ const changePassword = {
   },
 };
 
+const updateAddress = {
+  type: UserType,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    address: { type: new GraphQLNonNull(GraphQLString) },
+
+  },
+  async resolve(parent, args) {
+
+    const options = { new: true };
+    await User.findOneAndUpdate(
+      { _id: args.id },
+      { address: args?.address },
+      options
+    );
+
+
+    return user;
+  },
+};
+
 const updateUser = {
   type: UserType,
   args: {
@@ -414,7 +435,8 @@ export {
   updateUser,
   deleteUser,
   changePassword,
-  imageTest
+  imageTest,
+  updateAddress
   // deleteUser,
   // followUser,
   // verifyUser,
