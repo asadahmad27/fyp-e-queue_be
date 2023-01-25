@@ -2,6 +2,8 @@ import { createWriteStream } from 'fs';
 import path from 'path';
 import randomstring from 'randomstring';
 
+
+const DOMAIN_NAME = "https://petvet-backend.vercel.app"
 const uploadFile = async (image, name) => {
 
     const { filename, createReadStream } = await image;
@@ -10,7 +12,7 @@ const uploadFile = async (image, name) => {
     const stream = createReadStream();
     const pathName = path.join(path.resolve("./"), `/public/images/${name}.${imgExtension}`);
     await stream.pipe(createWriteStream(pathName))
-    return `http://localhost:8000/images/${name}.${imgExtension}`;
+    return `${DOMAIN_NAME}/${name}.${imgExtension}`;
 
 };
 
@@ -24,7 +26,7 @@ const multipleUploadFile = async (images, name) => {
         const finalName = `${name}-${randomstring.generate(12).toLowerCase()}.${imgExtension}`
         const pathName = path.join(path.resolve("./"), `/public/images/${finalName}`);
         await stream.pipe(createWriteStream(pathName))
-        names.push(`http://localhost:8000/images/${finalName}`)
+        names.push(`${DOMAIN_NAME}/${finalName}`)
     }
     // await images.forEach(async (element, index) => {
 
@@ -41,7 +43,7 @@ const multipleUploadFileSingled = async (image, name) => {
     const finalName = `${name}-${randomstring.generate(12).toLowerCase()}.${imgExtension}`
     const pathName = path.join(path.resolve("./"), `/public/images/${finalName}`);
     await stream.pipe(createWriteStream(pathName))
-    return `http://localhost:8000/images/${finalName}`
+    return `${DOMAIN_NAME}/${finalName}`
 
 };
 
