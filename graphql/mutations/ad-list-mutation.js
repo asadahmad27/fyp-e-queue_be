@@ -57,7 +57,7 @@ const createAdList = {
             throw new ApolloError('Not authenticated');
         }
         const slug = `${slugify(args?.title, { lower: true })}-${randomstring.generate(12).toLowerCase()}`;
-        console.log(args)
+
         const newAd = new AdList({
             title: args?.title,
             slug,
