@@ -35,7 +35,6 @@ cron.schedule('0 0 * * *', () => {
 //  * MIDDLEWARE
 var corsOptions = {
   origin: '*',
-  credentials: true // <-- REQUIRED backend setting
 };
 
 const maxRequestBodySize = '5mb';
