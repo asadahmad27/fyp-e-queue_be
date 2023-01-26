@@ -12,7 +12,7 @@ const uploadFile = async (image, name) => {
     const stream = createReadStream();
     const pathName = path.join(path.resolve("./"), `/public/images/${name}.${imgExtension}`);
     await stream.pipe(createWriteStream(pathName))
-    return `${DOMAIN_NAME}/${name}.${imgExtension}`;
+    return `${DOMAIN_NAME}/images/${name}.${imgExtension}`;
 
 };
 
@@ -26,7 +26,7 @@ const multipleUploadFile = async (images, name) => {
         const finalName = `${name}-${randomstring.generate(12).toLowerCase()}.${imgExtension}`
         const pathName = path.join(path.resolve("./"), `/public/images/${finalName}`);
         await stream.pipe(createWriteStream(pathName))
-        names.push(`${DOMAIN_NAME}/${finalName}`)
+        names.push(`${DOMAIN_NAME}/images/${finalName}`)
     }
     // await images.forEach(async (element, index) => {
 
