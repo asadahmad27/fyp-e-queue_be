@@ -33,10 +33,15 @@ cron.schedule('0 0 * * *', () => {
 });
 
 //  * MIDDLEWARE
+var corsOptions = {
+  origin: 'https://petvet-v2-six.vercel.app/',
+  credentials: true // <-- REQUIRED backend setting
+};
+
 const maxRequestBodySize = '5mb';
 app.use(express.json({ limit: maxRequestBodySize }));
 app.use(express.urlencoded({ limit: maxRequestBodySize }));
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(isAuth);

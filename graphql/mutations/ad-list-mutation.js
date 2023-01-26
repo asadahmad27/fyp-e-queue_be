@@ -79,12 +79,12 @@ const createAdList = {
             vaccinated: args?.vaccinated ?? 'no',
         })
         if (!args?.sub_category_id) {
-            console.log("here")
+
             delete newAd?.sub_category_id
         }
         const ad = await newAd.save();
-        console.log("herer")
-        return ad
+        return ad;
+
         // const images = await multipleUploadFile(args.images, `ad-${ad?._id}`)
         // const options = { new: true };
         // const data = {
