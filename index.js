@@ -34,7 +34,7 @@ cron.schedule('0 0 * * *', () => {
 
 //  * MIDDLEWARE
 var corsOptions = {
-  origin: 'https://petvet-v2-six.vercel.app/',
+  origin: '*',
   credentials: true // <-- REQUIRED backend setting
 };
 
