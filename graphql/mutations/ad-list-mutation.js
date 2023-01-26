@@ -84,19 +84,19 @@ const createAdList = {
             delete newAd?.sub_category_id
         }
         const ad = await newAd.save();
-        return ad;
+        // return ad;
 
-        // const images = await multipleUploadFile(args.images, `ad-${ad?._id}`)
-        // const options = { new: true };
-        // const data = {
-        //     images,
-        // }
-        // const edited = await AdList.findOneAndUpdate(
-        //     { _id: ad?._id },
-        //     data,
-        //     options);
+        const images = await multipleUploadFile(args.images, `ad-${ad?._id}`)
+        const options = { new: true };
+        const data = {
+            images,
+        }
+        const edited = await AdList.findOneAndUpdate(
+            { _id: ad?._id },
+            data,
+            options);
 
-        // return edited;
+        return edited;
     },
 };
 
