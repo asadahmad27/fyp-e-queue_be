@@ -10,6 +10,7 @@ import isAuth from './middleware/is-auth.js';
 import cron from 'node-cron';
 import User from './models/user.js';
 import { USER_ROLES } from './constants.js';
+import isHeader from './middleware/is-headers.js';
 //  * INTIALIZE  DOTENV TO LOAD VARIABLES FROM .ENV fILE
 dotenv.config();
 
@@ -39,9 +40,8 @@ var corsOptions = {
   accessControlAllowOrigin: '*',
   accessControlAllowCredentials: true,
   accessControlAllowMethods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  preflightContinue: false,
 };
-
+// app.use(isHeader);
 const maxRequestBodySize = '5mb';
 app.use(express.json({ limit: maxRequestBodySize }));
 app.use(express.urlencoded({ limit: maxRequestBodySize }));
