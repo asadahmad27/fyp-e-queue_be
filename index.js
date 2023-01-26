@@ -35,6 +35,9 @@ cron.schedule('0 0 * * *', () => {
 //  * MIDDLEWARE
 var corsOptions = {
   origin: '*',
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  accessControlAllowOrigin: '*',
+  accessControlAllowCredentials: true,
 };
 
 const maxRequestBodySize = '5mb';
