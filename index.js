@@ -34,18 +34,18 @@ cron.schedule('0 0 * * *', () => {
 });
 
 //  * MIDDLEWARE
-// var corsOptions = {
-//   origin: '*',
-//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//   accessControlAllowOrigin: '*',
-//   accessControlAllowCredentials: true,
-//   accessControlAllowMethods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-// };
+var corsOptions = {
+  origin: '*',
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  accessControlAllowOrigin: '*',
+  accessControlAllowCredentials: true,
+  accessControlAllowMethods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+};
 // app.use(isHeader);
 const maxRequestBodySize = '5mb';
 app.use(express.json({ limit: maxRequestBodySize }));
 app.use(express.urlencoded({ limit: maxRequestBodySize }));
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(isAuth);
