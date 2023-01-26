@@ -36,7 +36,7 @@ cron.schedule('0 0 * * *', () => {
 var corsOptions = {
   origin: '*',
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  accessControlAllowOrigin: ['https://petvet-v2-six.vercel.app/*', 'http://localhost:3000/*'],
+  accessControlAllowOrigin: ['https://petvet-v2-six.vercel.app', 'http://localhost:3000'],
   accessControlAllowCredentials: true,
 };
 
