@@ -83,7 +83,7 @@ const createAdList = {
             delete newAd?.sub_category_id
         }
         const ad = await newAd.save();
-
+        console.log("herer")
         const images = await multipleUploadFile(args.images, `ad-${ad?._id}`)
         const options = { new: true };
         const data = {
