@@ -45,6 +45,7 @@ app.use(express.static('public'));
 //  * SETTING UP GRAPHQL
 app.use(
   '/petvet',
+
   graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
   graphqlHTTP({
     schema,

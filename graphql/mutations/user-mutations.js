@@ -185,7 +185,7 @@ const updateAddress = {
   async resolve(parent, args) {
 
     const options = { new: true };
-    await User.findOneAndUpdate(
+    const user = await User.findOneAndUpdate(
       { _id: args.id },
       { address: args?.address },
       options

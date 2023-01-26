@@ -84,17 +84,18 @@ const createAdList = {
         }
         const ad = await newAd.save();
         console.log("herer")
-        const images = await multipleUploadFile(args.images, `ad-${ad?._id}`)
-        const options = { new: true };
-        const data = {
-            images,
-        }
-        const edited = await AdList.findOneAndUpdate(
-            { _id: ad?._id },
-            data,
-            options);
+        return ad
+        // const images = await multipleUploadFile(args.images, `ad-${ad?._id}`)
+        // const options = { new: true };
+        // const data = {
+        //     images,
+        // }
+        // const edited = await AdList.findOneAndUpdate(
+        //     { _id: ad?._id },
+        //     data,
+        //     options);
 
-        return edited;
+        // return edited;
     },
 };
 
