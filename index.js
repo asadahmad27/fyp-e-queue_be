@@ -38,6 +38,8 @@ var corsOptions = {
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   accessControlAllowOrigin: '*',
   accessControlAllowCredentials: true,
+  accessControlAllowMethods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  preflightContinue: false,
 };
 
 const maxRequestBodySize = '5mb';
