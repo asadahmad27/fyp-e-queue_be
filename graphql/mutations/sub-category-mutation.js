@@ -39,7 +39,7 @@ const addSubCategory = {
             category_id: args?.categoryID
         })
         const subCategory = await newSubCategory.save();
-        const imageName = args?.image ? await uploadFile(args?.image, `sub-category-${subCategory._id}`) : ''
+        const imageName = args?.image ? await uploadFile(args.image, 'sub-category', args?.id, `sub-category-${args?.id}`) : ''
 
         const data = {
             image: imageName ?? ''
@@ -70,7 +70,7 @@ const updateSubCategory = {
             throw new ApolloError('Not authenticated');
         }
         if (args?.image) {
-            args.image = await uploadFile(args.image, `sub-category-${args?.id}`);
+            args.image = await uploadFile(args.image, 'sub-category', args?.id, `sub-category-${args?.id}`);
         }
 
         const slug = `${slugify(args?.name, { lower: true })}-${randomstring.generate(12).toLowerCase()}`;

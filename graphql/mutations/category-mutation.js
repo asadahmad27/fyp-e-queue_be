@@ -41,7 +41,7 @@ const addCategory = {
             image: '',
         })
         let cate = await data.save();
-        const imageName = args?.image ? await uploadFile(args?.image, `category-${cate.id}`) : ''
+        const imageName = args?.image ? await uploadFile(args.image, 'category', args?.id, `category-${args?.id}`) : ''
 
         data = {
             image: imageName ?? ''
@@ -76,7 +76,7 @@ const updateCategory = {
         //     throw new ApolloError('Category already exists');
         // }
         if (args?.image) {
-            args.image = await uploadFile(args.image, `category-${args?.id}`);
+            args.image = await uploadFile(args.image, 'category', args?.id, `category-${args?.id}`);
         }
 
         const data = {

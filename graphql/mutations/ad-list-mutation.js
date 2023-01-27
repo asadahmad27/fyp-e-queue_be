@@ -16,7 +16,7 @@ import randomstring from 'randomstring';
 import slugify from 'slugify';
 import { AD_STATUS } from '../../constants.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
-import { multipleUploadFile, NameCorrect } from '../schema/local-file-upload.js';
+import { DeleteFile, multipleUploadFile, NameCorrect } from '../schema/local-file-upload.js';
 
 const createAdList = {
     type: AdListType,
@@ -86,7 +86,7 @@ const createAdList = {
         const ad = await newAd.save();
         // return ad;
 
-        const images = await multipleUploadFile(args.images, `ad-${ad?._id}`)
+        const images = await multipleUploadFile(args.images, 'ad', ad?._id, `ad-${ad?._id}`)
         const options = { new: true };
         const data = {
             images,
@@ -133,7 +133,7 @@ const updateAdList = {
         }
         let finalImages = []
 
-        const images = await multipleUploadFile(args.images, `ad-${args?.id}`)
+        const images = await multipleUploadFile(args.images, 'ad', args?.id, `ad-${args?.id}`)
         // finalImages = NameCorrect(args?.imagePaths);
         const newImages = args?.imagePaths?.concat(images)
 
@@ -213,6 +213,7 @@ const deleteAdList = {
         // if (!req.isAuth) {
         //     throw new ApolloError('Not authenticated');
         //   }
+        // await DeleteFile('ad', args?.id)
         const ad = await AdList.findByIdAndDelete(args.id)
         return ad;
     },

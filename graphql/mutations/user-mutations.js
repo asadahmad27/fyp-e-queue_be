@@ -224,7 +224,7 @@ const updateUser = {
     //   );
     // }
     if (args?.profile_pic) {
-      args.profile_pic = await uploadFile(args.profile_pic, `profile-${args?.id}`);
+      args.profile_pic = await uploadFile(args.profile_pic, `profile`, args?.id, `img-${args?.id}`);
     }
 
     // let hashedPassword;
