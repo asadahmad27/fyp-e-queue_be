@@ -9,7 +9,7 @@ import {
 import Category from '../../models/category.js';
 import CategoryType from '../types/category-type.js';
 import slugify from 'slugify';
-import { uploadFile } from '../schema/local-file-upload.js';
+import { DeleteFile, uploadFile } from '../schema/local-file-upload.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
 import SubCategory from '../../models/sub-category.js';
 
@@ -41,7 +41,7 @@ const addCategory = {
             image: '',
         })
         let cate = await data.save();
-        const imageName = args?.image ? await uploadFile(args.image, 'category', args?.id, `category-${args?.id}`) : ''
+        const imageName = args?.image ? await uploadFile(args.image, 'category', cate?.id, `category-${cate?.id}`) : ''
 
         data = {
             image: imageName ?? ''
@@ -110,12 +110,13 @@ const deleteCategory = {
             throw new ApolloError('Not authenticated');
         }
         SubCategory?.find({ category_id: args.id }).then((subCategories) => {
-            subCategories?.forEach((subCategory) => {
+            subCategories?.forEach(async (subCategory) => {
+                await DeleteFile('sub-category', subCategory?._id)
                 //  * DELETE BRAND REVIEWS
                 subCategory?.remove()
             });
         });
-
+        await DeleteFile('category', args?.id)
         const category = await Category.findByIdAndDelete(args.id)
         return category;
     },

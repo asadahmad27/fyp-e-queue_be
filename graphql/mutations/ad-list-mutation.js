@@ -213,7 +213,7 @@ const deleteAdList = {
         // if (!req.isAuth) {
         //     throw new ApolloError('Not authenticated');
         //   }
-        // await DeleteFile('ad', args?.id)
+        await DeleteFile('ad', args?.id)
         const ad = await AdList.findByIdAndDelete(args.id)
         return ad;
     },

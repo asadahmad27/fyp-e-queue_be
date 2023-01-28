@@ -20,7 +20,7 @@ const uploadFile = async (image, folderName, id, name) => {
 
     const pathName = path.join(path.resolve("./"), `${dir}/${name}.${imgExtension}`);
     await stream.pipe(createWriteStream(pathName))
-    return `${DOMAIN_NAME}/${folderName}/${id}/${name}.${imgExtension}`;
+    return `${folderName}/${id}/${name}.${imgExtension}`;
 
 };
 
@@ -49,7 +49,7 @@ const multipleUploadFile = async (images, folderName, id, name) => {
         const finalName = `${name}-${randomstring.generate(12).toLowerCase()}.${imgExtension}`
         const pathName = path.join(path.resolve("./"), `${dir}/${finalName}`);
         await stream.pipe(createWriteStream(pathName))
-        names.push(`${DOMAIN_NAME}/${folderName}/${id}/${finalName}`)
+        names.push(`${folderName}/${id}/${finalName}`)
     }
 
     return names

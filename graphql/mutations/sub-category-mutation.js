@@ -13,7 +13,7 @@ import SubCategory from '../../models/sub-category.js';
 import randomstring from 'randomstring';
 import { SubCategoryType } from '../types/sub-category-type.js';
 import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
-import { uploadFile } from '../schema/local-file-upload.js';
+import { DeleteFile, uploadFile } from '../schema/local-file-upload.js';
 
 const addSubCategory = {
     type: SubCategoryType,
@@ -38,8 +38,8 @@ const addSubCategory = {
             slug,
             category_id: args?.categoryID
         })
-        const subCategory = await newSubCategory.save();
-        const imageName = args?.image ? await uploadFile(args.image, 'sub-category', args?.id, `sub-category-${args?.id}`) : ''
+        const subCategory = await newSubCategory.save(); subCategory
+        const imageName = args?.image ? await uploadFile(args.image, 'sub-category', subCategory?.id, `sub-category-${subCategory?.id}`) : ''
 
         const data = {
             image: imageName ?? ''
@@ -108,12 +108,8 @@ const deleteSubCategory = {
         if (!req.isAuth) {
             throw new ApolloError('Not authenticated');
         }
-        // SubCategoryDetails?.find({ subCategory_id: args.id }).then((details) => {
-        //     details?.forEach((detail) => {
-        //         //  * DELETE BRAND REVIEWS
-        //         detail?.remove()
-        //     });
-        // });
+
+        await DeleteFile('sub-category', args?.id)
         const subCategory = await SubCategory.findByIdAndDelete(args.id)
         return subCategory;
     },

@@ -313,11 +313,13 @@ const deleteUser = {
 
     //  * DELETE Ads
     AdList?.find({ user_id: args.id }).then((ads) => {
-      ads?.forEach((ad) => {
-        //  * DELETE BRAND REVIEWS
+      ads?.forEach(async (ad) => {
+        // *delete images
+        await DeleteFile('ad', ad?._id)
         ad?.remove()
       });
     });
+    await DeleteFile('profile', args?.id)
     const user = await User.findByIdAndDelete(args.id);
     return user;
   },
