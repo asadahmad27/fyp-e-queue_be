@@ -1,6 +1,7 @@
 const USER_ROLES = {
   USER: 'USER',
   ADMIN: 'ADMIN',
+  EMPLOY: "EMPLOY"
 };
 const FILE_KEYS = {
   PROFILE_PICS: 'profile_pics',

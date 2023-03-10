@@ -23,16 +23,6 @@ const app = express();
 // * CONNECT DATABASE
 connectDB();
 
-//  * RESET REVIEWS DONE COUNT TO = 0 EVERY MIDNIGHT
-cron.schedule('0 0 * * *', () => {
-  User.find({ role: USER_ROLES.USER }).then((users) => {
-    users.forEach((user) => {
-      user.total_reviews_done = 0;
-      user.save();
-    });
-  });
-});
-
 //  * MIDDLEWARE
 var corsOptions = {
   origin: '*',
@@ -53,7 +43,7 @@ app.use(express.static('public'));
 
 //  * SETTING UP GRAPHQL
 app.use(
-  '/petvet',
+  '/e-queue',
 
   graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
   graphqlHTTP({

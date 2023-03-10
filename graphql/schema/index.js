@@ -1,7 +1,8 @@
 import { GraphQLSchema, GraphQLObjectType } from 'graphql';
 import {
   user,
-  users
+  users,
+  allEmploys
 } from '../queries/user-queries.js';
 import { allCategory, category } from "../queries/category-queries.js"
 
@@ -13,7 +14,9 @@ import {
   deleteUser,
   changePassword,
   imageTest,
-  updateAddress
+  updateAddress,
+  empRegister,
+  empLogin
 } from '../mutations/user-mutations.js';
 import { addCategory, updateCategory, deleteCategory } from "../mutations/category-mutation.js"
 import { addSubCategory, updateSubCategory, deleteSubCategory } from "../mutations/sub-category-mutation.js"
@@ -27,6 +30,7 @@ const RootQuery = new GraphQLObjectType({
     //  * USERS QUERIE
     user,
     users,
+    allEmploys,
 
     //  * CATEGORY QUERIE
     allCategory,
@@ -56,6 +60,10 @@ const mutation = new GraphQLObjectType({
     // ? LOGIN USER
     login,
     // ? PROFILE UPDATE
+    // EMPLOYEE REGISTER
+    empRegister,
+    // // EMPLOYEE LOGIN 
+    empLogin,
     updateUser,
     //  ? USER DELETE
     deleteUser,

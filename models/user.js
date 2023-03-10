@@ -6,43 +6,43 @@ const UserSchema = new mongoose.Schema(
     name: {
       type: String,
     },
-    last_name: {
-      type: String,
-    },
+    // last_name: {
+    //   type: String,
+    // },
     email: {
       type: String,
-      required: true,
       unique: true,
     },
     phone: {
       type: String,
+      unique: true,
     },
     role: {
       type: String,
-      enum: [USER_ROLES.ADMIN, USER_ROLES.USER],
+      enum: [USER_ROLES.ADMIN, USER_ROLES.USER, USER_ROLES.EMPLOY],
     },
     password: {
       type: String,
     },
-    about: {
-      type: String,
-    },
-    province: {
-      type: String,
-    },
-    city: {
-      type: String,
-    },
-    address: {
-      type: String,
-    },
-    profile_pic: {
-      type: String,
-    },
-    status: {
-      type: String,
-      enum: [USER_STATUS.ACTIVE, USER_STATUS.UNACTIVE],
-    }
+    // about: {
+    //   type: String,
+    // },
+    // province: {
+    //   type: String,
+    // },
+    // city: {
+    //   type: String,
+    // },
+    // address: {
+    //   type: String,
+    // },
+    // profile_pic: {
+    //   type: String,
+    // },
+    // status: {
+    //   type: String,
+    //   enum: [USER_STATUS.ACTIVE, USER_STATUS.UNACTIVE],
+    // }
 
   },
   {

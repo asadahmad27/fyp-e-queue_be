@@ -25,12 +25,25 @@ const user = {
   },
   async resolve(parent, args) {
     let user = await User.findById(args.id);
-    user.total_ads = (await AdList.find({ user_id: user?._id })).length;
-    user.ads_sold = (await AdList.find({ user_id: user?._id, status: AD_STATUS.SOLD })).length;
+    // user.total_ads = (await AdList.find({ user_id: user?._id })).length;
+    // user.ads_sold = (await AdList.find({ user_id: user?._id, status: AD_STATUS.SOLD })).length;
     return user
 
   },
 };
+
+const allEmploys = {
+  type: new GraphQLList(UserType),
+  resolve: (parent, args, req) => {
+    // * CHECK IF TOKEN IS VALID
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
+
+    return User.find({ role: USER_ROLES.EMPLOY });
+  },
+};
+
 
 // const userForAdmin = {
 //   type: UserType,
@@ -51,4 +64,4 @@ const user = {
 //   },
 // };
 
-export { users, user, };
+export { users, user, allEmploys };

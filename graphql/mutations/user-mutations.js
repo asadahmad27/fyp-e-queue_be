@@ -22,33 +22,24 @@ const register = {
   type: UserType,
   args: {
     name: { type: new GraphQLNonNull(GraphQLString) },
-    email: { type: new GraphQLNonNull(GraphQLString) },
+    // email: { type: new GraphQLNonNull(GraphQLString) },
     password: { type: new GraphQLNonNull(GraphQLString) },
     phone: { type: GraphQLString },
     role: {
       type: new GraphQLEnumType({
         name: 'UserRole',
         values: {
-          author: { value: USER_ROLES.USER },
+          user: { value: USER_ROLES.USER },
           admin: { value: USER_ROLES.ADMIN },
+          employ: { value: USER_ROLES.EMPLOY }
         },
       }),
       defaultValue: USER_ROLES.USER,
     },
-    status: {
-      type: new GraphQLEnumType({
-        name: 'ActiveStatus',
-        values: {
-          author: { value: USER_STATUS.ACTIVE },
-          admin: { value: USER_STATUS.UNACTIVE },
-        },
-      }),
-      defaultValue: USER_STATUS.ACTIVE,
-    },
   },
   async resolve(parent, args) {
     //  * CHECK IF USER EXISTS
-    const userExist = await User.findOne({ email: args.email });
+    const userExist = await User.findOne({ phone: args.phone });
     if (userExist) {
       throw new ApolloError('User already exists');
     }
@@ -59,11 +50,11 @@ const register = {
 
     const newUser = new User({
       name: args.name,
-      email: args.email,
+      email: "N/A",
       password: hashedPassword,
       phone: args.phone,
       role: args.role,
-      status: args.status
+      // status: args.status
     });
 
     // * CREATE AND ASSIGN TOKEN
@@ -84,19 +75,15 @@ const register = {
 const login = {
   type: UserType,
   args: {
-    email: { type: new GraphQLNonNull(GraphQLString) },
+    phone: { type: new GraphQLNonNull(GraphQLString) },
     password: { type: new GraphQLNonNull(GraphQLString) },
   },
   async resolve(parent, args) {
     //  * CHECK IF USER EXISTS
-    const user = await User.findOne({ email: args.email });
+    const user = await User.findOne({ phone: args.phone });
 
     if (!user) {
       throw new ApolloError('User does not exist');
-    }
-
-    if (user.suspended) {
-      throw new ApolloError(SUSPENDED);
     }
 
     //   * COMPARE HASHED PASSWORD
@@ -113,12 +100,83 @@ const login = {
     );
     user.token = token;
     user.token_expirtation = 1;
-    user.total_ads = (await AdList.find({ user_id: user?._id })).length;
-    if (user.role === USER_ROLES.ADMIN) {
-      user.total_ads = (await AdList.find()).length;
-      user.total_category = (await Category.find()).length;
-      user.total_users = (await User.find({ role: USER_ROLES.USER })).length;
+
+    return user;
+  },
+};
+
+
+const empRegister = {
+  type: UserType,
+  args: {
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    password: { type: new GraphQLNonNull(GraphQLString) },
+    phone: { type: GraphQLString },
+  },
+  async resolve(parent, args) {
+    //  * CHECK IF USER EXISTS
+    const userExist = await User.findOne({ email: args.email });
+    if (userExist) {
+      throw new ApolloError('Employ already exists');
     }
+
+    //  * HASH PASSWORD
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(args.password, salt);
+
+    const newUser = new User({
+      name: args.name,
+      email: args.email,
+      password: hashedPassword,
+      phone: args?.phone ?? "N/A",
+      role: USER_ROLES.EMPLOY,
+      // status: args.status
+    });
+
+    // * CREATE AND ASSIGN TOKEN
+    const token = jwt.sign(
+      { _id: newUser._id, role: newUser.role },
+      process.env.TOKEN_SECRET,
+      { expiresIn: '24h' }
+    );
+    newUser.token = token;
+    newUser.token_expirtation = 1;
+
+    const user = await newUser.save();
+
+    return user;
+  },
+};
+
+const empLogin = {
+  type: UserType,
+  args: {
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    password: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  async resolve(parent, args) {
+    //  * CHECK IF USER EXISTS
+    const user = await User.findOne({ email: args.email });
+
+    if (!user) {
+      throw new ApolloError('Employe does not exist');
+    }
+
+    //   * COMPARE HASHED PASSWORD
+    const isMatch = await bcrypt.compare(args.password, user.password);
+    if (!isMatch) {
+      throw new ApolloError('Password is incorrect');
+    }
+
+    // * CREATE AND ASSIGN TOKEN
+    const token = jwt.sign(
+      { _id: user._id, role: user.role },
+      process.env.TOKEN_SECRET,
+      { expiresIn: '24h' }
+    );
+    user.token = token;
+    user.token_expirtation = 1;
 
     return user;
   },
@@ -201,14 +259,14 @@ const updateUser = {
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
     name: { type: new GraphQLNonNull(GraphQLString) },
-    last_name: { type: GraphQLString },
-    province: { type: GraphQLString },
-    city: { type: GraphQLString },
-    address: { type: GraphQLString },
+    // last_name: { type: GraphQLString },
+    // province: { type: GraphQLString },
+    // city: { type: GraphQLString },
+    // address: { type: GraphQLString },
     phone: { type: GraphQLString },
-    about: { type: GraphQLString },
-    profile_pic: { type: GraphQLUpload },
-    status: { type: GraphQLString }
+    // about: { type: GraphQLString },
+    // profile_pic: { type: GraphQLUpload },
+    // status: { type: GraphQLString }
   },
   async resolve(parent, args, req) {
     // * CHECK IF TOKEN IS VALID
@@ -236,19 +294,11 @@ const updateUser = {
     const data = {
       name: args.name,
       phone: args.phone ?? '',
-      country: args.country ?? '',
-      city: args.city ?? '',
-      last_name: args.last_name ?? '',
-      profile_pic: args.profile_pic ?? '',
-      about: args.about ?? '',
-      province: args?.province ?? '',
-      status: args?.status,
-      address: args?.address ?? ''
     };
 
-    if (!args?.profile_pic) {
-      delete data.profile_pic;
-    }
+    // if (!args?.profile_pic) {
+    //   delete data.profile_pic;
+    // }
 
     const options = { new: true };
     const updatedUser = await User.findOneAndUpdate(
@@ -311,15 +361,7 @@ const deleteUser = {
       throw new ApolloError('Not authenticated');
     }
 
-    //  * DELETE Ads
-    AdList?.find({ user_id: args.id }).then((ads) => {
-      ads?.forEach(async (ad) => {
-        // *delete images
-        await DeleteFile('ad', ad?._id)
-        ad?.remove()
-      });
-    });
-    await DeleteFile('profile', args?.id)
+    // await DeleteFile('profile', args?.id)
     const user = await User.findByIdAndDelete(args.id);
     return user;
   },
@@ -438,7 +480,9 @@ export {
   deleteUser,
   changePassword,
   imageTest,
-  updateAddress
+  updateAddress,
+  empRegister,
+  empLogin
   // deleteUser,
   // followUser,
   // verifyUser,

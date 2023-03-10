@@ -22,50 +22,50 @@ const UserType = new GraphQLObjectType({
     name: { type: GraphQLString },
     email: { type: GraphQLString },
     phone: { type: GraphQLString },
-    province: { type: GraphQLString },
-    city: { type: GraphQLString },
-    address: { type: GraphQLString },
-    last_name: { type: GraphQLString },
+    // province: { type: GraphQLString },
+    // city: { type: GraphQLString },
+    // address: { type: GraphQLString },
+    // last_name: { type: GraphQLString },
     password: { type: GraphQLString },
-    new_password: { type: GraphQLString },
-    about: { type: GraphQLString },
+    // new_password: { type: GraphQLString },
+    // about: { type: GraphQLString },
     role: { type: GraphQLString },
-    status: { type: GraphQLString },
-    image: { type: GraphQLString },
-    ads: {
-      type: new GraphQLList(AdListType),
-      resolve(parent, args) {
-        return AdList.find({ user_id: parent.id })
-          .limit(10)
-          .sort({ timeStamp: -1 });
-      },
-    },
-    profile_pic: {
-      type: GraphQLString,
-      // resolve(parent, args) {
-      //   console.log("lioj")
-      //   let name = readFile(`profile-${parent.id}.jpg`)
-      //   console.log("name", name)
-      //   return name ? getBufferedFile(name) : null
-      // }
+    // status: { type: GraphQLString },
+    // image: { type: GraphQLString },
+    // ads: {
+    //   type: new GraphQLList(AdListType),
+    //   resolve(parent, args) {
+    //     return AdList.find({ user_id: parent.id })
+    //       .limit(10)
+    //       .sort({ timeStamp: -1 });
+    //   },
+    // },
+    // profile_pic: {
+    //   type: GraphQLString,
+    //   // resolve(parent, args) {
+    //   //   console.log("lioj")
+    //   //   let name = readFile(`profile-${parent.id}.jpg`)
+    //   //   console.log("name", name)
+    //   //   return name ? getBufferedFile(name) : null
+    //   // }
 
-      // resolve(parent, args) {
-      //   let imageUrl;
-      //   if (parent.profile_pic) {
-      //     imageUrl = s3.getSignedUrl('getObject', {
-      //       Bucket: process.env.S3_BUCKET,
-      //       Key: parent.profile_pic,
-      //     });
-      //   }
-      //   return imageUrl || parent.profile_pic;
-      // },
-    },
+    //   // resolve(parent, args) {
+    //   //   let imageUrl;
+    //   //   if (parent.profile_pic) {
+    //   //     imageUrl = s3.getSignedUrl('getObject', {
+    //   //       Bucket: process.env.S3_BUCKET,
+    //   //       Key: parent.profile_pic,
+    //   //     });
+    //   //   }
+    //   //   return imageUrl || parent.profile_pic;
+    //   // },
+    // },
     token: { type: GraphQLString },
     token_expirtation: { type: GraphQLInt },
-    total_ads: { type: GraphQLInt },
-    total_category: { type: GraphQLInt },
-    total_users: { type: GraphQLInt },
-    ads_sold: { type: GraphQLInt },
+    // total_ads: { type: GraphQLInt },
+    // total_category: { type: GraphQLInt },
+    // total_users: { type: GraphQLInt },
+    // ads_sold: { type: GraphQLInt },
     createdAt: { type: GraphQLDateTime },
     updatedAt: { type: GraphQLDateTime },
     // post_feed_ids: { type: new GraphQLList(GraphQLID) },
