@@ -51,7 +51,7 @@ const register = {
 
     const newUser = new User({
       name: args.name,
-      email: "N/A",
+      // email: "N/A",
       password: hashedPassword,
       phone: args.phone,
       role: args.role,
@@ -114,6 +114,17 @@ const empRegister = {
     email: { type: new GraphQLNonNull(GraphQLString) },
     password: { type: new GraphQLNonNull(GraphQLString) },
     phone: { type: GraphQLString },
+    org_id: { type: GraphQLID },
+    role: {
+      type: new GraphQLEnumType({
+        name: 'EmpRole',
+        values: {
+          admin: { value: USER_ROLES.ADMIN },
+          employ: { value: USER_ROLES.EMPLOY },
+        },
+      }),
+      defaultValue: USER_ROLES.SUPER_ADMIN,
+    },
   },
   async resolve(parent, args) {
     //  * CHECK IF USER EXISTS
@@ -130,12 +141,55 @@ const empRegister = {
       name: args.name,
       email: args.email,
       password: hashedPassword,
-      phone: args?.phone ?? "N/A",
-      role: USER_ROLES.SUPER_ADMIN,
-      // status: args.status
+      // phone: args?.phone ?? "N/A",
+      role: args?.role ?? USER_ROLES.ADMIN,
+      org_id: args?.org_id
     });
 
     // * CREATE AND ASSIGN TOKEN
+    const token = jwt.sign(
+      { _id: newUser._id, role: newUser.role },
+      process.env.TOKEN_SECRET,
+      { expiresIn: '24h' }
+    );
+    newUser.token = token;
+    newUser.token_expirtation = 1;
+
+    const user = await newUser.save();
+
+    return user;
+  },
+};
+
+const addAdmin = {
+  type: UserType,
+  args: {
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    password: { type: new GraphQLNonNull(GraphQLString) },
+    org_id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  async resolve(parent, args) {
+    //  * CHECK IF USER EXISTS
+    const userExist = await User.findOne({ email: args.email });
+    if (userExist) {
+      throw new ApolloError('Admin already exists');
+    }
+
+    //  * HASH PASSWORD
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(args.password, salt);
+
+    const newUser = new User({
+      name: args.name,
+      email: args.email,
+      password: hashedPassword,
+      // phone: args.phone ?? '',
+      role: USER_ROLES.ADMIN,
+      org_id: args?.org_id
+    });
+
+    // // * CREATE AND ASSIGN TOKEN
     const token = jwt.sign(
       { _id: newUser._id, role: newUser.role },
       process.env.TOKEN_SECRET,
@@ -321,6 +375,56 @@ const updateUser = {
     return user;
   },
 };
+const updateAdmin = {
+  type: UserType,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    email: { type: GraphQLString },
+    new_password: { type: GraphQLString },
+  },
+  async resolve(parent, args, req) {
+    // * CHECK IF TOKEN IS VALID
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
+
+    let hashedPassword;
+    if (args.new_password) {
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(args.new_password, salt);
+    }
+
+    const data = {
+      name: args.name,
+      email: args.email ?? '',
+      password: hashedPassword
+    };
+
+    if (!args?.new_password) {
+      delete data.password;
+    }
+
+    const options = { new: true };
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: args.id },
+      data,
+      options
+    );
+
+    // * CREATE AND ASSIGN TOKEN
+    const token = jwt.sign(
+      { _id: updatedUser._id, role: updatedUser.role },
+      process.env.TOKEN_SECRET,
+      { expiresIn: '24h' }
+    );
+    updatedUser.token = token;
+    updatedUser.token_expirtation = 1;
+
+    const user = await updatedUser.save();
+    return user;
+  },
+};
 
 
 const imageTest = {
@@ -483,7 +587,9 @@ export {
   imageTest,
   updateAddress,
   empRegister,
-  empLogin
+  empLogin,
+  addAdmin,
+  updateAdmin
   // deleteUser,
   // followUser,
   // verifyUser,

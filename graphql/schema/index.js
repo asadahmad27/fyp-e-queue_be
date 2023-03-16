@@ -16,10 +16,12 @@ import {
   imageTest,
   updateAddress,
   empRegister,
-  empLogin
+  empLogin,
+  addAdmin,
+  updateAdmin
 } from '../mutations/user-mutations.js';
 import { allWindow, window } from "../queries/window-queries.js"
-import { allOrg } from "../queries/org-queries.js"
+import { allOrg, organization } from "../queries/org-queries.js"
 import {
   addWindow,
   updateWindow,
@@ -46,6 +48,7 @@ const RootQuery = new GraphQLObjectType({
 
     // ORG QRIES
     allOrg,
+    organization,
     //  * CATEGORY QUERIE
     allCategory,
     category,
@@ -76,6 +79,8 @@ const mutation = new GraphQLObjectType({
     // ? PROFILE UPDATE
     // EMPLOYEE REGISTER
     empRegister,
+    addAdmin,
+    updateAdmin,
     // // EMPLOYEE LOGIN 
     empLogin,
     updateUser,

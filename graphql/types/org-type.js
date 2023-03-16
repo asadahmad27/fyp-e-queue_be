@@ -3,9 +3,12 @@ import {
     GraphQLID,
     GraphQLString,
     GraphQLInt,
+    GraphQLList
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
+import UserType from './user-types.js';
+import User from '../../models/user.js';
 
 const { GraphQLDateTime } = pkg;
 
@@ -16,8 +19,12 @@ const OrgType = new GraphQLObjectType({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
         slug: { type: GraphQLString },
-        token: { type: GraphQLString },
-        token_expirtation: { type: GraphQLInt },
+        admin: {
+            type: new GraphQLList(UserType),
+            resolve(parent, args) {
+                return User.find({ org_id: parent.id })
+            },
+        },
         createdAt: { type: GraphQLDateTime },
         updatedAt: { type: GraphQLDateTime },
 

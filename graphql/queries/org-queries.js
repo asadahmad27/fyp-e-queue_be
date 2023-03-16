@@ -13,21 +13,20 @@ const allOrg = {
         return Organization.find();
     },
 };
-// const window = {
-//     type: WindowType,
-//     args: {
-//         id: { type: new GraphQLNonNull(GraphQLID) },
+const organization = {
+    type: OrgType,
+    args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+    },
+    resolve: (parent, args, req) => {
+        // * CHECK IF TOKEN IS VALID
+        // if (!req.isAuth) {
+        //   throw new ApolloError('Not authenticated');
+        // }
 
-//     },
-//     resolve: (parent, args, req) => {
-//         // * CHECK IF TOKEN IS VALID
-//         // if (!req.isAuth) {
-//         //   throw new ApolloError('Not authenticated');
-//         // }
 
+        return Organization.findById(args.id);
+    },
+};
 
-//         return Window.findById(args.id);
-//     },
-// };
-
-export { allOrg }
+export { allOrg, organization }
