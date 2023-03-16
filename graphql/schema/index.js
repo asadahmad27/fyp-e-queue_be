@@ -18,6 +18,14 @@ import {
   empRegister,
   empLogin
 } from '../mutations/user-mutations.js';
+import { allWindow, window } from "../queries/window-queries.js"
+import { allOrg } from "../queries/org-queries.js"
+import {
+  addWindow,
+  updateWindow,
+  deleteWindow
+} from "../mutations/window-mutation.js"
+import { addOrg, updateOrg } from "../mutations/org-mutation.js"
 import { addCategory, updateCategory, deleteCategory } from "../mutations/category-mutation.js"
 import { addSubCategory, updateSubCategory, deleteSubCategory } from "../mutations/sub-category-mutation.js"
 import { createAdList, updateAdList, deleteAdList, updateAdListStatus } from "../mutations/ad-list-mutation.js"
@@ -32,6 +40,12 @@ const RootQuery = new GraphQLObjectType({
     users,
     allEmploys,
 
+    //  * WINDOW QUERIE
+    allWindow,
+    window,
+
+    // ORG QRIES
+    allOrg,
     //  * CATEGORY QUERIE
     allCategory,
     category,
@@ -67,7 +81,16 @@ const mutation = new GraphQLObjectType({
     updateUser,
     //  ? USER DELETE
     deleteUser,
+    // ADD WINDOW
+    addWindow,
+    updateWindow,
+    deleteWindow,
     imageTest,
+
+    // ADD ORG
+    addOrg,
+    // UPDATE ORG
+    updateOrg,
     //  ? UPDATE PASSWORD
     updateAddress,
 

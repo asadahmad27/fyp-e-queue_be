@@ -11,19 +11,23 @@ const UserSchema = new mongoose.Schema(
     // },
     email: {
       type: String,
-      unique: true,
+
     },
     phone: {
       type: String,
-      unique: true,
+
     },
     role: {
       type: String,
-      enum: [USER_ROLES.ADMIN, USER_ROLES.USER, USER_ROLES.EMPLOY],
+      enum: [USER_ROLES.ADMIN, USER_ROLES.USER, USER_ROLES.EMPLOY, USER_ROLES.SUPER_ADMIN],
     },
     password: {
       type: String,
     },
+    org_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Organization',
+    }
     // about: {
     //   type: String,
     // },

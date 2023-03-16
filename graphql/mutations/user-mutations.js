@@ -31,7 +31,8 @@ const register = {
         values: {
           user: { value: USER_ROLES.USER },
           admin: { value: USER_ROLES.ADMIN },
-          employ: { value: USER_ROLES.EMPLOY }
+          employ: { value: USER_ROLES.EMPLOY },
+          super_admin: { value: USER_ROLES.SUPER_ADMIN }
         },
       }),
       defaultValue: USER_ROLES.USER,
@@ -130,7 +131,7 @@ const empRegister = {
       email: args.email,
       password: hashedPassword,
       phone: args?.phone ?? "N/A",
-      role: USER_ROLES.EMPLOY,
+      role: USER_ROLES.SUPER_ADMIN,
       // status: args.status
     });
 
