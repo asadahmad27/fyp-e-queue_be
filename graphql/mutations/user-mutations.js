@@ -123,7 +123,7 @@ const empRegister = {
           employ: { value: USER_ROLES.EMPLOY },
         },
       }),
-      defaultValue: USER_ROLES.SUPER_ADMIN,
+      defaultValue: USER_ROLES.EMPLOY,
     },
   },
   async resolve(parent, args) {
@@ -141,8 +141,8 @@ const empRegister = {
       name: args.name,
       email: args.email,
       password: hashedPassword,
-      // phone: args?.phone ?? "N/A",
-      role: args?.role ?? USER_ROLES.ADMIN,
+      phone: args?.phone ?? '',
+      role: args?.role ?? USER_ROLES.EMPLOY,
       org_id: args?.org_id
     });
 
@@ -297,6 +297,7 @@ const updateAddress = {
   },
   async resolve(parent, args) {
 
+
     const options = { new: true };
     const user = await User.findOneAndUpdate(
       { _id: args.id },
@@ -314,14 +315,10 @@ const updateUser = {
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
     name: { type: new GraphQLNonNull(GraphQLString) },
-    // last_name: { type: GraphQLString },
-    // province: { type: GraphQLString },
-    // city: { type: GraphQLString },
-    // address: { type: GraphQLString },
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    new_password: { type: GraphQLString },
     phone: { type: GraphQLString },
-    // about: { type: GraphQLString },
-    // profile_pic: { type: GraphQLUpload },
-    // status: { type: GraphQLString }
+    org_id: { type: GraphQLID },
   },
   async resolve(parent, args, req) {
     // * CHECK IF TOKEN IS VALID
@@ -329,31 +326,24 @@ const updateUser = {
       throw new ApolloError('Not authenticated');
     }
 
-    // if (args?.profile_pic) {
-    //   args.profile_pic = await singleFileUpload(
-    //     args?.profile_pic,
-    //     FILE_KEYS.PROFILE_PICS,
-    //     args.id
-    //   );
-    // }
-    if (args?.profile_pic) {
-      args.profile_pic = await uploadFile(args.profile_pic, `profile`, args?.id, `img-${args?.id}`);
+    let hashedPassword;
+    if (args.new_password) {
+      const salt = await bcrypt.genSalt(10);
+      hashedPassword = await bcrypt.hash(args.new_password, salt);
     }
-
-    // let hashedPassword;
-    // if (args.new_password) {
-    //   const salt = await bcrypt.genSalt(10);
-    //   hashedPassword = await bcrypt.hash(args.new_password, salt);
-    // }
 
     const data = {
       name: args.name,
-      phone: args.phone ?? '',
+      email: args.email,
+      password: hashedPassword,
+      phone: args?.phone ?? '',
+      org_id: args?.org_id
     };
 
-    // if (!args?.profile_pic) {
-    //   delete data.profile_pic;
-    // }
+    if (!args?.new_password) {
+      delete data.password;
+    }
+
 
     const options = { new: true };
     const updatedUser = await User.findOneAndUpdate(

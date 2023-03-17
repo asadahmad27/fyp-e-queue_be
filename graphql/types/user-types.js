@@ -12,6 +12,8 @@ import pkg from 'graphql-iso-date';
 import { getBufferedFile, readFile } from '../schema/local-file-read.js';
 import AdListType from './ad-list-type.js';
 import AdList from '../../models/ad-list.js';
+import OrgType from './org-type.js';
+import Organization from '../../models/organization.js';
 const { GraphQLDateTime } = pkg;
 
 // * USER TYPE
@@ -23,6 +25,12 @@ const UserType = new GraphQLObjectType({
     name: { type: GraphQLString },
     email: { type: GraphQLString },
     phone: { type: GraphQLString },
+    org: {
+      type: new GraphQLList(OrgType),
+      resolve(parent, args) {
+        return Organization.find({ _id: parent.org_id })
+      },
+    },
     // province: { type: GraphQLString },
     // city: { type: GraphQLString },
     // address: { type: GraphQLString },

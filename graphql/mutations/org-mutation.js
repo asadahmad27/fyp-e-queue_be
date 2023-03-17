@@ -79,32 +79,32 @@ const updateOrg = {
     },
 };
 
-// const deleteWindow = {
-//     type: WindowType,
-//     args: {
-//         id: { type: new GraphQLNonNull(GraphQLID) },
+const deleteOrg = {
+    type: OrgType,
+    args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
 
-//     },
-//     async resolve(parent, args, req) {
-//         //  * CHECK TOKEN
+    },
+    async resolve(parent, args, req) {
+        //  * CHECK TOKEN
 
-//         if (!req.isAuth) {
-//             throw new ApolloError('Not authenticated');
-//         }
-//         // SubCategory?.find({ category_id: args.id }).then((subCategories) => {
-//         //     subCategories?.forEach(async (subCategory) => {
-//         //         await DeleteFile('sub-category', subCategory?._id)
-//         //         //  * DELETE BRAND REVIEWS
-//         //         subCategory?.remove()
-//         //     });
-//         // });
-//         // await DeleteFile('category', args?.id)
-//         const window = await Window.findByIdAndDelete(args.id)
-//         return window;
-//     },
-// };
+        if (!req.isAuth) {
+            throw new ApolloError('Not authenticated');
+        }
+        // SubCategory?.find({ category_id: args.id }).then((subCategories) => {
+        //     subCategories?.forEach(async (subCategory) => {
+        //         await DeleteFile('sub-category', subCategory?._id)
+        //         //  * DELETE BRAND REVIEWS
+        //         subCategory?.remove()
+        //     });
+        // });
+        // await DeleteFile('category', args?.id)
+        const window = await Organization.findByIdAndDelete(args.id)
+        return window;
+    },
+};
 
 
 
-export { addOrg, updateOrg }
+export { addOrg, updateOrg, deleteOrg }
 

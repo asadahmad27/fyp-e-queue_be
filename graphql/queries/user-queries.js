@@ -34,13 +34,17 @@ const user = {
 
 const allEmploys = {
   type: new GraphQLList(UserType),
+  args: {
+    org_id: { type: new GraphQLNonNull(GraphQLID) },
+    // limit: { type: GraphQLInt },
+  },
   resolve: (parent, args, req) => {
     // * CHECK IF TOKEN IS VALID
     if (!req.isAuth) {
       throw new ApolloError('Not authenticated');
     }
 
-    return User.find({ role: USER_ROLES.EMPLOY });
+    return User.find({ role: USER_ROLES.EMPLOY, org_id: args?.org_id });
   },
 };
 

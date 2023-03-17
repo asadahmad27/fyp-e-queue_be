@@ -16,6 +16,7 @@ const WindowType = new GraphQLObjectType({
     name: 'Window',
     fields: () => ({
         id: { type: GraphQLID },
+        org_id: { type: GraphQLID },
         title: { type: GraphQLString },
         subtitle: { type: GraphQLString },
         slug: { type: GraphQLString },

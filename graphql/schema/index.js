@@ -27,7 +27,7 @@ import {
   updateWindow,
   deleteWindow
 } from "../mutations/window-mutation.js"
-import { addOrg, updateOrg } from "../mutations/org-mutation.js"
+import { addOrg, updateOrg, deleteOrg } from "../mutations/org-mutation.js"
 import { addCategory, updateCategory, deleteCategory } from "../mutations/category-mutation.js"
 import { addSubCategory, updateSubCategory, deleteSubCategory } from "../mutations/sub-category-mutation.js"
 import { createAdList, updateAdList, deleteAdList, updateAdListStatus } from "../mutations/ad-list-mutation.js"
@@ -96,6 +96,8 @@ const mutation = new GraphQLObjectType({
     addOrg,
     // UPDATE ORG
     updateOrg,
+    // DELETE ORG
+    deleteOrg,
     //  ? UPDATE PASSWORD
     updateAddress,
 

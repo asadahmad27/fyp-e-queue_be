@@ -23,7 +23,8 @@ const addWindow = {
         subtitle: { type: GraphQLString },
         slug: { type: new GraphQLNonNull(GraphQLString) },
         counter_num: { type: GraphQLString },
-        emp_id: { type: new GraphQLNonNull(GraphQLID) }
+        emp_id: { type: new GraphQLNonNull(GraphQLID) },
+        org_id: { type: new GraphQLNonNull(GraphQLID) }
     },
     async resolve(parent, args, req) {
         //  * CHECK TOKEN
@@ -53,7 +54,8 @@ const updateWindow = {
         subtitle: { type: GraphQLString },
         slug: { type: new GraphQLNonNull(GraphQLString) },
         counter_num: { type: GraphQLString },
-        emp_id: { type: new GraphQLNonNull(GraphQLID) }
+        emp_id: { type: new GraphQLNonNull(GraphQLID) },
+        org_id: { type: new GraphQLNonNull(GraphQLID) }
     },
     async resolve(parent, args, req) {
         //  * CHECK TOKEN

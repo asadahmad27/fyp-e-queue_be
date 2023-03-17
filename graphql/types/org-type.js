@@ -17,6 +17,7 @@ const OrgType = new GraphQLObjectType({
     name: 'Organization',
     fields: () => ({
         id: { type: GraphQLID },
+
         name: { type: GraphQLString },
         slug: { type: GraphQLString },
         admin: {

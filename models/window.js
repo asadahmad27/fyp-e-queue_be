@@ -20,6 +20,10 @@ const WindowSchema = new mongoose.Schema(
             ref: 'User',
             required: true
         },
+        org_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Organization',
+        }
     },
     {
         timestamps: true,
