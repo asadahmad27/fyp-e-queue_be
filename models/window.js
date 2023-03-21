@@ -23,6 +23,10 @@ const WindowSchema = new mongoose.Schema(
         org_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Organization',
+        },
+        avg_waiting_time: {
+            type: String,
+            default: "5"
         }
     },
     {

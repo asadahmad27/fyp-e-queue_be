@@ -25,21 +25,21 @@ const UserType = new GraphQLObjectType({
     name: { type: GraphQLString },
     email: { type: GraphQLString },
     phone: { type: GraphQLString },
+    avg_waiting_time: { type: GraphQLString },
     org: {
       type: new GraphQLList(OrgType),
       resolve(parent, args) {
         return Organization.find({ _id: parent.org_id })
       },
     },
-    // province: { type: GraphQLString },
-    // city: { type: GraphQLString },
-    // address: { type: GraphQLString },
-    // last_name: { type: GraphQLString },
+
     password: { type: GraphQLString },
+    total_windows: { type: GraphQLInt },
+    total_employees: { type: GraphQLInt },
+    total_customers: { type: GraphQLInt },
     // new_password: { type: GraphQLString },
     // about: { type: GraphQLString },
     role: { type: GraphQLString },
-    // status: { type: GraphQLString },
     // image: { type: GraphQLString },
     // ads: {
     //   type: new GraphQLList(AdListType),

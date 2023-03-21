@@ -47,6 +47,21 @@ const allEmploys = {
     return User.find({ role: USER_ROLES.EMPLOY, org_id: args?.org_id });
   },
 };
+const allCustomers = {
+  type: new GraphQLList(UserType),
+  args: {
+    org_id: { type: new GraphQLNonNull(GraphQLID) },
+    // limit: { type: GraphQLInt },
+  },
+  resolve: (parent, args, req) => {
+    // * CHECK IF TOKEN IS VALID
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
+
+    return User.find({ role: USER_ROLES.USER, org_id: args?.org_id });
+  },
+};
 
 
 // const userForAdmin = {
@@ -68,4 +83,4 @@ const allEmploys = {
 //   },
 // };
 
-export { users, user, allEmploys };
+export { users, user, allEmploys, allCustomers };

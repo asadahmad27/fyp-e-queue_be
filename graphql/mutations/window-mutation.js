@@ -7,12 +7,6 @@ import {
     GraphQLID,
     GraphQLInt
 } from 'graphql';
-import Category from '../../models/category.js';
-import CategoryType from '../types/category-type.js';
-import slugify from 'slugify';
-import { DeleteFile, uploadFile } from '../schema/local-file-upload.js';
-import GraphQLUpload from 'graphql-upload/GraphQLUpload.mjs';
-import SubCategory from '../../models/sub-category.js';
 import Window from '../../models/window.js';
 import WindowType from '../types/window-type.js';
 
@@ -24,7 +18,8 @@ const addWindow = {
         slug: { type: new GraphQLNonNull(GraphQLString) },
         counter_num: { type: GraphQLString },
         emp_id: { type: new GraphQLNonNull(GraphQLID) },
-        org_id: { type: new GraphQLNonNull(GraphQLID) }
+        org_id: { type: new GraphQLNonNull(GraphQLID) },
+        avg_waiting_time: { type: GraphQLString },
     },
     async resolve(parent, args, req) {
         //  * CHECK TOKEN
@@ -39,6 +34,8 @@ const addWindow = {
             slug: args?.slug ?? '',
             counter_num: args?.counter_num ?? '',
             emp_id: args?.emp_id ?? '',
+            org_id: args?.org_id,
+            avg_waiting_time: args?.avg_waiting_time ?? '5',
         });
         let newWindow = await data.save();
 
@@ -53,6 +50,7 @@ const updateWindow = {
         title: { type: new GraphQLNonNull(GraphQLString) },
         subtitle: { type: GraphQLString },
         slug: { type: new GraphQLNonNull(GraphQLString) },
+        avg_waiting_time: { type: GraphQLString },
         counter_num: { type: GraphQLString },
         emp_id: { type: new GraphQLNonNull(GraphQLID) },
         org_id: { type: new GraphQLNonNull(GraphQLID) }
@@ -79,6 +77,8 @@ const updateWindow = {
             slug: args?.slug ?? '',
             counter_num: args?.counter_num ?? '',
             emp_id: args?.emp_id ?? '',
+            org_id: args?.org_id,
+            avg_waiting_time: args?.avg_waiting_time ?? '5',
         };
         // if (!args?.image) {
         //     delete data.image;

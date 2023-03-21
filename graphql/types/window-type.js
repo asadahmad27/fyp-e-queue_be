@@ -8,6 +8,8 @@ import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
 import UserType from './user-types.js';
 import User from '../../models/user.js';
+import OrgType from './org-type.js';
+import Organization from '../../models/organization.js';
 
 const { GraphQLDateTime } = pkg;
 
@@ -21,6 +23,7 @@ const WindowType = new GraphQLObjectType({
         subtitle: { type: GraphQLString },
         slug: { type: GraphQLString },
         emp_id: { type: GraphQLString },
+        avg_waiting_time: { type: GraphQLString },
         employ: {
             type: UserType,
             resolve(parent, args) {
@@ -28,9 +31,13 @@ const WindowType = new GraphQLObjectType({
                 return User.findById(parent.emp_id);
             },
         },
+        org: {
+            type: OrgType,
+            resolve(parent, args) {
+                return Organization.find({ _id: parent.org_id })
+            },
+        },
         counter_num: { type: GraphQLString },
-        token: { type: GraphQLString },
-        token_expirtation: { type: GraphQLInt },
         createdAt: { type: GraphQLDateTime },
         updatedAt: { type: GraphQLDateTime },
 

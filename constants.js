@@ -4,6 +4,14 @@ const USER_ROLES = {
   EMPLOY: "EMPLOY",
   SUPER_ADMIN: "SUPER_ADMIN"
 };
+
+const TICKET_STATUS = {
+  PENDING: "PENDING",
+  SERVING: "SERVING",
+  DONE: "DONE",
+  DISCARD: "DISCARD"
+
+}
 const FILE_KEYS = {
   PROFILE_PICS: 'profile_pics',
   BRAND_LOGO: 'brand_logos',
@@ -41,7 +49,8 @@ export {
   REVIEW_STAT,
   DEFAULT_REVIEW_COUNT,
   AD_STATUS,
-  USER_STATUS
+  USER_STATUS,
+  TICKET_STATUS
 };
 
 export const SUSPENDED = 'suspended';

@@ -2,7 +2,8 @@ import { GraphQLSchema, GraphQLObjectType } from 'graphql';
 import {
   user,
   users,
-  allEmploys
+  allEmploys,
+  allCustomers
 } from '../queries/user-queries.js';
 import { allCategory, category } from "../queries/category-queries.js"
 
@@ -18,8 +19,11 @@ import {
   empRegister,
   empLogin,
   addAdmin,
-  updateAdmin
+  updateAdmin,
+  updateAdminEmail,
+  deleteEmp
 } from '../mutations/user-mutations.js';
+import { createTicket } from "../mutations/ticket-mutation.js"
 import { allWindow, window } from "../queries/window-queries.js"
 import { allOrg, organization } from "../queries/org-queries.js"
 import {
@@ -41,6 +45,7 @@ const RootQuery = new GraphQLObjectType({
     user,
     users,
     allEmploys,
+    allCustomers,
 
     //  * WINDOW QUERIE
     allWindow,
@@ -81,8 +86,10 @@ const mutation = new GraphQLObjectType({
     empRegister,
     addAdmin,
     updateAdmin,
+    updateAdminEmail,
     // // EMPLOYEE LOGIN 
     empLogin,
+    deleteEmp,
     updateUser,
     //  ? USER DELETE
     deleteUser,
@@ -92,6 +99,8 @@ const mutation = new GraphQLObjectType({
     deleteWindow,
     imageTest,
 
+    // TOKEN
+    createTicket,
     // ADD ORG
     addOrg,
     // UPDATE ORG

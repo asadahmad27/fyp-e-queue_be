@@ -17,6 +17,7 @@ import AdList from '../../models/ad-list.js';
 import { uploadFile } from '../schema/local-file-upload.js';
 
 import Category from '../../models/category.js';
+import Window from '../../models/window.js';
 
 const register = {
   type: UserType,
@@ -25,18 +26,7 @@ const register = {
     // email: { type: new GraphQLNonNull(GraphQLString) },
     password: { type: new GraphQLNonNull(GraphQLString) },
     phone: { type: GraphQLString },
-    role: {
-      type: new GraphQLEnumType({
-        name: 'UserRole',
-        values: {
-          user: { value: USER_ROLES.USER },
-          admin: { value: USER_ROLES.ADMIN },
-          employ: { value: USER_ROLES.EMPLOY },
-          super_admin: { value: USER_ROLES.SUPER_ADMIN }
-        },
-      }),
-      defaultValue: USER_ROLES.USER,
-    },
+    org_id: { type: new GraphQLNonNull(GraphQLID) }
   },
   async resolve(parent, args) {
     //  * CHECK IF USER EXISTS
@@ -54,7 +44,8 @@ const register = {
       // email: "N/A",
       password: hashedPassword,
       phone: args.phone,
-      role: args.role,
+      role: USER_ROLES.USER,
+      org_id: args?.org_id
       // status: args.status
     });
 
@@ -233,6 +224,16 @@ const empLogin = {
     user.token = token;
     user.token_expirtation = 1;
 
+    if (user?.role === USER_ROLES.ADMIN) {
+      const total_windows = await Window.find({ org_id: user?.org_id }).count();;
+      const total_employees = await User.find({ org_id: user?.org_id, role: USER_ROLES.EMPLOY }).count();
+      const total_customers = await User.find({ org_id: user?.org_id, role: USER_ROLES.USER }).count();
+      user.total_windows = total_windows,
+        user.total_employees = total_employees,
+        user.total_customers = total_customers
+    }
+
+    console.log(user)
     return user;
   },
 };
@@ -415,6 +416,43 @@ const updateAdmin = {
     return user;
   },
 };
+const updateAdminEmail = {
+  type: UserType,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    email: { type: GraphQLString },
+  },
+  async resolve(parent, args, req) {
+    // * CHECK IF TOKEN IS VALID
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
+
+
+    const data = {
+      email: args.email ?? '',
+    };
+
+    const options = { new: true };
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: args.id },
+      data,
+      options
+    );
+
+    // * CREATE AND ASSIGN TOKEN
+    const token = jwt.sign(
+      { _id: updatedUser._id, role: updatedUser.role },
+      process.env.TOKEN_SECRET,
+      { expiresIn: '24h' }
+    );
+    updatedUser.token = token;
+    updatedUser.token_expirtation = 1;
+
+    const user = await updatedUser.save();
+    return user;
+  },
+};
 
 
 const imageTest = {
@@ -446,6 +484,22 @@ const imageTest = {
 
 
 const deleteUser = {
+  type: UserType,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  async resolve(parent, args, req) {
+    // * CHECK IF TOKEN IS VALID
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
+
+    // await DeleteFile('profile', args?.id)
+    const user = await User.findByIdAndDelete(args.id);
+    return user;
+  },
+};
+const deleteEmp = {
   type: UserType,
   args: {
     id: { type: new GraphQLNonNull(GraphQLID) },
@@ -579,7 +633,9 @@ export {
   empRegister,
   empLogin,
   addAdmin,
-  updateAdmin
+  updateAdmin,
+  updateAdminEmail,
+  deleteEmp
   // deleteUser,
   // followUser,
   // verifyUser,
