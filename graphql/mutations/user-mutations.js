@@ -32,7 +32,7 @@ const register = {
     //  * CHECK IF USER EXISTS
     const userExist = await User.findOne({ phone: args.phone });
     if (userExist) {
-      throw new ApolloError('User already exists');
+      throw new ApolloError('The phone number is already exist');
     }
 
     //  * HASH PASSWORD
@@ -231,9 +231,11 @@ const empLogin = {
       user.total_windows = total_windows,
         user.total_employees = total_employees,
         user.total_customers = total_customers
+    } else if (user?.role === USER_ROLES.EMPLOY) {
+      const window = await Window.find({ emp_id: user?.id })
+      user.window_id = window?.[0]?.id;
+      console.log("isnide", user, window)
     }
-
-    console.log(user)
     return user;
   },
 };

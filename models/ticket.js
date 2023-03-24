@@ -21,11 +21,6 @@ const TicketSchema = new mongoose.Schema(
             ref: "Window",
             required: true,
         },
-        org_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Organization',
-        }
-
     },
     {
         timestamps: true,

@@ -26,6 +26,7 @@ import {
 import { createTicket } from "../mutations/ticket-mutation.js"
 import { allWindow, window } from "../queries/window-queries.js"
 import { allOrg, organization } from "../queries/org-queries.js"
+import { allTickets } from "../queries/ticket-queries.js"
 import {
   addWindow,
   updateWindow,
@@ -54,6 +55,9 @@ const RootQuery = new GraphQLObjectType({
     // ORG QRIES
     allOrg,
     organization,
+
+    // tickets
+    allTickets,
     //  * CATEGORY QUERIE
     allCategory,
     category,

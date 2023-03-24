@@ -17,7 +17,7 @@ const createTicket = {
     type: TicketType,
     args: {
         user_id: { type: new GraphQLNonNull(GraphQLID) },
-        org_id: { type: new GraphQLNonNull(GraphQLID) },
+
         window_id: { type: new GraphQLNonNull(GraphQLID) },
     },
     async resolve(parent, args, req) {
@@ -31,7 +31,7 @@ const createTicket = {
         let data = new Ticket({
             number: allTokens + 1,
             user_id: args?.user_id,
-            org_id: args?.user_id,
+
             window_id: args?.window_id,
             status: args?.status ?? TICKET_STATUS.PENDING,
 

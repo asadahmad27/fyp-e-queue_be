@@ -10,8 +10,8 @@ const TICKET_STATUS = {
   SERVING: "SERVING",
   DONE: "DONE",
   DISCARD: "DISCARD"
-
 }
+
 const FILE_KEYS = {
   PROFILE_PICS: 'profile_pics',
   BRAND_LOGO: 'brand_logos',
