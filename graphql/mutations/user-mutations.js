@@ -234,7 +234,6 @@ const empLogin = {
     } else if (user?.role === USER_ROLES.EMPLOY) {
       const window = await Window.find({ emp_id: user?.id })
       user.window_id = window?.[0]?.id;
-      console.log("isnide", user, window)
     }
     return user;
   },
