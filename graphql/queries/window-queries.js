@@ -15,7 +15,7 @@ const allWindow = {
         //   throw new ApolloError('Not authenticated');
         // }
 
-        return Window.find({ org_id: args?.org_id });
+        return Window.find({ org_id: args.org_id });
     },
 };
 const window = {

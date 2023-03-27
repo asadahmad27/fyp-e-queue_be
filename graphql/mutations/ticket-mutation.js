@@ -22,14 +22,15 @@ const createTicket = {
             throw new ApolloError('Not authenticated');
         }
 
-        let allTokens = await Ticket.find({ window_id: args?.window_id }).count();
+        let allTokens = await Ticket.find({ window_id: args.window_id }).count();
         let data = new Ticket({
             number: allTokens + 1,
-            user_id: args?.user_id,
-            window_id: args?.window_id,
-            status: args?.status ?? TICKET_STATUS.PENDING,
+            user_id: args.user_id,
+            window_id: args.window_id,
+            status: args.status || TICKET_STATUS.PENDING,
 
         });
+
         let newTicket = await data.save();
 
         return newTicket
@@ -39,9 +40,9 @@ const createTicket = {
 const updateTicket = {
     type: TicketType,
     args: {
-        id: { type: new GraphQLNonNull(GraphQLID) },
+        // id: { type: new GraphQLNonNull(GraphQLID) },
         status: { type: GraphQLString },
-        number: { type: GraphQLString },
+        curr_number: { type: GraphQLString },
     },
     async resolve(parent, args, req) {
         //  * CHECK TOKEN
@@ -51,27 +52,26 @@ const updateTicket = {
         }
 
         let data = {
-            status: args?.status ?? TICKET_STATUS.DONE,
+            status: args.status || TICKET_STATUS.DONE,
         };
 
         let options = { new: true };
-        let token = await Ticket.findOneAndUpdate(
-            { _id: args.id },
+        let curToken = await Ticket.findOneAndUpdate(
+            { number: args.curr_number },
             data,
             options);
 
-
-        let nextTicket = await Ticket.find({ number: parseInt(args?.status) + 1 });
         let nextTokenData = {
             status: TICKET_STATUS.SERVING,
         };
         options = { new: true };
-        token = await Ticket.findOneAndUpdate(
-            { _id: nextTicket.id },
+        let newToken = await Ticket.findOneAndUpdate(
+            { number: (parseInt(args.curr_number) + 1).toString() },
             nextTokenData,
             options);
 
-        return token;
+
+        return curToken;
     },
 };
 
@@ -87,14 +87,14 @@ const updateTicket = {
 //         if (!req.isAuth) {
 //             throw new ApolloError('Not authenticated');
 //         }
-//         // SubCategory?.find({ category_id: args.id }).then((subCategories) => {
-//         //     subCategories?.forEach(async (subCategory) => {
-//         //         await DeleteFile('sub-category', subCategory?._id)
+//         // SubCategory.find({ category_id: args.id }).then((subCategories) => {
+//         //     subCategories.forEach(async (subCategory) => {
+//         //         await DeleteFile('sub-category', subCategory._id)
 //         //         //  * DELETE BRAND REVIEWS
-//         //         subCategory?.remove()
+//         //         subCategory.remove()
 //         //     });
 //         // });
-//         // await DeleteFile('category', args?.id)
+//         // await DeleteFile('category', args.id)
 //         const window = await Window.findByIdAndDelete(args.id)
 //         return window;
 //     },

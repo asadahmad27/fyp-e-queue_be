@@ -16,6 +16,7 @@ const TicketType = new GraphQLObjectType({
         user_id: { type: GraphQLID },
         window_id: { type: GraphQLID },
         number: { type: GraphQLString },
+        curr_number: { type: GraphQLString },
         status: { type: GraphQLString },
         user: {
             type: UserType,

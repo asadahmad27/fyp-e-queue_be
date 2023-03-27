@@ -5,7 +5,7 @@ const setNames = (data) => {
     return names;
 }
 const makeIDs = (data) => {
-    let ids = data.map((item) => item?._id)
+    let ids = data.map((item) => item._id)
     return ids
 }
 export { setNames, makeIDs }

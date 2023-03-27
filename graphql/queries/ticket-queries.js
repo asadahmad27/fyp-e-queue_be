@@ -13,9 +13,8 @@ const allTickets = {
         // if (!req.isAuth) {
         //   throw new ApolloError('Not authenticated');
         // }
-        console.log(args)
 
-        return Ticket.find({ window_id: args?.window_id });
+        return Ticket.find({ window_id: args.window_id });
     },
 };
 // const window = {

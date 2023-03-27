@@ -41,7 +41,7 @@ const multipleUploadFile = async (images, folderName, id, name) => {
 
         fs.mkdirSync(path.join(path.resolve("./"), dir));
     }
-    for (let i = 0; i < images?.length; i++) {
+    for (let i = 0; i < images.length; i++) {
         const { filename, createReadStream } = await images[i];
         let imgArray = filename.split('.');
         let imgExtension = imgArray[imgArray.length - 1]
@@ -57,7 +57,7 @@ const multipleUploadFile = async (images, folderName, id, name) => {
 };
 
 const NameCorrect = (data) => {
-    if (data?.length > 0) {
+    if (data.length > 0) {
         const finalImages = data.map(item => {
             let splited = item.split("images/")
             if (splited[1]) {

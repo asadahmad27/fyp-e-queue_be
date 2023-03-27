@@ -29,13 +29,13 @@ const addWindow = {
         }
 
         let data = new Window({
-            title: args?.title ?? '',
-            subtitle: args?.subtitle ?? '',
-            slug: args?.slug ?? '',
-            counter_num: args?.counter_num ?? '',
-            emp_id: args?.emp_id ?? '',
-            org_id: args?.org_id,
-            avg_waiting_time: args?.avg_waiting_time ?? '5',
+            title: args.title || '',
+            subtitle: args.subtitle || '',
+            slug: args.slug || '',
+            counter_num: args.counter_num || '',
+            emp_id: args.emp_id || '',
+            org_id: args.org_id,
+            avg_waiting_time: args.avg_waiting_time || '5',
         });
         let newWindow = await data.save();
 
@@ -63,24 +63,24 @@ const updateWindow = {
         }
 
         //  * CHECK IF CATEGORY ALREADY EXIST
-        // const categoryExist = await Category.find({ slug: slugify(args?.name, { lower: true }) })
-        // if (categoryExist?.length > 0) {
+        // const categoryExist = await Category.find({ slug: slugify(args.name, { lower: true }) })
+        // if (categoryExist.length > 0) {
         //     throw new ApolloError('Category already exists');
         // }
-        // if (args?.image) {
-        //     args.image = await uploadFile(args.image, 'category', args?.id, `category-${args?.id}`);
+        // if (args.image) {
+        //     args.image = await uploadFile(args.image, 'category', args.id, `category-${args.id}`);
         // }
 
         let data = {
-            title: args?.title ?? '',
-            subtitle: args?.subtitle ?? '',
-            slug: args?.slug ?? '',
-            counter_num: args?.counter_num ?? '',
-            emp_id: args?.emp_id ?? '',
-            org_id: args?.org_id,
-            avg_waiting_time: args?.avg_waiting_time ?? '5',
+            title: args.title || '',
+            subtitle: args.subtitle || '',
+            slug: args.slug || '',
+            counter_num: args.counter_num || '',
+            emp_id: args.emp_id || '',
+            org_id: args.org_id,
+            avg_waiting_time: args.avg_waiting_time || '5',
         };
-        // if (!args?.image) {
+        // if (!args.image) {
         //     delete data.image;
         // }
         const options = { new: true };
@@ -105,14 +105,14 @@ const deleteWindow = {
         if (!req.isAuth) {
             throw new ApolloError('Not authenticated');
         }
-        // SubCategory?.find({ category_id: args.id }).then((subCategories) => {
-        //     subCategories?.forEach(async (subCategory) => {
-        //         await DeleteFile('sub-category', subCategory?._id)
+        // SubCategory.find({ category_id: args.id }).then((subCategories) => {
+        //     subCategories.forEach(async (subCategory) => {
+        //         await DeleteFile('sub-category', subCategory._id)
         //         //  * DELETE BRAND REVIEWS
-        //         subCategory?.remove()
+        //         subCategory.remove()
         //     });
         // });
-        // await DeleteFile('category', args?.id)
+        // await DeleteFile('category', args.id)
         const window = await Window.findByIdAndDelete(args.id)
         return window;
     },

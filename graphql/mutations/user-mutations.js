@@ -45,7 +45,7 @@ const register = {
       password: hashedPassword,
       phone: args.phone,
       role: USER_ROLES.USER,
-      org_id: args?.org_id
+      org_id: args.org_id
       // status: args.status
     });
 
@@ -132,9 +132,9 @@ const empRegister = {
       name: args.name,
       email: args.email,
       password: hashedPassword,
-      phone: args?.phone ?? '',
-      role: args?.role ?? USER_ROLES.EMPLOY,
-      org_id: args?.org_id
+      phone: args.phone || '',
+      role: args.role || USER_ROLES.EMPLOY,
+      org_id: args.org_id
     });
 
     // * CREATE AND ASSIGN TOKEN
@@ -175,9 +175,9 @@ const addAdmin = {
       name: args.name,
       email: args.email,
       password: hashedPassword,
-      // phone: args.phone ?? '',
+      // phone: args.phone || '',
       role: USER_ROLES.ADMIN,
-      org_id: args?.org_id
+      org_id: args.org_id
     });
 
     // // * CREATE AND ASSIGN TOKEN
@@ -224,16 +224,16 @@ const empLogin = {
     user.token = token;
     user.token_expirtation = 1;
 
-    if (user?.role === USER_ROLES.ADMIN) {
-      const total_windows = await Window.find({ org_id: user?.org_id }).count();;
-      const total_employees = await User.find({ org_id: user?.org_id, role: USER_ROLES.EMPLOY }).count();
-      const total_customers = await User.find({ org_id: user?.org_id, role: USER_ROLES.USER }).count();
+    if (user.role === USER_ROLES.ADMIN) {
+      const total_windows = await Window.find({ org_id: user.org_id }).count();;
+      const total_employees = await User.find({ org_id: user.org_id, role: USER_ROLES.EMPLOY }).count();
+      const total_customers = await User.find({ org_id: user.org_id, role: USER_ROLES.USER }).count();
       user.total_windows = total_windows,
         user.total_employees = total_employees,
         user.total_customers = total_customers
-    } else if (user?.role === USER_ROLES.EMPLOY) {
-      const window = await Window.find({ emp_id: user?.id })
-      user.window_id = window?.[0]?.id;
+    } else if (user.role === USER_ROLES.EMPLOY) {
+      const window = await Window.find({ emp_id: user.id })
+      user.window_id = window[0].id;
     }
     return user;
   },
@@ -303,7 +303,7 @@ const updateAddress = {
     const options = { new: true };
     const user = await User.findOneAndUpdate(
       { _id: args.id },
-      { address: args?.address },
+      { address: args.address },
       options
     );
 
@@ -338,11 +338,11 @@ const updateUser = {
       name: args.name,
       email: args.email,
       password: hashedPassword,
-      phone: args?.phone ?? '',
-      org_id: args?.org_id
+      phone: args.phone || '',
+      org_id: args.org_id
     };
 
-    if (!args?.new_password) {
+    if (!args.new_password) {
       delete data.password;
     }
 
@@ -389,11 +389,11 @@ const updateAdmin = {
 
     const data = {
       name: args.name,
-      email: args.email ?? '',
+      email: args.email || '',
       password: hashedPassword
     };
 
-    if (!args?.new_password) {
+    if (!args.new_password) {
       delete data.password;
     }
 
@@ -431,7 +431,7 @@ const updateAdminEmail = {
 
 
     const data = {
-      email: args.email ?? '',
+      email: args.email || '',
     };
 
     const options = { new: true };
@@ -495,7 +495,7 @@ const deleteUser = {
       throw new ApolloError('Not authenticated');
     }
 
-    // await DeleteFile('profile', args?.id)
+    // await DeleteFile('profile', args.id)
     const user = await User.findByIdAndDelete(args.id);
     return user;
   },
@@ -511,7 +511,7 @@ const deleteEmp = {
       throw new ApolloError('Not authenticated');
     }
 
-    // await DeleteFile('profile', args?.id)
+    // await DeleteFile('profile', args.id)
     const user = await User.findByIdAndDelete(args.id);
     return user;
   },

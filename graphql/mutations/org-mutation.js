@@ -29,8 +29,8 @@ const addOrg = {
         }
 
         let data = new Organization({
-            name: args?.name ?? '',
-            slug: args?.slug ?? '',
+            name: args.name || '',
+            slug: args.slug || '',
         });
         let newOrg = await data.save();
 
@@ -54,19 +54,19 @@ const updateOrg = {
         }
 
         //  * CHECK IF CATEGORY ALREADY EXIST
-        // const categoryExist = await Category.find({ slug: slugify(args?.name, { lower: true }) })
-        // if (categoryExist?.length > 0) {
+        // const categoryExist = await Category.find({ slug: slugify(args.name, { lower: true }) })
+        // if (categoryExist.length > 0) {
         //     throw new ApolloError('Category already exists');
         // }
-        // if (args?.image) {
-        //     args.image = await uploadFile(args.image, 'category', args?.id, `category-${args?.id}`);
+        // if (args.image) {
+        //     args.image = await uploadFile(args.image, 'category', args.id, `category-${args.id}`);
         // }
 
         let data = {
-            name: args?.name ?? '',
-            slug: args?.slug ?? '',
+            name: args.name || '',
+            slug: args.slug || '',
         };
-        // if (!args?.image) {
+        // if (!args.image) {
         //     delete data.image;
         // }
         const options = { new: true };
@@ -91,14 +91,14 @@ const deleteOrg = {
         if (!req.isAuth) {
             throw new ApolloError('Not authenticated');
         }
-        // SubCategory?.find({ category_id: args.id }).then((subCategories) => {
-        //     subCategories?.forEach(async (subCategory) => {
-        //         await DeleteFile('sub-category', subCategory?._id)
+        // SubCategory.find({ category_id: args.id }).then((subCategories) => {
+        //     subCategories.forEach(async (subCategory) => {
+        //         await DeleteFile('sub-category', subCategory._id)
         //         //  * DELETE BRAND REVIEWS
-        //         subCategory?.remove()
+        //         subCategory.remove()
         //     });
         // });
-        // await DeleteFile('category', args?.id)
+        // await DeleteFile('category', args.id)
         const window = await Organization.findByIdAndDelete(args.id)
         return window;
     },

@@ -25,8 +25,8 @@ const user = {
   },
   async resolve(parent, args) {
     let user = await User.findById(args.id);
-    // user.total_ads = (await AdList.find({ user_id: user?._id })).length;
-    // user.ads_sold = (await AdList.find({ user_id: user?._id, status: AD_STATUS.SOLD })).length;
+    // user.total_ads = (await AdList.find({ user_id: user._id })).length;
+    // user.ads_sold = (await AdList.find({ user_id: user._id, status: AD_STATUS.SOLD })).length;
     return user
 
   },
@@ -44,7 +44,7 @@ const allEmploys = {
       throw new ApolloError('Not authenticated');
     }
 
-    return User.find({ role: USER_ROLES.EMPLOY, org_id: args?.org_id });
+    return User.find({ role: USER_ROLES.EMPLOY, org_id: args.org_id });
   },
 };
 const allCustomers = {
@@ -59,7 +59,7 @@ const allCustomers = {
       throw new ApolloError('Not authenticated');
     }
 
-    return User.find({ role: USER_ROLES.USER, org_id: args?.org_id });
+    return User.find({ role: USER_ROLES.USER, org_id: args.org_id });
   },
 };
 

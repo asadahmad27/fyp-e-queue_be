@@ -9,9 +9,6 @@ import {
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
-import { getBufferedFile, readFile } from '../schema/local-file-read.js';
-import AdListType from './ad-list-type.js';
-import AdList from '../../models/ad-list.js';
 import OrgType from './org-type.js';
 import Organization from '../../models/organization.js';
 const { GraphQLDateTime } = pkg;
@@ -108,7 +105,7 @@ const UserType = new GraphQLObjectType({
     //   },
     //   async resolve(parent, args) {
     //     const user = await User.findById(parent.id);
-    //     if (user?.role === USER_ROLES.USER)
+    //     if (user.role === USER_ROLES.USER)
     //       return Review.find({ user_id: parent.id });
     //     return Review.find();
     //   },
@@ -118,7 +115,7 @@ const UserType = new GraphQLObjectType({
     //   async resolve(parent, args) {
     //     const user = await User.findById(parent.id);
 
-    //     if (user?.role === USER_ROLES.USER)
+    //     if (user.role === USER_ROLES.USER)
     //       return Brand.find({ user_id: parent.id });
     //     return Brand.find();
     //   },
@@ -128,7 +125,7 @@ const UserType = new GraphQLObjectType({
     //   async resolve(parent, args) {
     //     const user = await User.findById(parent.id);
 
-    //     if (user?.role === USER_ROLES.USER)
+    //     if (user.role === USER_ROLES.USER)
     //       return Product.find({ user_id: parent.id });
     //     return Product.find();
     //   },
@@ -144,7 +141,7 @@ const UserType = new GraphQLObjectType({
     //   type: new GraphQLList(GraphQLFloat),
     //   async resolve(parent, args) {
     //     const reviews = await Review.find({ user_id: parent.id });
-    //     const ratings = reviews?.map((review) => review.rating);
+    //     const ratings = reviews.map((review) => review.rating);
     //     return ratings;
     //   },
     // },
