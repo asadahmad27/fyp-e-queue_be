@@ -52,7 +52,7 @@ const updateTicket = {
         }
 
         let data = {
-            status: args.status || TICKET_STATUS.DONE,
+            status: TICKET_STATUS.DONE,
         };
 
         let options = { new: true };
@@ -71,7 +71,7 @@ const updateTicket = {
             options);
 
 
-        return curToken;
+        return newToken;
     },
 };
 

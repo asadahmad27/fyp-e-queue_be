@@ -11,6 +11,8 @@ import cron from 'node-cron';
 import User from './models/user.js';
 import { USER_ROLES } from './constants.js';
 import isHeader from './middleware/is-headers.js';
+import http from "http"
+import { Server } from "socket.io";
 //  * INTIALIZE  DOTENV TO LOAD VARIABLES FROM .ENV fILE
 dotenv.config();
 
@@ -31,6 +33,28 @@ var corsOptions = {
   accessControlAllowCredentials: true,
   accessControlAllowMethods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 };
+// const server = http.createServer(app);
+// const io = new Server(server, {
+//   cors: {
+//     origin: "*",
+//     methods: ["GET", "POST"]
+//   }
+// });
+// const data = { key: "abc" }
+// io.on('connection', (socket) => {
+//   // listening to events from client
+//   socket.on('connection', (params, callback) => {
+
+//     // send data back to client by using ack callback
+//     callback(data)
+
+//     // send data back to client by using emit
+//     socket.emit('connection', data)
+
+//     // broadcasting data to all other connected clients
+//     socket.broadcast.emit('connection', data)
+//   })
+// })
 // app.use(isHeader);
 const maxRequestBodySize = '5mb';
 app.use(express.json({ limit: maxRequestBodySize }));
@@ -55,3 +79,4 @@ app.use(
 
 // * LISTENING ON PORT
 app.listen(port, console.log(`Server is running on port ${port}`));
+// io.listen(9000)
