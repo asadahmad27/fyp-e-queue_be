@@ -28,7 +28,8 @@ import { allTickets } from "../queries/ticket-queries.js"
 import {
   addWindow,
   updateWindow,
-  deleteWindow
+  deleteWindow,
+  updateServingStatus
 } from "../mutations/window-mutation.js"
 import { addOrg, updateOrg, deleteOrg } from "../mutations/org-mutation.js"
 
@@ -82,6 +83,7 @@ const mutation = new GraphQLObjectType({
     addWindow,
     updateWindow,
     deleteWindow,
+    updateServingStatus,
     imageTest,
 
     // TOKEN

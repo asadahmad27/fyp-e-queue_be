@@ -14,7 +14,10 @@ const WindowSchema = new mongoose.Schema(
         counter_num: {
             type: String,
         },
-
+        serving_status: {
+            type: Boolean,
+            default: false
+        },
         emp_id: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',

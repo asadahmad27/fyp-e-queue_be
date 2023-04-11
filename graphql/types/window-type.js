@@ -3,6 +3,7 @@ import {
     GraphQLID,
     GraphQLString,
     GraphQLInt,
+    GraphQLBoolean,
 } from 'graphql';
 import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
@@ -21,6 +22,7 @@ const WindowType = new GraphQLObjectType({
         org_id: { type: GraphQLID },
         title: { type: GraphQLString },
         subtitle: { type: GraphQLString },
+        serving_status: { type: GraphQLBoolean },
         slug: { type: GraphQLString },
         emp_id: { type: GraphQLString },
         avg_waiting_time: { type: GraphQLString },

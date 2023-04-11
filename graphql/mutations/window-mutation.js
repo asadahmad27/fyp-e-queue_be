@@ -5,10 +5,13 @@ import {
     GraphQLString,
     GraphQLNonNull,
     GraphQLID,
-    GraphQLInt
+    GraphQLInt,
+    GraphQLBoolean
 } from 'graphql';
 import Window from '../../models/window.js';
 import WindowType from '../types/window-type.js';
+import { TICKET_STATUS } from '../../constants.js';
+import Ticket from '../../models/ticket.js';
 
 const addWindow = {
     type: WindowType,
@@ -93,6 +96,48 @@ const updateWindow = {
     },
 };
 
+
+const updateServingStatus = {
+    type: WindowType,
+    args: {
+        id: { type: new GraphQLNonNull(GraphQLID) },
+        serving_status: { type: new GraphQLNonNull(GraphQLBoolean) },
+
+    },
+    async resolve(parent, args, req) {
+        //  * CHECK TOKEN
+
+        if (!req.isAuth) {
+            throw new ApolloError('Not authenticated');
+        }
+
+        let data = {
+            serving_status: args.serving_status || false,
+        };
+        // if (!args.image) {
+        //     delete data.image;
+        // }
+        const options = { new: true };
+        const window = await Window.findOneAndUpdate(
+            { _id: args.id },
+            data,
+            options);
+
+        let allTokens = await Ticket.find({ window_id: args.id });
+        let excludedTokens = allTokens.filter(item => item.status !== TICKET_STATUS.DONE)
+        const firstToken = excludedTokens[0];
+        let ticketdata = {
+            status: args.serving_status ? TICKET_STATUS.SERVING : TICKET_STATUS.PENDING,
+        };
+        let curToken = await Ticket.findOneAndUpdate(
+            { number: firstToken.number },
+            ticketdata,
+            options)
+
+        return window;
+    },
+};
+
 const deleteWindow = {
     type: WindowType,
     args: {
@@ -120,5 +165,5 @@ const deleteWindow = {
 
 
 
-export { addWindow, updateWindow, deleteWindow }
+export { addWindow, updateWindow, deleteWindow, updateServingStatus }
 
