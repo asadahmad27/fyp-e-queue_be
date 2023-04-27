@@ -127,10 +127,11 @@ const updateServingStatus = {
         let excludedTokens = allTokens.filter(item => item.status !== TICKET_STATUS.DONE)
         const firstToken = excludedTokens[0];
         let ticketdata = {
-            status: args.serving_status ? TICKET_STATUS.SERVING : TICKET_STATUS.PENDING,
+            status: args.serving_status === true ? TICKET_STATUS.SERVING : TICKET_STATUS.PENDING,
         };
+        console.log(allTokens, "alltokens", excludedTokens, ticketdata, excludedTokens)
         let curToken = await Ticket.findOneAndUpdate(
-            { number: firstToken.number },
+            { number: firstToken.number, window_id: args.id },
             ticketdata,
             options)
 
