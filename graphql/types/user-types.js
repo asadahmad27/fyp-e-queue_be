@@ -38,6 +38,7 @@ const UserType = new GraphQLObjectType({
     // new_password: { type: GraphQLString },
     // about: { type: GraphQLString },
     role: { type: GraphQLString },
+    available: { type: GraphQLBoolean },
     // image: { type: GraphQLString },
     // ads: {
     //   type: new GraphQLList(AdListType),

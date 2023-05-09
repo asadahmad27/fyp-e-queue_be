@@ -6,6 +6,7 @@ import {
   GraphQLNonNull,
   GraphQLEnumType,
   GraphQLID,
+  GraphQLBoolean,
 } from 'graphql';
 import User from '../../models/user.js';
 import UserType from '../types/user-types.js';
@@ -500,6 +501,32 @@ const deleteUser = {
     return user;
   },
 };
+const updateEmpAvailability = {
+  type: UserType,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    status: { type: GraphQLBoolean },
+  },
+  async resolve(parent, args, req) {
+    // * CHECK IF TOKEN IS VALID
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
+
+    const data = {
+      available: args.status,
+    };
+    const options = { new: true };
+    const user = await User.findOneAndUpdate(
+      { _id: args.id },
+      data,
+      options
+    );
+    // await DeleteFile('profile', args.id)
+
+    return user;
+  },
+};
 const deleteEmp = {
   type: UserType,
   args: {
@@ -636,7 +663,8 @@ export {
   addAdmin,
   updateAdmin,
   updateAdminEmail,
-  deleteEmp
+  deleteEmp,
+  updateEmpAvailability
   // deleteUser,
   // followUser,
   // verifyUser,

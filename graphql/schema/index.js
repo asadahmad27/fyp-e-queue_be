@@ -19,7 +19,8 @@ import {
   addAdmin,
   updateAdmin,
   updateAdminEmail,
-  deleteEmp
+  deleteEmp,
+  updateEmpAvailability
 } from '../mutations/user-mutations.js';
 import { createTicket, updateTicket } from "../mutations/ticket-mutation.js"
 import { allWindow, window } from "../queries/window-queries.js"
@@ -73,6 +74,7 @@ const mutation = new GraphQLObjectType({
     addAdmin,
     updateAdmin,
     updateAdminEmail,
+    updateEmpAvailability,
     // // EMPLOYEE LOGIN 
     empLogin,
     deleteEmp,

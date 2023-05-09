@@ -27,6 +27,10 @@ const UserSchema = new mongoose.Schema(
     org_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Organization',
+    },
+    available: {
+      type: Boolean,
+      default: true
     }
     // about: {
     //   type: String,
