@@ -28,6 +28,10 @@ const UserSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Organization',
     },
+    window_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Window',
+    },
     available: {
       type: Boolean,
       default: true

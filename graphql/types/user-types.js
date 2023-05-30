@@ -11,6 +11,8 @@ import { s3 } from '../schema/s3.js';
 import pkg from 'graphql-iso-date';
 import OrgType from './org-type.js';
 import Organization from '../../models/organization.js';
+import WindowType from './window-type.js';
+import Window from '../../models/window.js';
 const { GraphQLDateTime } = pkg;
 
 // * USER TYPE
@@ -28,6 +30,12 @@ const UserType = new GraphQLObjectType({
       type: new GraphQLList(OrgType),
       resolve(parent, args) {
         return Organization.find({ _id: parent.org_id })
+      },
+    },
+    window: {
+      type: new GraphQLList(WindowType),
+      resolve(parent, args) {
+        return Window.find({ _id: parent.window_id })
       },
     },
 

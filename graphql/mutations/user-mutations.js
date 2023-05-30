@@ -527,6 +527,34 @@ const updateEmpAvailability = {
     return user;
   },
 };
+const updateEmpWindowID = {
+  type: UserType,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) },
+    window_id: { type: GraphQLID },
+  },
+  async resolve(parent, args, req) {
+    // * CHECK IF TOKEN IS VALID
+    if (!req.isAuth) {
+      throw new ApolloError('Not authenticated');
+    }
+
+    const data = {
+      window_id: args.window_id,
+    };
+    const options = { new: true };
+    const user = await User.findOneAndUpdate(
+      { _id: args.id },
+      data,
+      options
+    );
+    // await DeleteFile('profile', args.id)
+    console.log(user, "useree")
+    return user;
+  },
+};
+
+
 const deleteEmp = {
   type: UserType,
   args: {
@@ -664,7 +692,8 @@ export {
   updateAdmin,
   updateAdminEmail,
   deleteEmp,
-  updateEmpAvailability
+  updateEmpAvailability,
+  updateEmpWindowID
   // deleteUser,
   // followUser,
   // verifyUser,
