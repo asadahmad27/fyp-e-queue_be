@@ -23,7 +23,7 @@ import {
   updateEmpAvailability,
   updateEmpWindowID
 } from '../mutations/user-mutations.js';
-import { createTicket, updateTicket } from "../mutations/ticket-mutation.js"
+import { createTicket, updateTicket, deleteAllTickets } from "../mutations/ticket-mutation.js"
 import { allWindow, window } from "../queries/window-queries.js"
 import { allOrg, organization } from "../queries/org-queries.js"
 import { allTickets } from "../queries/ticket-queries.js"
@@ -93,6 +93,7 @@ const mutation = new GraphQLObjectType({
     // TOKEN
     createTicket,
     updateTicket,
+    deleteAllTickets,
     // ADD ORG
     addOrg,
     // UPDATE ORG

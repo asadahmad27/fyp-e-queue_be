@@ -75,31 +75,19 @@ const updateTicket = {
     },
 };
 
-// const deleteWindow = {
-//     type: WindowType,
-//     args: {
-//         id: { type: new GraphQLNonNull(GraphQLID) },
+const deleteAllTickets = {
+    type: TicketType,
+    async resolve(parent, args, req) {
+        //  * CHECK TOKEN
 
-//     },
-//     async resolve(parent, args, req) {
-//         //  * CHECK TOKEN
-
-//         if (!req.isAuth) {
-//             throw new ApolloError('Not authenticated');
-//         }
-//         // SubCategory.find({ category_id: args.id }).then((subCategories) => {
-//         //     subCategories.forEach(async (subCategory) => {
-//         //         await DeleteFile('sub-category', subCategory._id)
-//         //         //  * DELETE BRAND REVIEWS
-//         //         subCategory.remove()
-//         //     });
-//         // });
-//         // await DeleteFile('category', args.id)
-//         const window = await Window.findByIdAndDelete(args.id)
-//         return window;
-//     },
-// };
+        if (!req.isAuth) {
+            throw new ApolloError('Not authenticated');
+        }
+        let deleteAll = await Ticket?.deleteMany({});
+        return deleteAll;
+    },
+};
 
 
 
-export { createTicket, updateTicket }
+export { createTicket, updateTicket, deleteAllTickets }
