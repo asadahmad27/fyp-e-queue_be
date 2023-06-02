@@ -40,9 +40,10 @@ const allEmploys = {
   },
   resolve: (parent, args, req) => {
     // * CHECK IF TOKEN IS VALID
-    if (!req.isAuth) {
-      throw new ApolloError('Not authenticated');
-    }
+    // if (!req.isAuth) {
+    //   throw new ApolloError('Not authenticated');
+    // }
+    console.log("hyereee", args)
 
     return User.find({ role: USER_ROLES.EMPLOY, org_id: args.org_id });
   },
@@ -55,9 +56,9 @@ const allCustomers = {
   },
   resolve: (parent, args, req) => {
     // * CHECK IF TOKEN IS VALID
-    if (!req.isAuth) {
-      throw new ApolloError('Not authenticated');
-    }
+    // if (!req.isAuth) {
+    //   throw new ApolloError('Not authenticated');
+    // }
 
     return User.find({ role: USER_ROLES.USER, org_id: args.org_id });
   },

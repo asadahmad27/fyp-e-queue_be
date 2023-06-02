@@ -400,7 +400,7 @@ const updateAdmin = {
 
     const options = { new: true };
     const updatedUser = await User.findOneAndUpdate(
-      { _id: args.id },
+      { id: args.id },
       data,
       options
     );
