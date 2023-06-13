@@ -40,7 +40,7 @@ const createTicket = {
 const updateTicket = {
     type: TicketType,
     args: {
-        // id: { type: new GraphQLNonNull(GraphQLID) },
+        window_id: { type: new GraphQLNonNull(GraphQLID) },
         status: { type: GraphQLString },
         curr_number: { type: GraphQLString },
     },
@@ -57,7 +57,7 @@ const updateTicket = {
 
         let options = { new: true };
         let curToken = await Ticket.findOneAndUpdate(
-            { number: args.curr_number },
+            { number: args.curr_number, window_id: args?.window_id },
             data,
             options);
 
@@ -66,7 +66,7 @@ const updateTicket = {
         };
         options = { new: true };
         let newToken = await Ticket.findOneAndUpdate(
-            { number: (parseInt(args.curr_number) + 1).toString() },
+            { number: (parseInt(args.curr_number) + 1).toString(), window_id: args?.window_id },
             nextTokenData,
             options);
 
