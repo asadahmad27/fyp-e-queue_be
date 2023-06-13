@@ -40,9 +40,10 @@ const createTicket = {
 const updateTicket = {
     type: TicketType,
     args: {
-        // id: { type: new GraphQLNonNull(GraphQLID) },
+        id: { type: new GraphQLNonNull(GraphQLID) },
         status: { type: GraphQLString },
         curr_number: { type: GraphQLString },
+        window_id: { type: new GraphQLNonNull(GraphQLID) },
     },
     async resolve(parent, args, req) {
         //  * CHECK TOKEN
@@ -51,13 +52,14 @@ const updateTicket = {
             throw new ApolloError('Not authenticated');
         }
 
+        console.log(args)
         let data = {
             status: TICKET_STATUS.DONE,
         };
 
         let options = { new: true };
         let curToken = await Ticket.findOneAndUpdate(
-            { number: args.curr_number },
+            { window_id: args?.window_id, number: args.curr_number },
             data,
             options);
 
@@ -66,7 +68,7 @@ const updateTicket = {
         };
         options = { new: true };
         let newToken = await Ticket.findOneAndUpdate(
-            { number: (parseInt(args.curr_number) + 1).toString() },
+            { window_id: args?.window_id, number: (parseInt(args.curr_number) + 1).toString() },
             nextTokenData,
             options);
 
