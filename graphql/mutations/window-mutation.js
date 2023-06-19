@@ -12,6 +12,9 @@ import Window from '../../models/window.js';
 import WindowType from '../types/window-type.js';
 import { TICKET_STATUS } from '../../constants.js';
 import Ticket from '../../models/ticket.js';
+import User from '../../models/user.js';
+import mongoose from 'mongoose';
+// import { ObjectId } from 'mongoose';
 
 const addWindow = {
     type: WindowType,
@@ -143,6 +146,7 @@ const deleteWindow = {
     type: WindowType,
     args: {
         id: { type: new GraphQLNonNull(GraphQLID) },
+        emp_id: { type: new GraphQLNonNull(GraphQLID) },
 
     },
     async resolve(parent, args, req) {
@@ -151,14 +155,15 @@ const deleteWindow = {
         if (!req.isAuth) {
             throw new ApolloError('Not authenticated');
         }
-        // SubCategory.find({ category_id: args.id }).then((subCategories) => {
-        //     subCategories.forEach(async (subCategory) => {
-        //         await DeleteFile('sub-category', subCategory._id)
-        //         //  * DELETE BRAND REVIEWS
-        //         subCategory.remove()
-        //     });
-        // });
-        // await DeleteFile('category', args.id)
+        const data = {
+            window_id: new mongoose.Types.ObjectId()
+        };
+        const options = { new: true };
+        const user = await User.findOneAndUpdate(
+            { _id: args.emp_id },
+            data,
+            options
+        );
         const window = await Window.findByIdAndDelete(args.id)
         return window;
     },
